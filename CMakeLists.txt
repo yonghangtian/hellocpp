@@ -1,0 +1,22 @@
+cmake_minimum_required(VERSION 3.0.0)
+project(HelloWorld VERSION 0.1.0)
+
+include(CTest)
+enable_testing()
+
+#add_executable(HelloWorld CppPrimerPlus/chapter91/chapter91_main.cpp CppPrimerPlus/chapter91/golf.cpp)
+#add_executable(HelloWorld CppPrimerPlus/chapter101/chapter101_main.cpp CppPrimerPlus/chapter101/golf10.cpp)
+#add_executable(HelloWorld CppPrimerPlus/chapter111/randwalk.cpp CppPrimerPlus/chapter111/vect.cpp)
+#add_executable(HelloWorld CppPrimerPlus/chapter112/randwalk.cpp CppPrimerPlus/chapter112/vect.cpp)
+#add_executable(HelloWorld CppPrimerPlus/chapter113/randwalk.cpp CppPrimerPlus/chapter113/vect.cpp)
+#add_executable(HelloWorld CppPrimerPlus/chapter115/check.cpp CppPrimerPlus/chapter115/stonewt.cpp)
+#add_executable(HelloWorld CppPrimerPlus/chapter116/check.cpp CppPrimerPlus/chapter116/stonewt.cpp)
+#add_executable(HelloWorld CppPrimerPlus/chapter117/check.cpp CppPrimerPlus/chapter117/complex0.cpp)
+#add_executable(HelloWorld main.cpp CppPrimerPlus/chapter13.cpp)
+#add_executable(HelloWorld main.cpp CppPrimerPlus/chapter15.cpp)
+#add_executable(HelloWorld main.cpp CppPrimerPlus/chapter17/chapter17.cpp)
+add_executable(HelloWorld main.cpp CppPrimerPlus/chapter18.cpp)
+
+set(CPACK_PROJECT_NAME ${PROJECT_NAME})
+set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
+include(CPack)
