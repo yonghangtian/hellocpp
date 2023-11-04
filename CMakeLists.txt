@@ -15,7 +15,7 @@ enable_testing()
 #add_executable(HelloWorld main.cpp CppPrimerPlus/chapter13.cpp)
 #add_executable(HelloWorld main.cpp CppPrimerPlus/chapter15.cpp)
 #add_executable(HelloWorld main.cpp CppPrimerPlus/chapter17/chapter17.cpp)
-add_executable(HelloWorld main.cpp CppPrimerPlus/chapter18.cpp)
+add_executable(HelloWorld main.cpp CppPrimer5thEdtion/chapter2/chapter2.cpp)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
