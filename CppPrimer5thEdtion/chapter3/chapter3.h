@@ -4,6 +4,8 @@
 #include <typeinfo>
 #include <string>
 #include <cctype>
+#include <vector>
+#include <cerrno>
 using namespace std;
 
 // Exercise 3.2: Write a program to read the standard input a line at a time.
@@ -43,5 +45,64 @@ int exercise3_10();
 // const string s = "Keep out!"; 
 // for (auto &c : s) {/* ... */ }
 int exercise3_11();
+// Exercise 3.12: Which, if any, of the following vector definitions are in
+// error? For those that are legal, explain what the definition does. For those
+// that are not legal, explain why they are illegal.
+// (a) vector<vector<int>> ivec;
+// (b) vector<string> svec = ivec;
+// (c) vector<string> svec(10, "null");
+int exercise3_12();
+// Exercise 3.13: How many elements are there in each of the following
+// vectors? What are the values of the elements?
+// (a) vector<int> v1;
+// (b) vector<int> v2(10);
+// (c) vector<int> v3(10, 42);
+// (d) vector<int> v4{10};
+// (e) vector<int> v5{10, 42};
+// (f) vector<string> v6{10};
+// (g) vector<string> v7{10, "hi"};
+int exercise3_13();
+
+template<typename T>
+int rangeForVector(vector<T> a)
+{
+    for (auto b : a){
+        cout << b << ",";
+    }
+    cout << endl;
+    return 0;
+}
+
+// Exercise 3.14: Write a program to read a sequence of ints from cin and
+// store those values in a vector.
+int exercise3_14();
+// Exercise 3.15: Repeat Exercise 3.14 but read strings this time.
+int exercise3_15();
+// Exercise 3.16: Write a program to print the size and contents of the
+// vectors from exercise 3.13. Check whether your answers to that exercise
+// were correct. If not, restudy § 3.3.1 (p. 97) until you understand why you
+// were wrong.
+// Same as exercise 3.13.
+int exercise3_16();
+// Exercise 3.17: Read a sequence of words from cin and store the values a
+// vector. After you’ve read all the words, process the vector and change
+// each word to uppercase. Print the transformed elements, eight words to a
+// line
+int exercise3_17();
+// Exercise 3.18: Is the following program legal? If not, how might you fix it?
+// vector<int>
+// ivec[0] = 42;
+//  ivec;
+int exercise3_18();
+// Exercise 3.19: List three ways to define a vector and give it ten elements,
+// each with the value 42. Indicate whether there is a preferred way to do so
+// and why.
+int exercise3_19();
+// Exercise 3.20: Read a set of integers into a vector. Print the sum of each
+// pair of adjacent elements. Change your program so that it prints the sum of
+// the first and last elements, followed by the sum of the second and second-tolast, and so on.
+int exercise3_20();
+
+
 
 #endif

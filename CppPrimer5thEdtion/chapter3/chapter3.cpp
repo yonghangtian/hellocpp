@@ -3,7 +3,7 @@
 int exercise3_2()
 {
     string a;
-    cout << "Please input strings by line: (Press Ctrl + Z to quit.)" << endl;
+    cout << "Please input strings by line: (Press Ctrl + D to input EOF signal.)" << endl;
     while (getline(cin, a))
     {
         cout << a << endl;
@@ -15,7 +15,7 @@ int exercise3_2()
 int exercise3_3()
 {
     string a;
-    cout << "Please input strings by line: (cin will refresh once Enter, Press Ctrl + Z to quit.)" << endl;
+    cout << "Please input strings line by line: (cin will refresh once Enter, Press Ctrl + D to input EOF signal.)" << endl;
     while (cin >> a)
     {
         cout << a << endl;
@@ -184,6 +184,178 @@ int exercise3_11()
     {
         // c = 'X'; // c is const char reference, is low-level const
     }
+
+    return 0;
+}
+
+int exercise3_12()
+{
+    vector<vector<int>> ivec;
+    // vector<string> svec = ivec;
+    vector<string> svec(10, "null");
+    return 0;
+}
+
+int exercise3_13()
+{
+    vector<int> v1;     // default init
+    vector<int> v2(10); // 10 elements, value is default int(0)
+    cout << "v2:    ";
+    rangeForVector(v2);
+    vector<int> v3(10, 42); // 10 elements, value is 42
+    cout << "v3:    ";
+    rangeForVector(v3);
+    vector<int> v4{10}; // 1 element, value is 10
+    cout << "v4:    ";
+    rangeForVector(v4);
+    vector<int> v5{10, 42}; // 2 elements, 10 and 42
+    cout << "v5:    ";
+    rangeForVector(v5);
+    vector<string> v6{10}; // 10 elements, value is default string
+    cout << "v6:    ";
+    rangeForVector(v6);
+    vector<string> v7{10, "hi"}; // 10 elements with same value, value is "hi"
+    cout << "v7:    ";
+    rangeForVector(v7);
+    return 0;
+}
+
+int exercise3_14()
+{
+    int a, b;
+    vector<int> c;
+    cout << "Please input ints as many as you want. Input any char to terminate." << endl;
+    while (cin >> a)
+    {
+        c.push_back(a);
+    }
+
+    rangeForVector(c);
+
+    return 0;
+}
+
+int exercise3_15()
+{
+    string a;
+    vector<string> c;
+    // Linux 中 ctrl + d：输入EOF信号 ； ctrl + z ：将前台程序转为后台并停止，使用jobs命令查看后台暂停的程序，然后使用“fg 序号”将命令带到前台继续执行
+    cout << "Please input string as many as you want. (Press Ctrl + D to input EOF signal.)" << endl;
+    while (getline(cin, a))
+    {
+        c.push_back(a);
+    }
+
+    rangeForVector(c);
+
+    return 0;
+}
+
+int exercise3_16()
+{
+
+    return 0;
+}
+
+int exercise3_17()
+{
+    vector<string> a;
+    string b;
+
+    cout << "Please input string as many as you want. (Press Ctrl + D to input EOF signal.)" << endl;
+    while (getline(cin, b))
+    {
+        a.push_back(b);
+    }
+    rangeForVector(a);
+
+    for (auto &c : a)
+    {
+        for (auto &d : c)
+        {
+            d = toupper(d);
+        }
+    }
+
+    rangeForVector(a);
+
+    return 0;
+}
+
+int exercise3_18()
+{
+
+    vector<int> ivec;
+    ivec.push_back(1);
+    rangeForVector(ivec);
+    ivec[0] = 42;
+    rangeForVector(ivec);
+
+    return 0;
+}
+
+int exercise3_19()
+{
+    // method 1
+    vector<int> ivec(10, 42);
+    rangeForVector(ivec);
+
+    // method 2
+    vector<int> ivec2{42, 42, 42, 42, 42, 42, 42, 42, 42, 42};
+    cout << ivec2.size() << endl;
+    rangeForVector(ivec2);
+
+    // method 3 is preferred as expands element in vector is faster
+    vector<int> ivec3;
+    for (int i = 0; i < 10; ++i)
+    {
+        ivec3.push_back(42);
+    }
+    rangeForVector(ivec3);
+    // method4
+    vector<int> ivec4(10);
+    for (int j = 0; j < 10; ++j)
+    {
+        ivec4[j] = 42;
+    }
+    rangeForVector(ivec4);
+    // method5
+    vector<int> ivec5(10);
+    for (auto &k : ivec5)
+    {
+        k = 42;
+    }
+    rangeForVector(ivec5);
+
+    return 0;
+}
+
+int exercise3_20()
+{
+    const int k = 21;
+    vector<int> ivec1(k);
+    for (int j = 0; j < k; ++j)
+    {
+        ivec1[j] = j;
+    }
+    rangeForVector(ivec1);
+
+    vector<int> ivec2;
+    for (auto i = 1; i < k; ++i)
+    {
+        ivec2.push_back(ivec1[i-1] + ivec1[i]);
+    }
+    cout << ivec2.size() << endl;
+    rangeForVector(ivec2);
+
+    vector<int> ivec3;
+    for (auto j = 0; j < (k/2+1); ++j)
+    {
+        ivec3.push_back(ivec1[j] + ivec1[k-1-j]);
+    }
+    cout << ivec3.size() << endl;
+    rangeForVector(ivec3);
+
 
     return 0;
 }
