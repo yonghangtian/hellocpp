@@ -127,7 +127,7 @@ int exercise3_25();
 
 // Exercise 3.26: In the binary search program on page 112, why did we write
 // mid = beg + (end - beg) / 2; instead of mid = (beg + end)/2;?
-// Answer : we dont have operator + between two iterator. We only have operator in Table 3.7
+// Answer : we dont have operator + between two iterators. We only have operator in Table 3.7
 int exercise3_26();
 
 #endif
