@@ -103,6 +103,31 @@ int exercise3_19();
 // the first and last elements, followed by the sum of the second and second-tolast, and so on.
 int exercise3_20();
 
+// Exercise 3.21: Redo the first exercise from § 3.3.3 (p. 105) using iterators.
+// actually I dont know what to to, exercise 3.16 is too redundant.
+int exercise3_21();
 
+// Exercise 3.22: Revise the loop that printed the first paragraph in text to
+// instead change the elements in text that correspond to the first paragraph
+// to all uppercase. After you’ve updated text, print its contents.
+int exercise3_22();
+
+// Exercise 3.23: Write a program to create a vector with ten int elements.
+// Using an iterator, assign each element a value that is twice its current value.
+// Test your program by printing the vector.
+int exercise3_23();
+
+// Exercise 3.24: Redo the last exercise from § 3.3.3 (p. 105) using iterators.
+// redo 3.20
+int exercise3_24();
+
+// Exercise 3.25: Rewrite the grade clustering program from § 3.3.3 (p. 104)
+// using iterators instead of subscripts.
+int exercise3_25();
+
+// Exercise 3.26: In the binary search program on page 112, why did we write
+// mid = beg + (end - beg) / 2; instead of mid = (beg + end)/2;?
+// Answer : we dont have operator + between two iterator. We only have operator in Table 3.7
+int exercise3_26();
 
 #endif

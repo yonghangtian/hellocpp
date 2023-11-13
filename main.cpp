@@ -5,7 +5,7 @@
 
 int main(int, char**) 
 {
-    int a = exercise3_20();
+    int a = exercise3_25();
     
     return a;
 }

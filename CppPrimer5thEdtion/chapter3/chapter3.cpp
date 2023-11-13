@@ -343,19 +343,122 @@ int exercise3_20()
     vector<int> ivec2;
     for (auto i = 1; i < k; ++i)
     {
-        ivec2.push_back(ivec1[i-1] + ivec1[i]);
+        ivec2.push_back(ivec1[i - 1] + ivec1[i]);
     }
     cout << ivec2.size() << endl;
     rangeForVector(ivec2);
 
     vector<int> ivec3;
-    for (auto j = 0; j < (k/2+1); ++j)
+    for (auto j = 0; j < (k / 2 + 1); ++j)
     {
-        ivec3.push_back(ivec1[j] + ivec1[k-1-j]);
+        ivec3.push_back(ivec1[j] + ivec1[k - 1 - j]);
     }
     cout << ivec3.size() << endl;
     rangeForVector(ivec3);
 
+    return 0;
+}
 
+int exercise3_21()
+{
+    return 0;
+}
+
+int exercise3_22()
+{
+    vector<string> text;
+    text.push_back("say we have some line of text, and all words in the first line are lowercase.");
+    text.push_back("");
+    text.push_back("THE THIRD LINE IS UPPERCASE!!!!");
+
+    cout << "Before:" << endl;
+    rangeForVector(text);
+
+    for (auto it = text.begin(); it != text.end() && !it->empty(); ++it)
+    {
+        for (auto it2 = it->begin(); it2 != it->end(); ++it2)
+        {
+            *it2 = toupper(*it2);
+        }
+    }
+
+    cout << "After:" << endl;
+    rangeForVector(text);
+
+    return 0;
+}
+
+int exercise3_23()
+{
+    vector<int> a(10, 4);
+
+    cout << "Before:" << endl;
+    rangeForVector(a);
+
+    for (auto it = a.begin(); it != a.end(); ++it)
+    {
+        (*it) *= (*it);
+    }
+
+    cout << "After:" << endl;
+    rangeForVector(a);
+
+    return 0;
+}
+
+int exercise3_24()
+{
+    const int k = 21;
+    int i = 0;
+    vector<int> ivec1(k);
+
+    for (auto it = ivec1.begin(); it != ivec1.end(); ++it)
+    {
+        (*it) = ++i;
+    }
+    cout << "Before:" << endl;
+    rangeForVector(ivec1);
+
+    cout << "Add n and n+1:" << endl;
+    for (auto it1 = ivec1.begin(); it1 < ivec1.end() - 1; ++it1)
+    {
+        cout << (*it1) + (*(it1 + 1)) << ",";
+    }
+    cout << endl;
+
+    cout << "Add first and last, second and secondtolast:" << endl;
+    for (auto it2 = ivec1.begin(); it2 < ivec1.begin() + ((ivec1.end() - ivec1.begin()) / 2 + 1); ++it2)
+    {
+        cout << (*it2) + (*(ivec1.begin() + ((ivec1.end() - it2) - 1))) << ",";
+    }
+    cout << endl;
+
+    cout << ivec1.end() - ivec1.begin();
+
+    return 0;
+}
+
+int exercise3_25()
+{
+    vector<unsigned> grades{9,11,22,33,44,55,66,67,88,90,99,100};
+    vector<unsigned> alt_scores(11,0); // 11 buckets, all initially 0
+
+    // for each grade in the input
+    for (auto it = grades.begin(); it != grades.end(); ++it)
+    {
+        unsigned i = *it;
+        // increment the counter for the current cluster
+        ++(*(alt_scores.begin() + i / 10));
+    }
+
+    cout << "alt_scores.size = " << alt_scores.size() << endl;
+    for (auto it = alt_scores.begin(); it != alt_scores.end(); ++it)
+        cout << *it << " ";
+    cout << endl;
+    return 0;
+}
+
+int exercise3_26()
+{
     return 0;
 }
