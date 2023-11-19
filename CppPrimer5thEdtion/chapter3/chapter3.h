@@ -6,6 +6,7 @@
 #include <cctype>
 #include <vector>
 #include <cerrno>
+#include <algorithm>
 using namespace std;
 
 // Exercise 3.2: Write a program to read the standard input a line at a time.
@@ -129,5 +130,19 @@ int exercise3_25();
 // mid = beg + (end - beg) / 2; instead of mid = (beg + end)/2;?
 // Answer : we dont have operator + between two iterators. We only have operator in Table 3.7
 int exercise3_26();
+
+// Exercise 3.34: Given that p1 and p2 point to elements in the same array,
+// what does the following code do? Are there values of p1 or p2 that make
+// this code illegal?
+// p1 += p2 - p1;
+int exercise3_34();
+
+
+// Exercise 3.41: Write a program to initialize a vector from an array of
+// ints.
+int exercise3_41();
+// Exercise 3.42: Write a program to copy a vector of ints into an array of
+// ints.
+int exercise3_42();
 
 #endif

@@ -440,8 +440,8 @@ int exercise3_24()
 
 int exercise3_25()
 {
-    vector<unsigned> grades{9,11,22,33,44,55,66,67,88,90,99,100};
-    vector<unsigned> alt_scores(11,0); // 11 buckets, all initially 0
+    vector<unsigned> grades{9, 11, 22, 33, 44, 55, 66, 67, 88, 90, 99, 100};
+    vector<unsigned> alt_scores(11, 0); // 11 buckets, all initially 0
 
     // for each grade in the input
     for (auto it = grades.begin(); it != grades.end(); ++it)
@@ -460,5 +460,101 @@ int exercise3_25()
 
 int exercise3_26()
 {
+    return 0;
+}
+
+int exercise3_34()
+{
+    int arr[10];
+
+    for (auto i = 0; i < sizeof(arr) / sizeof(arr[0]); ++i)
+    {
+        arr[i] = i;
+        cout << i << " : " << arr[i] << endl;
+    }
+
+    int *p1 = &arr[1];
+    int *p2 = &arr[5];
+
+    cout << "P1: " << *p1 << endl;
+    cout << "P2: " << *p2 << endl;
+
+    p1 += p2 - p1;
+
+    cout << "after: ";
+    cout << "P1: " << *p1 << endl;
+    cout << "P2: " << *p2 << endl;
+
+    // iterate an array using stl function
+    int *st = begin(arr);
+    int *ed = end(arr);
+
+    for (auto temp = st; temp != ed; ++temp)
+    {
+        cout << *temp << endl;
+    }
+
+    return 0;
+}
+
+int exercise3_41()
+{
+    int arr[10];
+
+    for (auto i = 0; i < sizeof(arr) / sizeof(arr[0]); ++i)
+    {
+        arr[i] = i;
+        cout << i << " : " << arr[i] << endl;
+    }
+
+    int *st = begin(arr);
+    int *ed = end(arr);
+
+    vector<int> tar(st, ed);
+
+    rangeForVector(tar);
+
+    return 0;
+}
+
+int exercise3_42()
+{
+
+    const int k = 21;
+    int i = 0;
+    vector<int> ivec1(k);
+
+    for (auto it = ivec1.begin(); it != ivec1.end(); ++it)
+    {
+        (*it) = ++i;
+    }
+    rangeForVector(ivec1);
+
+    // method 1: stl copy method
+    int arr[k];
+    std::copy(ivec1.begin(), ivec1.end(), arr);
+    for (auto n : arr)
+    {
+        cout << n << ", ";
+    }
+    cout << endl;
+
+    int arr1[k];
+    int * st = begin(arr1);
+    for (auto a = ivec1.begin(); a != ivec1.end(); ++a)
+    {
+        //  in vector's definition     typedef ptrdiff_t					difference_type;
+        //  a - ivec1.begin() 's type is difference_type
+        //  st is a pointer to the start of arr1
+        // st add ptrdiff_t is legal the result is inside [ begin(arr1), end(arr1) ), otherwise, it's illegal.
+        *(st + (a - ivec1.begin())) = *a;
+    }
+
+    for (auto n : arr1)
+    {
+        cout << n << ", ";
+    }
+    cout << endl;
+
     return 0;
 }
