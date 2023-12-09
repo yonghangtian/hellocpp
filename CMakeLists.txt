@@ -1,20 +1,15 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(HelloCpp VERSION 0.1.0)
-
+add_compile_options(-std=c++11)
 include(CTest)
 enable_testing()
 
 #add_executable(HelloCpp CppPrimerPlus/chapter91/chapter91_main.cpp CppPrimerPlus/chapter91/golf.cpp)
-#add_executable(HelloCpp CppPrimerPlus/chapter101/chapter101_main.cpp CppPrimerPlus/chapter101/golf10.cpp)
 #add_executable(HelloCpp CppPrimerPlus/chapter111/randwalk.cpp CppPrimerPlus/chapter111/vect.cpp)
-#add_executable(HelloCpp CppPrimerPlus/chapter112/randwalk.cpp CppPrimerPlus/chapter112/vect.cpp)
-#add_executable(HelloCpp CppPrimerPlus/chapter113/randwalk.cpp CppPrimerPlus/chapter113/vect.cpp)
-#add_executable(HelloCpp CppPrimerPlus/chapter115/check.cpp CppPrimerPlus/chapter115/stonewt.cpp)
-#add_executable(HelloCpp CppPrimerPlus/chapter116/check.cpp CppPrimerPlus/chapter116/stonewt.cpp)
-#add_executable(HelloCpp CppPrimerPlus/chapter117/check.cpp CppPrimerPlus/chapter117/complex0.cpp)
 #add_executable(HelloCpp main.cpp CppPrimerPlus/chapter13.cpp)
 #add_executable(HelloCpp main.cpp CppPrimerPlus/chapter17/chapter17.cpp)
-add_executable(HelloCpp main.cpp CppPrimer5thEdtion/chapter5/chapter5.cpp)
+# add_executable(HelloCpp main.cpp CppPrimer5thEdtion/chapter5/chapter5.cpp)
+add_executable(HelloCpp main.cpp CppPrimer5thEdtion/chapter6/chapter6.cpp)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
