@@ -146,6 +146,18 @@ Type Exercise::setVal(Type parm)
     return val;
 }
 
+// define static data and function members
+const string Account::accountType("Savings Account");
+double Account::interestRate = initRate();
+
+void Account::rate(double newRate)
+{
+    interestRate = newRate;
+}
+
+double Example::rate = 6.5;
+vector<double> Example::vec(Example::vecSize);
+
 int exercise7_1()
 {
 
@@ -389,17 +401,50 @@ int exercise7_50() { return 0; }
 int exercise7_51() { return 0; }
 int exercise7_52()
 {
-    Sales_data item = {"978-0590353403", 25, 15.99};
+    Sales_data item{"978-0590353403", 25, 15.99};
+    // two initialize method are same, both using cpp 11's list initialization
+    // Sales_data item = {"978-0590353403", 25, 15.99};
     print(cout, item);
 
     return 0;
 }
-int exercise7_53() { return 0; }
+
+int exercise7_53()
+{
+
+    Debug db;
+    db.set_io(false);
+
+    db.set_other(false);
+
+    return 0;
+}
+
 int exercise7_54() { return 0; }
 int exercise7_55() { return 0; }
 int exercise7_56() { return 0; }
-int exercise7_57() { return 0; }
-int exercise7_58() { return 0; }
+int exercise7_57()
+{
+    Account ac("tian", 2.0);
+    cout << ac.balance() << endl;
+
+    ac.calculate();
+    cout << ac.balance() << endl;
+
+    return 0;
+}
+int exercise7_58() {
+    
+    Example ex1;
+
+    cout << ex1.rate << ", " << ex1.vecSize << endl;
+    
+    for (const auto & a : Example::vec)
+    {
+        cout << a << ", ";
+    }
+    
+     return 0; }
 
 unsigned long g_a = 0, g_b = 0;
 

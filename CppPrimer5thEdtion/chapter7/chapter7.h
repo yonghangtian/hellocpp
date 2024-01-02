@@ -141,6 +141,56 @@ private:
     NoDefault noDefaultObj; // Member of type NoDefault
 };
 
+class Debug {
+public:
+	constexpr Debug(bool b = true): hw(b), io(b), other(b) { }
+	constexpr Debug(bool h, bool i, bool o): 
+	                                hw(h), io(i), other(o) { }
+	constexpr bool any() { return hw || io || other; }
+	constexpr bool hardware() { return hw || io; }
+	constexpr bool app() { return other; }
+
+	void set_io(bool b) { io = b; }
+	void set_hw(bool b) { hw = b; }
+	void set_other(bool b) { hw = b; }
+private:
+	bool hw;    // hardware errors other than IO errors
+	bool io;    // IO errors
+	bool other; // other errors
+};
+
+class Account {
+public:
+	Account() = default;
+	Account(const std::string &s, double amt):
+		owner(s), amount(amt) { }
+
+    void calculate() { amount += amount * interestRate; }
+    double balance() { return amount; }
+public:
+    static double rate() { return interestRate; }
+    static void rate(double);   
+private:
+    std::string owner; 
+    double amount = 0.0;
+    static double interestRate; 
+    static double initRate() { return .0225; }
+    static const std::string accountType;
+    static constexpr int period = 30;// period is a constant expression
+    double daily_tbl[period];
+};
+
+
+// example.h
+class Example {
+public:
+ static double rate; 
+ static const int vecSize = 20; 
+ static vector<double> vec;
+};
+// // example.C
+// #include "example.h"
+
 //  test static
 int exercise7_1();
 
@@ -315,19 +365,39 @@ int exercise7_52();
 
 // Exercise 7.53: Define your own version of Debug.
 int exercise7_53();
+
 // Exercise 7.54: Should the members of Debug that begin with set_ be
 // declared as constexpr? If not, why not?
+// Answer: shouldn't, as set_ funcs changed the value of arguments(data member).
+// The constexpr specifier implies that the function can be evaluated at compile time if its arguments are constant expressions. However, in the case of set_io, set_hw, and set_other, these functions modify the state of the object (Debug) by changing the values of its member variables (io, hw, other). 
+// This involves altering the object's state, which is not a compile-time operation and cannot be evaluated at compile time.
 int exercise7_54();
+
 // Exercise 7.55: Is the Data class from § 7.5.5 (p. 298) a literal class? If
 // not, why not? If so, explain why it is literal.
+// Answer: Yes, data class is a aggregate class, which natually is a literal class.
 int exercise7_55();
+
 // Exercise 7.56: What is a static class member? What are the advantages
 // of static members? How do they differ from ordinary members?
+// Answer: static class members aren't bind with any object, so it can be used in all object in that class.
+// and these members are defined inside class, which aviod using global static members.
 int exercise7_56();
+
 // Exercise 7.57: Write your own version of the Account class.
 int exercise7_57();
 // Exercise 7.58: Which, if any, of the following static data member
 // declarations and definitions are errors? Explain why.
+// // example.h
+// class Example {
+// public:
+//  static double rate = 6.5; static const int vecSize = 20; static vector<double> vec(vecSize);
+// };
+// // example.C
+// #include "example.h"
+// double Example::rate;
+// vector<double> Example::vec;
+
 int exercise7_58();
 
 int testThreads();
