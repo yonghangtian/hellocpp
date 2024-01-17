@@ -249,14 +249,135 @@ int exercise9_16()
     return 0;
 }
 
-int exercise9_17() {
-    
-     return 0; }
-int exercise9_18() { return 0; }
-int exercise9_19() { return 0; }
-int exercise9_20() { return 0; }
-int exercise9_21() { return 0; }
-int exercise9_22() { return 0; }
+int exercise9_17()
+{
+    return 0;
+}
+
+int exercise9_18()
+{
+    deque<string> strDeque;
+    string temp;
+    // step 1: read strings from std input
+    while (getline(cin, temp))
+    {
+        strDeque.push_back(temp);
+    }
+    // step 2: iterator deque using iterator
+    auto st = strDeque.cbegin(), ed = strDeque.cend();
+    while (st != ed)
+    {
+        cout << *st;
+        ++st;
+    }
+
+    return 0;
+}
+
+int exercise9_19()
+{
+    list<string> strList;
+    string temp;
+    // step 1: read strings from std input
+    while (getline(cin, temp))
+    {
+        strList.push_back(temp);
+    }
+    // step 2: iterator deque using iterator
+    auto st = strList.cbegin(), ed = strList.cend();
+    while (st != ed)
+    {
+        cout << *st;
+        ++st;
+    }
+
+    return 0;
+}
+
+int exercise9_20()
+{
+    list<int> intList;
+    deque<int> oddIntDeque, evenIntDeque;
+
+    for (int i = 0; i < 50000000; ++i)
+        intList.push_back(i);
+
+    // method 1: iterate intList and classify the item
+    for (auto st = intList.cbegin(); st != intList.cend(); ++st)
+    {
+        if (*st % 2 == 0)
+            evenIntDeque.push_back(*st);
+        else
+            oddIntDeque.push_back(*st);
+    }
+
+    cout << "oddIntDeque: " << oddIntDeque.size() << ", evenIntDeque: " << evenIntDeque.size() << endl;
+    return 0;
+}
+
+int exercise9_21()
+{
+    list<int> intList{1, 2, 3, 4, 5};
+    vector<int> intVec{6, 7, 8, 9, 10};
+    int temp = 0;
+
+    // For list: do insert to intList, which is equal to push_front
+    // auto iter = intList.begin();
+    // while (cin >> temp)
+    // {
+    //     iter = intList.insert(iter, temp);
+    // }
+
+    // for (auto st = intList.cbegin(); st != intList.cend(); ++st)
+    //     cout << *st << ", ";
+
+    // For vector: do insert to intVec, which is equal to push_back
+    auto iter1 = intVec.end();
+    while (cin >> temp)
+    {
+        iter1 = intVec.insert(iter1, temp);
+        ++iter1; // or iter1 = iter1.end();
+    }
+
+    for (auto st = intVec.cbegin(); st != intVec.cend(); ++st)
+        cout << *st << ", ";
+
+    return 0;
+}
+
+int exercise9_22()
+{
+    vector<int> iv{6, 7, 5, 8, 9, 10};
+    int some_val = 5;
+    // The original code does not maintain iter and mid after insert element into vector.
+    vector<int>::iterator iter = iv.begin(), org_mid = iv.begin() + iv.size() / 2;
+    while (iter < org_mid)
+    {
+        if (*iter == some_val)
+        {
+            cout << "original mid is " << *mid << endl;
+            cout << "original iter is " << *iter << endl;
+            // insert value
+            iter = iv.insert(iter, 2 * some_val);
+            // maintain iterator
+            iter += 2;
+            org_mid = iv.begin() + iv.size() / 2 + 1;
+            
+            cout << "updated mid is " << *mid << endl;
+            cout << "updated iter is " << *iter << endl;
+        }
+        else
+        {
+            ++iter;
+        }
+    }
+
+    for (auto st = iv.cbegin(); st != iv.cend(); ++st)
+        cout << *st << ", ";
+
+    return 0;
+}
+
 int exercise9_23() { return 0; }
 int exercise9_24() { return 0; }
 int exercise9_25() { return 0; }

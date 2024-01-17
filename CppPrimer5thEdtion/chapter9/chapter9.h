@@ -129,11 +129,32 @@ int exercise9_16();
 // Answer: (1) c1 and c2 should be the same type; (2) type of c1 and c2 should define operator < .
 int exercise9_17();
 
+// Exercises Section 9.3.1
+// Exercise 9.18: Write a program to read a sequence of strings from the
+// standard input into a deque. Use iterators to write a loop to print the
+// elements in the deque.
 int exercise9_18();
+// Exercise 9.19: Rewrite the program from the previous exercise to use a list. 
+// List the changes you needed to make.
 int exercise9_19();
+// Exercise 9.20: Write a program to copy elements from a list<int> into
+// two deques. The even-valued elements should go into one deque and the
+// odd ones into the other.
 int exercise9_20();
+
+// Exercise 9.21: Explain how the loop from page 345 that used the return
+// from insert to add elements to a list would work if we inserted into a
+// vector instead.
 int exercise9_21();
+
+// Exercise 9.22: Assuming iv is a vector of ints, what is wrong with the
+// following program? How might you correct the problem(s)?
+    // vector<int>::iterator iter = iv.begin(), mid = iv.begin() + iv.size()/2;
+    // while (iter != mid)
+    //     if (*iter == some_val)
+    //         iv.insert(iter, 2 * some_val);
 int exercise9_22();
+
 int exercise9_23();
 int exercise9_24();
 int exercise9_25();
