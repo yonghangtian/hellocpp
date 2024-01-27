@@ -197,9 +197,32 @@ int exercise9_29();
 // Answer: 如果存储的是 类 元素，那么这个类必须提供默认构造函数。
 int exercise9_30();
 
+// Exercise 9.31: The program on page 354 to remove even-valued elements
+// and duplicate odd ones will not work on a list or forward_list. Why?
+// Revise the program so that it works on these types as well.
 int exercise9_31();
+
+// Exercise 9.32: In the program onpage 354 would it be legal to write the call
+// to insert as follows? If not, why not?
+// iter = vi.insert(iter, *iter++);
+// Answer: Not legal, as *iter++ means (*iter)++, which is not the purpose of the program.
 int exercise9_32(); 
+
+// Exercise 9.33: In the final example in this section what would happen if we
+// did not assign the result of insert to begin? Write a program that omits
+// this assignment to see if your expectation was correct.
+// Answer: Illegal when use begin, as begin is invalid after insert element before it 
 int exercise9_33();
+
+// Exercise 9.34: Assuming vi is a container of ints that includes even and
+// odd values, predict the behavior of the following loop. After you’ve analyzed
+// this loop, write a program to test whether your expectations were correct.
+// iter = vi.begin();
+// while (iter != vi.end())
+//     if (*iter % 2)
+//         iter = vi.insert(iter, *iter);
+//     ++iter;
+// Answer: endless loop, when vi is vector,  "++iter" should be changed to "iter += 2;"
 int exercise9_34();
 int exercise9_35();
 int exercise9_36();

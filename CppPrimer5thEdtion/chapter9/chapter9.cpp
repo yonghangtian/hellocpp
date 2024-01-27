@@ -592,10 +592,120 @@ int exercise9_30()
 {
     return 0;
 }
-int exercise9_31() { return 0; }
-int exercise9_32() { return 0; }
-int exercise9_33() { return 0; }
-int exercise9_34() { return 0; }
+
+int exercise9_31()
+{
+    // silly loop to remove even-valued elements and insert a duplicate of odd-valued elements
+    vector<int> vi = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    auto iter = vi.begin(); // call begin, not cbegin because we're changing vi
+    while (iter != vi.end())
+    {
+        if (*iter % 2)
+        {
+            iter = vi.insert(iter, *iter); // duplicate the current element
+            iter += 2;                     // advance past this element and the one inserted before it
+        }
+        else
+            iter = vi.erase(iter); // remove even elements
+                                   // don't advance the iterator; iter denotes the element after the one we erased
+    }
+
+    for (auto &b : vi)
+        cout << b << ",";
+    cout << endl;
+
+    cout << "list version" << endl;
+
+    list<int> listi = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11};
+    auto iterList = listi.begin(); // call begin, not cbegin because we're changing vi
+    while (iterList != listi.end())
+    {
+        if (*iterList % 2)
+        {
+            iterList = listi.insert(iterList, *iterList); // duplicate the current element
+            std::advance(iterList, 2);                    // advance past this element and the one inserted before it
+        }
+        else
+            iterList = listi.erase(iterList); // remove even elements
+                                              // don't advance the iterator; iter denotes the element after the one we erased
+    }
+
+    for (auto &b : listi)
+        cout << b << ",";
+    cout << endl;
+
+    cout << "forward list version" << endl;
+
+    forward_list<int> fli = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13};
+    auto iterfl = fli.begin(), prevIter = fli.before_begin(); // call begin, not cbegin because we're changing vi
+    while (iterfl != fli.end())
+    {
+        if (*iterfl % 2)
+        {
+            iterfl = fli.insert_after(iterfl, *iterfl); // duplicate the current element
+            prevIter = iterfl;                          // update prevIter, then use it when remove even elements.
+            std::advance(iterfl, 1);                    // iterfl will point to the element past the duplicated element.
+        }
+        else
+        {
+            iterfl = fli.erase_after(prevIter); // remove even elements
+        }
+    }
+
+    for (auto &b : fli)
+        cout << b << ",";
+    cout << endl;
+
+    return 0;
+}
+
+int exercise9_32()
+{
+    list<int> listi = {1, 5};
+
+    auto iter = listi.begin();
+
+    cout << "*iter : " << *iter << endl;
+    cout << "*iter++, which is (*iter)++ : " << *iter++ << endl;
+    cout << "*(iter++) : " << *(iter++) << endl;
+
+    return 0;
+}
+
+int exercise9_33()
+{
+    vector<int> v = {1, 5};
+    auto begin = v.begin();
+    while (begin != v.end())
+    {
+        // do some processing
+        // insert the new value and reassign begin, which otherwise would be invalid
+        ++begin;                     // advance begin because we want to insert after this element
+        begin = v.insert(begin, 42); // insert the new value;
+        // v.insert(begin, 42); // Tian: remove the assignment. Result: double free or corruption (out)
+        ++begin; // advance begin past the element we just added
+    }
+
+    return 0;
+}
+int exercise9_34()
+{
+    vector<int> vi = {1, 5};
+    auto iter = vi.begin();
+    while (iter != vi.end())
+    {
+        if (*iter % 2)
+            iter = vi.insert(iter, *iter);
+        // ++iter;  //Wrong example,  this command will make the program run forever.
+        iter += 2; // Correct way.
+    }
+
+    for (auto &b : vi)
+        cout << b << ",";
+    cout << endl;
+
+    return 0;
+}
 int exercise9_35() { return 0; }
 int exercise9_36() { return 0; }
 int exercise9_37() { return 0; }
