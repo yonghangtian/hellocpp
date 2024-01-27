@@ -355,15 +355,15 @@ int exercise9_22()
     {
         if (*iter == some_val)
         {
-            cout << "original mid is " << *mid << endl;
+            cout << "original mid is " << *org_mid << endl;
             cout << "original iter is " << *iter << endl;
             // insert value
             iter = iv.insert(iter, 2 * some_val);
             // maintain iterator
             iter += 2;
             org_mid = iv.begin() + iv.size() / 2 + 1;
-            
-            cout << "updated mid is " << *mid << endl;
+
+            cout << "updated mid is " << *org_mid << endl;
             cout << "updated iter is " << *iter << endl;
         }
         else
@@ -378,14 +378,220 @@ int exercise9_22()
     return 0;
 }
 
-int exercise9_23() { return 0; }
-int exercise9_24() { return 0; }
-int exercise9_25() { return 0; }
-int exercise9_26() { return 0; }
-int exercise9_27() { return 0; }
-int exercise9_28() { return 0; }
-int exercise9_29() { return 0; }
-int exercise9_30() { return 0; }
+void showFrontAndBack(vector<int> vec)
+{
+    if (!vec.empty())
+    {
+        auto val1 = *vec.begin(), val2 = vec.front();
+
+        auto last = vec.end();
+
+        auto val3 = *(--last), val4 = vec.back();
+
+        cout << "val1: " << val1 << ", val2: " << val2 << ", val3: " << val3 << ", val4: " << val4 << endl;
+    }
+}
+
+int exercise9_23()
+{
+    vector<int> c{10, 11};
+    showFrontAndBack(c);
+
+    vector<int> d{10};
+    showFrontAndBack(d);
+
+    return 0;
+}
+
+void showFirstElement(vector<int> vec)
+{
+    cout << "showFirstElement: " << endl;
+    cout << "Using at : " << vec.at(0) << endl;              // when vec is empty, ERROR:  vector::_M_range_check: __n (which is 0) >= this->size() (which is 0)
+    cout << "Using subscript operator : " << vec[0] << endl; // when vec is empty, ERROR: Segmentation fault
+    cout << "Using at : " << vec.front() << endl;            // when vec is empty, ERROR: Segmentation fault
+    cout << "Using at : " << *vec.begin() << endl;           // when vec is empty, ERROR: Segmentation fault
+}
+
+int exercise9_24()
+{
+    vector<int> arr1{10, 11};
+    showFirstElement(arr1);
+
+    // test func with empty vector
+    vector<int> arr2;
+    showFirstElement(arr2);
+    return 0;
+}
+
+int exercise9_25()
+{
+    vector<int> slist{10, 11, 12, 13, 14, 15, 16};
+    auto elem1 = slist.begin(), elem2 = slist.end();
+    --elem2;
+    elem1 = slist.erase(elem1, elem2);
+    cout << *elem1 << endl;
+    // when elem1 == elem2, then erase does nothing.
+    elem1 = slist.erase(elem1, elem2);
+    cout << *elem1 << endl;
+
+    // when elem1 and elem2 are both off-the-end iterator, then erase does nothing.
+    elem1 = slist.end(), elem2 = slist.end();
+    elem1 = slist.erase(elem1, elem2);
+    cout << *elem1 << ", " << *elem2 << endl;
+    cout << slist.at(0) << endl;
+
+    return 0;
+}
+int exercise9_26()
+{
+    int ia[] = {0, 1, 1, 2, 3, 5, 8, 13, 21, 55, 89};
+    vector<int> veca{std::begin(ia), std::end(ia)};
+    list<int> lista{std::begin(ia), std::end(ia)};
+
+    auto vecIt = veca.begin();
+    while (vecIt != veca.end())
+    {
+        if (!(*vecIt % 2))
+            vecIt = veca.erase(vecIt);
+        else
+            ++vecIt;
+    }
+
+    auto listIt = lista.begin();
+    while (listIt != lista.end())
+    {
+        if (*listIt % 2)
+            listIt = lista.erase(listIt);
+        else
+            ++listIt;
+    }
+
+    for (auto &a : veca)
+    {
+        cout << a << ",";
+    }
+    cout << endl;
+    for (auto &b : lista)
+    {
+        cout << b << ",";
+    }
+    cout << endl;
+
+    return 0;
+}
+
+int exercise9_27()
+{
+    int ia[] = {0, 1, 1, 2, 3, 5, 8, 13, 21, 55, 89};
+    forward_list<int> fla{std::begin(ia), std::end(ia)};
+
+    auto prev = fla.before_begin(), curr = fla.begin();
+    while (curr != fla.end())
+    {
+        if (!(*curr % 2))
+            curr = fla.erase_after(prev);
+        else
+        {
+            prev = curr;
+            ++curr;
+        }
+    }
+
+    for (auto &b : fla)
+    {
+        cout << b << ",";
+    }
+    cout << endl;
+
+    return 0;
+}
+
+bool insertStr2AfterStr1(forward_list<string> &a, const string &str1, const string &str2)
+{
+    auto curr = a.begin(), prev = a.before_begin();
+
+    while (curr != a.end())
+    {
+        if (*curr == str1)
+        {
+            curr = a.insert_after(curr, str2);
+            cout << "Curr : " << *curr << endl;
+            return true;
+        }
+        else
+        {
+            prev = curr;
+            ++curr;
+        }
+    }
+
+    curr = a.insert_after(prev, str2);
+    cout << "Curr : " << *curr << endl;
+    return false;
+}
+
+int exercise9_28()
+{
+    forward_list<string> fla{"abc", "bcd", "edf"};
+
+    cout << insertStr2AfterStr1(fla, "bcd", "hahahaha");
+
+    for (auto &b : fla)
+    {
+        cout << b << ",";
+    }
+    cout << endl;
+
+    cout << insertStr2AfterStr1(fla, "bc", "hahahaha");
+
+    for (auto &b : fla)
+    {
+        cout << b << ",";
+    }
+    cout << endl;
+
+    return 0;
+}
+int exercise9_29()
+{
+    int SIZE = 25;
+    vector<int> vecA;
+
+    for (int i = 0; i != SIZE; ++i)
+    {
+        vecA.push_back(i);
+    }
+
+    for (auto &b : vecA)
+    {
+        cout << b << ",";
+    }
+    cout << endl;
+
+    vector<int> vecB(vecA);
+
+    vecA.resize(30);
+
+    for (auto &b : vecA)
+    {
+        cout << b << ",";
+    }
+    cout << endl;
+
+    vecB.resize(10);
+    for (auto &b : vecB)
+    {
+        cout << b << ",";
+    }
+    cout << endl;
+
+    return 0;
+}
+
+int exercise9_30()
+{
+    return 0;
+}
 int exercise9_31() { return 0; }
 int exercise9_32() { return 0; }
 int exercise9_33() { return 0; }

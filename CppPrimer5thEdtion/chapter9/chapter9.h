@@ -7,6 +7,7 @@
 #include <deque>
 #include <list>
 #include <cctype>
+#include <forward_list>
 using std::cin;
 using std::cout;
 using std::cerr;
@@ -18,6 +19,7 @@ using std::string;
 using std::vector;
 using std::deque;
 using std::list;
+using std::forward_list;
 // #define NDEBUG
 
 typedef string::size_type pos;
@@ -155,16 +157,48 @@ int exercise9_21();
     //         iv.insert(iter, 2 * some_val);
 int exercise9_22();
 
+// Exercise 9.23: In the first program in this section on page 346, what would
+// the values of val, val2, val3, and val4 be if c.size() is 1?
 int exercise9_23();
+
+// Exercise 9.24: Write a program that fetches the first element in a vector
+// using at, the subscript operator, front, and begin. Test your program on
+// an empty vector.
 int exercise9_24();
+
+// Exercise 9.25: In the program on page 349 that erased a range of
+// elements, what happens if elem1 and elem2 are equal? What if elem2 or
+// both elem1 and elem2 are the off-the-end iterator?
 int exercise9_25();
+
+// Exercise 9.26: Using the following definition of ia, copy ia into a vector
+// and into a list. Use the single-iterator form of erase to remove the
+// elements with odd values from your list and the even values from your
+// vector.
+// int ia[] = { 0, 1, 1, 2, 3, 5, 8, 13, 21, 55, 89 };
 int exercise9_26();
+
+// Exercise 9.27: Write a program to find and remove the odd-valued
+// elements in a forward_list<int>.
 int exercise9_27();
+
+// Exercise 9.28: Write a function that takes a forward_list<string> and
+// two additional string arguments. The function should find the first string
+// and insert the second immediately following the first. If the first string is
+// not found, then insert the second string at the end of the list.
 int exercise9_28();
+
+// Exercise 9.29: Given that vec holds 25 elements, what does
+// vec.resize(100) do? What if we next wrote vec.resize(10)?
 int exercise9_29();
+
+// Exercise 9.30: What, if any, restrictions does using the version of resize
+// that takes a single argument place on the element type?
+// Answer: 如果存储的是 类 元素，那么这个类必须提供默认构造函数。
 int exercise9_30();
+
 int exercise9_31();
-int exercise9_32();
+int exercise9_32(); 
 int exercise9_33();
 int exercise9_34();
 int exercise9_35();
