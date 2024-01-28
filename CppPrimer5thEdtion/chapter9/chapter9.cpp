@@ -706,21 +706,494 @@ int exercise9_34()
 
     return 0;
 }
-int exercise9_35() { return 0; }
+
+int exercise9_35()
+{
+    vector<int> vi{1, 5};
+
+    cout << "size: " << vi.size() << endl;
+    cout << "capacity: " << vi.capacity() << endl;
+
+    for (int i = 0; i < 25; ++i)
+    {
+        vi.push_back(i);
+    }
+
+    cout << "After push back:" << endl;
+
+    cout << "size: " << vi.size() << endl;
+    cout << "capacity: " << vi.capacity() << endl;
+
+    return 0;
+}
 int exercise9_36() { return 0; }
 int exercise9_37() { return 0; }
-int exercise9_38() { return 0; }
-int exercise9_39() { return 0; }
-int exercise9_40() { return 0; }
-int exercise9_41() { return 0; }
-int exercise9_42() { return 0; }
-int exercise9_43() { return 0; }
-int exercise9_44() { return 0; }
-int exercise9_45() { return 0; }
-int exercise9_46() { return 0; }
-int exercise9_47() { return 0; }
-int exercise9_48() { return 0; }
-int exercise9_49() { return 0; }
-int exercise9_50() { return 0; }
-int exercise9_51() { return 0; }
-int exercise9_52() { return 0; }
+int exercise9_38()
+{
+    vector<int> vi{1, 5};
+
+    cout << "size: " << vi.size() << endl;
+    cout << "capacity: " << vi.capacity() << endl;
+
+    for (int i = 0; i < 25; ++i)
+    {
+        vi.push_back(i);
+    }
+
+    cout << "After push back:" << endl;
+
+    cout << "size: " << vi.size() << endl;
+    cout << "capacity: " << vi.capacity() << endl;
+
+    vi.reserve(50);
+    cout << "After reserve:" << endl;
+
+    cout << "size: " << vi.size() << endl;
+    cout << "capacity: " << vi.capacity() << endl;
+
+    vi.shrink_to_fit();
+    cout << "After shrink to fit:" << endl;
+
+    cout << "size: " << vi.size() << endl;
+    cout << "capacity: " << vi.capacity() << endl;
+
+    return 0;
+}
+int exercise9_39()
+{
+    // 1:
+    // size: 0
+    // capacity: 1024
+    // tian yong hang haha heihei ywhy ahyayayayayaya
+    // 2:
+    // size: 7
+    // capacity: 1024
+    // 3:
+    // size: 10
+    // capacity: 1024
+
+    vector<string> svec;
+    svec.reserve(1024);
+
+    cout << "1:" << endl;
+    cout << "size: " << svec.size() << endl;
+    cout << "capacity: " << svec.capacity() << endl;
+
+    string word;
+    while (cin >> word)
+        svec.push_back(word);
+
+    cout << "2:" << endl;
+    cout << "size: " << svec.size() << endl;
+    cout << "capacity: " << svec.capacity() << endl;
+
+    svec.resize(svec.size() + svec.size() / 2);
+
+    cout << "3:" << endl;
+    cout << "size: " << svec.size() << endl;
+    cout << "capacity: " << svec.capacity() << endl;
+
+    for (auto &a : svec)
+        cout << a << ",";
+
+    cout << endl;
+    return 0;
+}
+int exercise9_40()
+{
+
+    vector<string> svec;
+    svec.reserve(1024);
+
+    cout << "1:" << endl;
+    cout << "size: " << svec.size() << endl;
+    cout << "capacity: " << svec.capacity() << endl;
+
+    int i = 0;
+    for (i = 0; i < 512; ++i)
+        svec.push_back("test");
+
+    cout << "2:" << endl;
+    cout << "size: " << svec.size() << endl;
+    cout << "capacity: " << svec.capacity() << endl;
+
+    svec.resize(0);
+
+    for (i = 0; i < 1000; ++i)
+        svec.push_back("test");
+
+    cout << "3:" << endl;
+    cout << "size: " << svec.size() << endl;
+    cout << "capacity: " << svec.capacity() << endl;
+
+    svec.resize(0);
+
+    for (i = 0; i < 1048; ++i)
+        svec.push_back("test");
+
+    cout << "4:" << endl;
+    cout << "size: " << svec.size() << endl;
+    cout << "capacity: " << svec.capacity() << endl;
+
+    return 0;
+}
+
+int exercise9_41()
+{
+    vector<char> svec;
+
+    // captical letter
+    for (int i = 65; i < 90; ++i)
+        svec.push_back(i);
+
+    string a(svec.begin(), svec.end());
+
+    cout << a << endl;
+    return 0;
+}
+
+int exercise9_42()
+{
+    const int initialCapacity = 100; // The minimum number of characters you expect to read
+    std::string input;
+
+    // Reserve space for at least 100 characters to avoid reallocations
+    input.reserve(initialCapacity);
+
+    char ch;
+    int charactersRead = 0;
+
+    while (std::cin.get(ch))
+    {
+        input.push_back(ch);
+        ++charactersRead;
+
+        // Check if you have read at least 100 characters
+        if (charactersRead >= initialCapacity)
+        {
+            break;
+        }
+    }
+    std::cout << "Size: " << input.size() << ", Capacity: " << input.capacity() << std::endl;
+    std::cout << "Read characters: " << input << std::endl;
+
+    return 0;
+}
+
+bool replaceOldByNewByIterator(string &s, const string &oldval, const string &newval)
+{
+    if ((s.size() < oldval.size()) || (oldval.size() == 0))
+    {
+        return false;
+    }
+    else
+    {
+        bool find = false;
+        auto it1 = s.begin(), target = s.begin();
+        string temp;
+        for (; it1 <= s.end() - oldval.size(); ++it1)
+        {
+            temp.assign(it1, it1 + oldval.size());
+            if (temp == oldval)
+            {
+                find = true;
+                target = it1;
+                break;
+            }
+        }
+
+        if (find)
+        {
+            s.replace(target, target + oldval.size(), newval);
+            return true;
+        }
+    }
+
+    return false;
+}
+
+int exercise9_43()
+{
+    string s1("tho"), oldval1("o"), newval1("ough");
+
+    cout << replaceOldByNewByIterator(s1, oldval1, newval1) << endl;
+    cout << s1 << endl;
+
+    string s2("thru"), oldval2("r"), newval2("rough");
+
+    cout << replaceOldByNewByIterator(s2, oldval2, newval2) << endl;
+    cout << s2 << endl;
+
+    return 0;
+}
+
+bool replaceOldByNewByIndex(string &s, const string &oldval, const string &newval)
+{
+    if ((s.size() < oldval.size()) || (oldval.size() == 0))
+    {
+        return false;
+    }
+    else
+    {
+        bool find = false;
+        string::size_type i = 0, target = 0;
+        for (; i <= s.size() - oldval.size(); ++i)
+        {
+            if (s.substr(i, i + oldval.size()) == oldval)
+            {
+                find = true;
+                target = i;
+                break;
+            }
+        }
+
+        if (find)
+        {
+            s.erase(i, oldval.size());
+            s.insert(i, newval);
+            return true;
+        }
+    }
+
+    return false;
+}
+
+int exercise9_44()
+{
+    string s1("tho"), oldval1("o"), newval1("ough");
+
+    cout << replaceOldByNewByIndex(s1, oldval1, newval1) << endl;
+    cout << s1 << endl;
+
+    string s2("thru"), oldval2("hru"), newval2("rough");
+
+    cout << replaceOldByNewByIndex(s2, oldval2, newval2) << endl;
+    cout << s2 << endl;
+
+    return 0;
+}
+
+void addSuffixAndPrefixByIterator(string &s, const string &prefix, const string &suffix)
+{
+    s.append(suffix);
+    s.insert(s.begin(), prefix.begin(), prefix.end());
+}
+
+int exercise9_45()
+{
+    string s1("tianyonghang"), prefix1("Mr. "), suffix1(" I");
+
+    addSuffixAndPrefixByIterator(s1, prefix1, suffix1);
+    cout << s1 << endl;
+
+    string s2("lixinyi"), prefix2("Ms. "), suffix2(" First");
+
+    addSuffixAndPrefixByIterator(s2, prefix2, suffix2);
+    cout << s2 << endl;
+
+    return 0;
+}
+
+void addSuffixAndPrefixByIndex(string &s, const string &prefix, const string &suffix)
+{
+    s.insert(0, prefix);
+
+    s.insert(s.size(), suffix);
+}
+
+int exercise9_46()
+{
+
+    string s1("tianyonghang"), prefix1("Mr. "), suffix1(" I");
+
+    addSuffixAndPrefixByIndex(s1, prefix1, suffix1);
+    cout << s1 << endl;
+
+    string s2("lixinyi"), prefix2("Ms. "), suffix2(" First");
+
+    addSuffixAndPrefixByIndex(s2, prefix2, suffix2);
+    cout << s2 << endl;
+
+    return 0;
+}
+
+void findFirstOf(string &s, const string &number, const string &alpChar)
+{
+    string::size_type pos = 0;
+    cout << "Numbers: ";
+    while ((pos = s.find_first_of(number, pos)) != string::npos)
+    {
+        cout << s[pos] << ",";
+        ++pos;
+    }
+    cout << endl;
+    cout << "Alp char: ";
+    pos = 0;
+    while ((pos = s.find_first_of(alpChar, pos)) != string::npos)
+    {
+        cout << s[pos] << ",";
+        ++pos;
+    }
+    cout << endl;
+}
+
+void findFirstNotOf(string &s, const string &number, const string &alpChar)
+{
+
+    string::size_type pos = 0;
+    cout << "Not Numbers: ";
+    while ((pos = s.find_first_not_of(number, pos)) != string::npos)
+    {
+        cout << s[pos] << ",";
+        ++pos;
+    }
+    cout << endl;
+
+    cout << "Not alp char: ";
+    pos = 0;
+    while ((pos = s.find_first_not_of(alpChar, pos)) != string::npos)
+    {
+        cout << s[pos] << ",";
+        ++pos;
+    }
+    cout << endl;
+}
+
+int exercise9_47()
+{
+    string number("0123456789");
+    string alpChar("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+    string target("ab2c3d7R4E6");
+
+    findFirstOf(target, number, alpChar);
+    findFirstNotOf(target, number, alpChar);
+
+    return 0;
+}
+
+int exercise9_48()
+{
+    string number("0123456789");
+    string name("r2d2");
+    string::size_type pos = 0;
+    if ((pos = number.find(name)) != string::npos)
+        cout << pos << endl;
+    else
+        cout << "Not found" << endl;
+
+    return 0;
+}
+
+int exercise9_49()
+{
+    return 0;
+}
+
+int exercise9_50()
+{
+    // vector<string> a{"100", "200", "-300", "400", "600"};
+    vector<string> a{"0XAB"};
+    vector<string> b{"100.1", "200.2", "-300.5", "400.4", "600.6"};
+    vector<string> c{"0112"};
+
+    int suma = 0;
+    for (auto &itema : a)
+    {
+        suma += std::stoi(itema, nullptr, 16);
+    }
+    cout << suma << endl;
+
+    double sumb = 0;
+    for (auto &itemb : b)
+    {
+        sumb += std::stod(itemb);
+    }
+    cout << sumb << endl;
+
+    int sumc = 0;
+    for (auto &itemc : c)
+    {
+        sumc += std::stoi(itemc, nullptr, 8);
+    }
+    cout << sumc << endl;
+
+    return 0;
+}
+
+ClassicDate::ClassicDate(const string &input)
+{
+    // split input using separator: space, "," or "/"
+    string seps(" /,");
+
+    string::size_type a = 0, b = 0;
+
+    a = input.find_first_of(seps, a);
+    month = std::stoul(input.substr(b, a - b));
+    b = ++a;
+    a = input.find_first_of(seps, a);
+    day = std::stoul(input.substr(b, a - b));
+    year = std::stoul(input.substr(++a));
+}
+
+void ClassicDate::show()
+{
+    cout << "Year: " << year << ", Month: " << month << ", Date: " << day << endl;
+}
+
+int exercise9_51()
+{
+    // month/day/year format
+    string a("12/31/2023");
+    ClassicDate cld(a);
+    cld.show();
+
+    string b("12,30 2023");
+    ClassicDate cld2(b);
+    cld2.show();
+
+    return 0;
+}
+
+int exercise9_52()
+{
+    stack<char> check;
+
+    char temp;
+    int detected = 0;
+    while (cin >> temp)
+    {
+        if (temp == '(')
+        {
+            ++detected;
+            check.push(temp);
+        }
+        else if (temp == ')')
+        {
+            while ((check.top() != '(') && (check.size() > 1))
+            {
+                check.pop();
+            }
+            if (check.top() == '(')
+            {
+                --detected;
+            }
+            check.pop();
+        }
+        else
+        {
+            check.push(temp);
+        }
+    }
+
+    if (!detected)
+    {
+        cout << "All ( are closed." << endl;
+    }
+    else
+    {
+        cout << "Some ( are not closed!!!" << endl;
+        cout << "Curr top of stack is " << check.top()  << ", curr stack size is " << check.size()<< endl;
+    }
+
+    return 0;
+}

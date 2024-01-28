@@ -8,22 +8,23 @@
 #include <list>
 #include <cctype>
 #include <forward_list>
+#include <stack>
+using std::cerr;
 using std::cin;
 using std::cout;
-using std::cerr;
+using std::deque;
 using std::endl;
+using std::forward_list;
 using std::istream;
+using std::list;
 using std::ostream;
 using std::size_t;
 using std::string;
 using std::vector;
-using std::deque;
-using std::list;
-using std::forward_list;
+using std::stack;
 // #define NDEBUG
 
 typedef string::size_type pos;
-
 
 template <typename T>
 int rangeForVector(vector<T> a)
@@ -36,6 +37,15 @@ int rangeForVector(vector<T> a)
     return 0;
 }
 
+class ClassicDate
+{
+public:
+    explicit ClassicDate(const string &);
+    void show();
+
+private:
+    unsigned year, month, day;
+};
 
 // Exercise 9.1: Which is the most appropriate—a vector, a deque, or a
 // list—for the following program tasks? Explain the rationale for your choice.
@@ -93,7 +103,7 @@ int exercise9_8();
 
 // Exercise 9.9: What is the difference between the begin and cbegin
 // functions?
-// Answer: if the object is const object, then begin func returns const iterator; 
+// Answer: if the object is const object, then begin func returns const iterator;
 // else if the object is non-const object, then begin func returns non-const iterator;
 // No matter whether the object is const or non-const, cbegin func returns const iterator.
 int exercise9_9();
@@ -136,7 +146,7 @@ int exercise9_17();
 // standard input into a deque. Use iterators to write a loop to print the
 // elements in the deque.
 int exercise9_18();
-// Exercise 9.19: Rewrite the program from the previous exercise to use a list. 
+// Exercise 9.19: Rewrite the program from the previous exercise to use a list.
 // List the changes you needed to make.
 int exercise9_19();
 // Exercise 9.20: Write a program to copy elements from a list<int> into
@@ -151,10 +161,10 @@ int exercise9_21();
 
 // Exercise 9.22: Assuming iv is a vector of ints, what is wrong with the
 // following program? How might you correct the problem(s)?
-    // vector<int>::iterator iter = iv.begin(), mid = iv.begin() + iv.size()/2;
-    // while (iter != mid)
-    //     if (*iter == some_val)
-    //         iv.insert(iter, 2 * some_val);
+// vector<int>::iterator iter = iv.begin(), mid = iv.begin() + iv.size()/2;
+// while (iter != mid)
+//     if (*iter == some_val)
+//         iv.insert(iter, 2 * some_val);
 int exercise9_22();
 
 // Exercise 9.23: In the first program in this section on page 346, what would
@@ -206,12 +216,12 @@ int exercise9_31();
 // to insert as follows? If not, why not?
 // iter = vi.insert(iter, *iter++);
 // Answer: Not legal, as *iter++ means (*iter)++, which is not the purpose of the program.
-int exercise9_32(); 
+int exercise9_32();
 
 // Exercise 9.33: In the final example in this section what would happen if we
 // did not assign the result of insert to begin? Write a program that omits
 // this assignment to see if your expectation was correct.
-// Answer: Illegal when use begin, as begin is invalid after insert element before it 
+// Answer: Illegal when use begin, as begin is invalid after insert element before it
 int exercise9_33();
 
 // Exercise 9.34: Assuming vi is a container of ints that includes even and
@@ -224,24 +234,102 @@ int exercise9_33();
 //     ++iter;
 // Answer: endless loop, when vi is vector,  "++iter" should be changed to "iter += 2;"
 int exercise9_34();
-int exercise9_35();
-int exercise9_36();
-int exercise9_37();
-int exercise9_38();
-int exercise9_39();
-int exercise9_40();
-int exercise9_41();
-int exercise9_42();
-int exercise9_43();
-int exercise9_44();
-int exercise9_45();
-int exercise9_46();
-int exercise9_47();
-int exercise9_48();
-int exercise9_49();
-int exercise9_50();
-int exercise9_51();
-int exercise9_52();
 
+// Exercise 9.35: Explain the difference between a vector’s capacity and its size.
+int exercise9_35();
+
+// Exercise 9.36: Can a container have a capacity less than its size?
+// Answer: cannot.
+int exercise9_36();
+
+// Exercise 9.37: Why don’t list or array have a capacity member?
+// Answer: (1) list does not have contiguous block of memory to track a "capacity."
+// (2) stl array cannot add or delete item once initialized, so no capacity.
+int exercise9_37();
+
+// Exercise 9.38: Write a program to explore how vectors grow in the library you use.
+int exercise9_38();
+// Exercise 9.39: Explain what the following program fragment does:
+// vector<string> svec;
+// svec.reserve(1024);
+// string word;
+// while (cin >> word)
+//  svec.push_back(word);
+// svec.resize(svec.size()+svec.size()/2);
+int exercise9_39();
+
+// Exercise 9.40: If the program in the previous exercise reads 256 words,
+// what is its likely capacity after it is resized? What if it reads 512? 1,000?
+// 1,048?
+// Answer: when reads 256 words, 512 words or 1,000 words, the capacity should be the same;
+// when reads 1048 words, the capacity will increase.
+int exercise9_40();
+
+// Exercise 9.41: Write a program that initializes a string from a
+// vector<char>.
+int exercise9_41();
+
+// Exercise 9.42: Given that you want to read a character at a time into a
+// string, and you know that you need to read at least 100 characters, how
+// might you improve the performance of your program?
+int exercise9_42();
+
+// Exercise 9.43: Write a function that takes three strings, s, oldVal, and
+// newVal. Using iterators, and the insert and erase functions replace all
+// instances of oldVal that appear in s by newVal. Test your function by
+// using it to replace common abbreviations, such as “tho” by “though” and
+// “thru” by “through”.
+int exercise9_43();
+
+// Exercise 9.44: Rewrite the previous function using an index and replace.
+int exercise9_44();
+
+// Exercise 9.45: Write a funtion that takes a string representing a name
+// and two other strings representing a prefix, such as “Mr.” or “Ms.” and a
+// suffix, such as “Jr.” or “III”. Using iterators and the insert and append
+// functions, generate and return a new string with the suffix and prefix
+// added to the given name.
+int exercise9_45();
+
+// Exercise 9.46: Rewrite the previous exercise using a position and length to
+// manage the strings. This time use only the insert function.
+int exercise9_46();
+
+// Exercise 9.47: Write a program that finds each numeric character and then
+// each alphabetic character in the string "ab2c3d7R4E6". Write two
+// versions of the program. The first should use find_first_of, and the
+// second find_first_not_of.
+int exercise9_47();
+
+// Exercise 9.48: Given the definitions of name and numbers on page 365,
+// what does numbers.find(name) return?
+int exercise9_48();
+
+// Exercise 9.49: A letter has an ascender if, as with d or f, part of the letter
+// extends above the middle of the line. A letter has a descender if, as with p or
+// g, part of the letter extends below the line. Write a program that reads a file
+// containing words and reports the longest word that contains neither
+// ascenders nor descenders.
+// Answer: 什么奇葩定义，看不懂。老子不做了。
+int exercise9_49();
+
+// Exercise 9.50: Write a program to process a vector<string>s whose
+// elements represent integral values. Produce the sum of all the elements in
+// that vector. Change the program so that it sums of strings that represent
+// floating-point values.
+int exercise9_50();
+
+// Exercise 9.51: Write a class that has three unsigned members
+// representing year, month, and day. Write a constructor that takes a string
+// representing a date. Your constructor should handle a variety of date
+// formats, such as January 1, 1900, 1/1/1900, Jan 1, 1900, and so on.
+int exercise9_51();
+
+// Exercise 9.52: Use a stack to process parenthesized expressions. When
+// you see an open parenthesis, note that it was seen. When you see a close
+// parenthesis after an open parenthesis, pop elements down to and including
+// the open parenthesis off the stack. push a value onto the stack to
+// indicate that a parenthesized expression was replaced.
+int exercise9_52();
 
 #endif
