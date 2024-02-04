@@ -4,24 +4,21 @@
 #include <string>
 #include <iostream>
 #include <vector>
-#include <deque>
-#include <list>
 #include <cctype>
-#include <forward_list>
-#include <stack>
+#include <algorithm>
+#include <numeric>
+#include <list>
+#include <iterator>
 using std::cerr;
 using std::cin;
 using std::cout;
-using std::deque;
 using std::endl;
-using std::forward_list;
 using std::istream;
-using std::list;
 using std::ostream;
 using std::size_t;
 using std::string;
 using std::vector;
-using std::stack;
+using std::list;
 // #define NDEBUG
 
 typedef string::size_type pos;
@@ -46,14 +43,19 @@ int exercise10_1();
 // Exercise 10.2: Repeat the previous program, but read values into a list of
 // strings.
 int exercise10_2();
+
 // Exercise 10.3: Use accumulate to sum the elements in a vector<int>.
 int exercise10_3();
+
 // Exercise 10.4: Assuming v is a vector<double>, what, if anything, is
 // wrong with calling accumulate(v.cbegin(), v.cend(), 0)?
+// Answer: 0 is not type of double, but maybe the compiler will do the implicit conversion.
 int exercise10_4();
+
 // Exercise 10.5: In the call to equal on rosters, what would happen if both
 // rosters held C-style strings, rather than library strings?
 int exercise10_5();
+
 // Exercise 10.6: Using fill_n, write a program to set a sequence of int
 // values to 0.
 int exercise10_6();
@@ -68,26 +70,34 @@ int exercise10_6();
 // vec.reserve(10); // reserve is covered in § 9.4 (p. 356)
 // fill_n(vec.begin(), 10, 0);
 int exercise10_7();
+
 // Exercise 10.8: We said that algorithms do not change the size of the
 // containers over which they operate. Why doesn’t the use of back_inserter
 // invalidate this claim?
+// Answer: 当我们说算法不会改变其操作的容器的大小时，我们通常是指算法不会直接增加或减少容器中的元素数量。
+// 然而，back_inserter是一个用于向容器尾部插入元素的迭代器适配器。
+// 使用back_inserter并不直接改变容器中元素的数量，但它确实允许你在算法不直接改变容器大小的情况下（由back_inserter去改变）向容器中添加新元素。
 int exercise10_8();
 
 // Exercise 10.9: Implement your own version of elimDups. Test your
 // program by printing the vector after you read the input, after the call to
 // unique, and after the call to erase.
 int exercise10_9();
+
 // Exercise 10.10: Why do you think the algorithms don’t change the size of
 // containers?
 int exercise10_10();
+
 // Exercise 10.11: Write a program that uses stable_sort and isShorter
 // to sort a vector passed to your version of elimDups. Print the vector to
 // verify that your program is correct.
 int exercise10_11();
+
 // Exercise 10.12: Write a function named compareIsbn that compares the
 // isbn() members of two Sales_data objects. Use that function to sort a
 // vector that holds Sales_data objects.
 int exercise10_12();
+
 // Exercise 10.13: The library defines an algorithm named partition that
 // takes a predicate and partitions the container so that values for which the
 // predicate is true appear in the first part and those for which the predicate is
@@ -97,26 +107,33 @@ int exercise10_12();
 // characters or more. Use that function to partition words. Print the elements
 // that have five or more characters.
 int exercise10_13();
+
 // Exercise 10.14: Write a lambda that takes two ints and returns their sum.
 int exercise10_14();
+
 // Exercise 10.15: Write a lambda that captures an int from its enclosing
 // function and takes an int parameter. The lambda should return the sum of
 // the captured int and the int parameter.
 int exercise10_15();
+
 // Exercise 10.16: Write your own version of the biggies function using
 // lambdas.
 int exercise10_16();
+
 // Exercise 10.17: Rewrite exercise 10.12 from § 10.3.1 (p. 387) to use a
 // lambda in the call to sort instead of the compareIsbn function.
 int exercise10_17();
+
 // Exercise 10.18: Rewrite biggies to use partition instead of find_if.
 // We described the partition algorithm in exercise 10.13 in § 10.3.1 (p.
 // 387).
 int exercise10_18();
+
 // Exercise 10.19: Rewrite the previous exercise to use stable_partition,
 // which like stable_sort maintains the original element order in the
 // paritioned sequence.
 int exercise10_19();
+
 // Exercise 10.20: The library defines an algorithm named count_if. Like
 // find_if, this function takes a pair of iterators denoting an input range and
 // a predicate that it applies to each element in the given range. count_if
@@ -124,11 +141,13 @@ int exercise10_19();
 // the portion of our program that counted how many words are greater than
 // length 6.
 int exercise10_20();
+
 // Exercise 10.21: Write a lambda that captures a local int variable and
 // decrements that variable until it reaches 0. Once the variable is 0 additional
 // calls should no longer decrement the variable. The lambda should return a
 // bool that indicates whether the captured variable is 0.
 int exercise10_21();
+
 // Exercise 10.22: Rewrite the program to count words of size 6 or less using
 // functions in place of the lambdas.
 int exercise10_22();
