@@ -142,7 +142,7 @@ int exercise8_3()
 
 int exercise8_4()
 {
-    string file("/home/tianyh/projects/hellocpp/CppPrimer5thEdtion/chapter8/exercise8_4.txt");
+    string file("/home/tianyh/projects/hellocpp/CppPrimer5th/chapter8/exercise8_4.txt");
     std::ifstream input(file);
     vector<string> vecStr;
     while (!input.fail())
@@ -162,7 +162,7 @@ int exercise8_4()
 
 int exercise8_5()
 {
-    string file("/home/tianyh/projects/hellocpp/CppPrimer5thEdtion/chapter8/exercise8_4.txt");
+    string file("/home/tianyh/projects/hellocpp/CppPrimer5th/chapter8/exercise8_4.txt");
     std::ifstream input(file);
     vector<string> vecWord;
     string temp, word;
@@ -240,7 +240,7 @@ int exercise8_10() { return 0; }
 
 int exercise8_11()
 {
-    string fileName("/home/tianyh/projects/hellocpp/CppPrimer5thEdtion/chapter8/exercise8_11.txt");
+    string fileName("/home/tianyh/projects/hellocpp/CppPrimer5th/chapter8/exercise8_11.txt");
     std::ifstream inputFile(fileName);
     process(cout, getData(inputFile));
 

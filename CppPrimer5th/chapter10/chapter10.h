@@ -86,6 +86,7 @@ int exercise10_9();
 
 // Exercise 10.10: Why do you think the algorithms don’t change the size of
 // containers?
+// Answer: It's much safely to delete element using container's own operation, and container's own operation have better management to container's iterators.
 int exercise10_10();
 
 // Exercise 10.11: Write a program that uses stable_sort and isShorter

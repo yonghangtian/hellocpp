@@ -226,7 +226,7 @@ int exercise6_22()
     return 0;
 }
 
-// more print func in CppPrimer5thEdtion/examples/6/printFcns.h
+// more print func in CppPrimer5th/examples/6/printFcns.h
 void print(const int (&a)[2])
 {
     for (auto item : a)

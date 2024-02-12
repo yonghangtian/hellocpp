@@ -1,4 +1,5 @@
 #include "chapter10.h"
+#include "../chapter7/chapter7.h"
 
 int exercise10_1()
 {
@@ -165,24 +166,154 @@ int exercise10_8()
 {
     return 0;
 }
+
+void elimDups(vector<string> &words)
+{
+    // sort words alphabetically so we can find the duplicates
+    sort(words.begin(), words.end());
+    cout << "After sort: " << endl;
+    rangeForVector(words);
+    // unique words
+    // The elements beyond that enc_unique still exist, but we don’t know what values they have
+    // (MEANS: unique function may change the VALUE!!!).
+    auto end_unique = unique(words.begin(), words.end());
+    cout << "After unique: " << endl;
+    rangeForVector(words);
+    // erase non-unique elements
+    words.erase(end_unique, words.end());
+}
+
 int exercise10_9()
 {
+    vector<string> wds{"abc", "bcd", "def", "abc", "bcd", "def", "abc", "bcd", "def", "abc", "bcd", "def"};
+    cout << "Original: " << endl;
+    rangeForVector(wds);
+
+    elimDups(wds);
+
+    cout << "After elimDups: " << endl;
+    rangeForVector(wds);
     return 0;
 }
+
 int exercise10_10()
 {
     return 0;
 }
+
+bool isShorter(const string &str1, const string &str2)
+{
+    return (str1.size() < str2.size()) ? true : false;
+}
+
+void elimDups_sort_shorter(vector<string> &words)
+{
+    sort(words.begin(), words.end(), isShorter);
+    cout << "After sort shorter: " << endl;
+    rangeForVector(words);
+    // unique words
+    // The elements beyond that enc_unique still exist, but we don’t know what values they have
+    // (MEANS: unique function may change the VALUE!!!).
+    auto end_unique = unique(words.begin(), words.end());
+    cout << "After unique: " << endl;
+    rangeForVector(words);
+    // erase non-unique elements
+    words.erase(end_unique, words.end());
+}
+
+void elimDups_stable_sort_shorter(vector<string> &words)
+{
+    stable_sort(words.begin(), words.end(), isShorter);
+    cout << "After stable sort shorter: " << endl;
+    rangeForVector(words);
+    // unique words
+    // The elements beyond that enc_unique still exist, but we don’t know what values they have
+    // (MEANS: unique function may change the VALUE!!!).
+    auto end_unique = unique(words.begin(), words.end());
+    cout << "After unique: " << endl;
+    rangeForVector(words);
+    // erase non-unique elements
+    words.erase(end_unique, words.end());
+}
+
 int exercise10_11()
 {
+    vector<string> wds{"abdce", "bcd", "abd", "defhhaserahoh", "abc", "abc", "abd"};
+    vector<string> wds_copy(wds);
+    cout << "Original: " << endl;
+    rangeForVector(wds);
+
+    elimDups_sort_shorter(wds);
+
+    cout << "After sort shorter elimDups: " << endl;
+    rangeForVector(wds);
+
+    elimDups_stable_sort_shorter(wds_copy);
+
+    cout << "After stable sort shorter elimDups: " << endl;
+    rangeForVector(wds_copy);
+
     return 0;
 }
+
+bool compareIsbn(const Sales_data &a, const Sales_data &b)
+{
+    return (a.isbn() < b.isbn()) ? true : false;
+}
+
 int exercise10_12()
 {
+    Sales_data a("9", 10, 1.1);
+    Sales_data b("A", 20, 2.2);
+    Sales_data c("a", 30, 3.2);
+
+    vector<Sales_data> vecSD{a, c, b};
+
+    cout << "Before sort : " << endl;
+    for (auto temp = vecSD.begin(); temp != vecSD.end(); ++temp)
+    {
+        print(cout, *temp);
+        cout << endl;
+    }
+
+    sort(vecSD.begin(), vecSD.end(), compareIsbn);
+
+    cout << "After sort : " << endl;
+    for (auto temp = vecSD.begin(); temp != vecSD.end(); ++temp)
+    {
+        print(cout, *temp);
+        cout << endl;
+    }
+
     return 0;
 }
+
+bool atLeast5Chars(const string & a)
+{
+    return (a.size() >= 5) ? true : false;
+}
+
 int exercise10_13()
 {
+
+    vector<string> wds{"abdce", "bcd", "abd", "defhhaserahoh", "abc", "abc", "abd"};
+
+    auto itWds = partition(wds.begin(), wds.end(), atLeast5Chars);
+
+    cout << "true items:" << endl;
+    for (auto temp = wds.begin(); temp != itWds; ++temp)
+    {
+        cout << *temp << ",";
+    }
+
+    cout << endl << "false items: " << endl;
+    
+    for (auto temp = itWds; temp != wds.end(); ++temp)
+    {
+        cout << *temp << ",";
+    }
+
+
     return 0;
 }
 int exercise10_14()
