@@ -5,7 +5,7 @@
 
 int main(int argc, char **argv)
 {
-    int a = exercise10_13();
+    int a = exercise10_25();
     // int a = exercise8_7(argc, argv);
     // int a = exercise6_26(argc, argv);
 

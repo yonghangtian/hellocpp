@@ -176,11 +176,11 @@ void elimDups(vector<string> &words)
     // unique words
     // The elements beyond that enc_unique still exist, but we don’t know what values they have
     // (MEANS: unique function may change the VALUE!!!).
-    auto end_unique = unique(words.begin(), words.end());
-    cout << "After unique: " << endl;
-    rangeForVector(words);
+    // auto end_unique = unique(words.begin(), words.end());
+    // cout << "After unique: " << endl;
+    // rangeForVector(words);
     // erase non-unique elements
-    words.erase(end_unique, words.end());
+    // words.erase(end_unique, words.end());
 }
 
 int exercise10_9()
@@ -288,7 +288,7 @@ int exercise10_12()
     return 0;
 }
 
-bool atLeast5Chars(const string & a)
+bool atLeast5Chars(const string &a)
 {
     return (a.size() >= 5) ? true : false;
 }
@@ -306,62 +306,376 @@ int exercise10_13()
         cout << *temp << ",";
     }
 
-    cout << endl << "false items: " << endl;
-    
+    cout << endl
+         << "false items: " << endl;
+
     for (auto temp = itWds; temp != wds.end(); ++temp)
     {
         cout << *temp << ",";
     }
 
+    return 0;
+}
+
+int exercise10_14()
+{
+
+    auto f1 = [](int a, int b) -> int
+    { return a + b; };
+
+    cout << f1(1, 2) << endl;
 
     return 0;
 }
-int exercise10_14()
-{
-    return 0;
-}
+
 int exercise10_15()
 {
+    int sz = 100;
+
+    auto f1 = [sz](int a) -> int
+    { return a + sz; };
+
+    cout << f1(1) << endl;
+
     return 0;
 }
+
+void biggies(vector<string> &words, vector<string>::size_type wordSize)
+{
+    elimDups(words);
+
+    auto isShorterLambda = [](const string &str1, const string &str2) -> bool
+    {
+        return (str1.size() < str2.size()) ? true : false;
+    };
+
+    stable_sort(words.begin(), words.end(), isShorterLambda);
+
+    auto it = std::find_if(words.begin(), words.end(), [wordSize](string &word)
+                           { return (wordSize <= word.size()) ? true : false; });
+
+    if (it != words.end())
+    {
+        cout << "Biggies found: ";
+        while (it != words.end())
+        {
+            cout << *(it++) << " ";
+        }
+    }
+    else
+    {
+        cout << "Biggies not found. ";
+    }
+    cout << endl;
+}
+
 int exercise10_16()
 {
+
+    vector<string> wds{"bcded", "defhhaserahoh", "abc", "abdc"};
+    cout << "Original: " << endl;
+    rangeForVector(wds);
+
+    biggies(wds, wds.size());
     return 0;
 }
+
 int exercise10_17()
 {
+    Sales_data a("9", 10, 1.1);
+    Sales_data b("A", 20, 2.2);
+    Sales_data c("a", 30, 3.2);
+
+    vector<Sales_data> vecSD{b, c, a};
+
+    cout << "Before sort : " << endl;
+    for (auto temp = vecSD.begin(); temp != vecSD.end(); ++temp)
+    {
+        print(cout, *temp);
+        cout << endl;
+    }
+
+    auto compareIsbnLambda = [](const Sales_data &a, const Sales_data &b) -> bool
+    {
+        return (a.isbn() < b.isbn()) ? true : false;
+    };
+
+    sort(vecSD.begin(), vecSD.end(), compareIsbnLambda);
+
+    cout << "After sort : " << endl;
+    for (auto temp = vecSD.begin(); temp != vecSD.end(); ++temp)
+    {
+        print(cout, *temp);
+        cout << endl;
+    }
+
     return 0;
 }
+
+void biggiesPartition(vector<string> &words, vector<string>::size_type wordSize)
+{
+    elimDups(words);
+
+    auto isShorterLambda = [](const string &str1, const string &str2) -> bool
+    {
+        return (str1.size() < str2.size()) ? true : false;
+    };
+
+    stable_sort(words.begin(), words.end(), isShorterLambda);
+
+    auto it = partition(words.begin(), words.end(), [wordSize](string &word)
+                        { return (word.size() < wordSize) ? true : false; });
+
+    if (it != words.end())
+    {
+        cout << "Biggies found: ";
+        while (it != words.end())
+        {
+            cout << *(it++) << " ";
+        }
+    }
+    else
+    {
+        cout << "Biggies not found. ";
+    }
+    cout << endl;
+}
+
 int exercise10_18()
 {
+    // vector<string> wds{"bcdede", "defhhaserahoh", "abc", "abdc", "bcdade"};
+    vector<string> wds{"apple", "banana", "orange", "banana", "apple"};
+    cout << "Original: " << endl;
+    rangeForVector(wds);
+
+    biggiesPartition(wds, wds.size());
     return 0;
 }
+
+void biggiesStablePartition(vector<string> &words, vector<string>::size_type wordSize)
+{
+    elimDups(words);
+
+    auto isShorterLambda = [](const string &str1, const string &str2) -> bool
+    {
+        return (str1.size() < str2.size()) ? true : false;
+    };
+
+    stable_sort(words.begin(), words.end(), isShorterLambda);
+
+    auto it = stable_partition(words.begin(), words.end(), [wordSize](string &word)
+                               { return (word.size() < wordSize) ? true : false; });
+
+    if (it != words.end())
+    {
+        cout << "Biggies found: ";
+        while (it != words.end())
+        {
+            cout << *(it++) << " ";
+        }
+    }
+    else
+    {
+        cout << "Biggies not found. ";
+    }
+    cout << endl;
+}
+
 int exercise10_19()
 {
+    // Actually,
+    // vector<string> wds{"bcdede", "defhhaserahoh", "abc", "abdc", "bcdade"};
+    vector<string> wds{"apple", "banana", "orange", "banana", "apple"};
+    cout << "Original: " << endl;
+    rangeForVector(wds);
+
+    biggiesStablePartition(wds, wds.size());
+
     return 0;
 }
+
+int compare_sort_and_stable_sort()
+{
+    // Create a vector of pairs with first element as integer and second element as string
+    std::vector<std::pair<int, std::string>> vec = {
+        {3, "Three"},
+        {1, "One"},
+        {2, "Two"},
+        {3, "Another Three"},
+        {2, "Another Two"},
+        {1, "Another One"}};
+
+    // Copy the vector to perform two separate sorts
+    std::vector<std::pair<int, std::string>> vec_sort = vec;
+    std::vector<std::pair<int, std::string>> vec_stable_sort = vec;
+
+    // Time measurement
+    auto start_sort = std::chrono::steady_clock::now();
+    sort(vec_sort.begin(), vec_sort.end());
+    auto end_sort = std::chrono::steady_clock::now();
+
+    auto start_stable_sort = std::chrono::steady_clock::now();
+    stable_sort(vec_stable_sort.begin(), vec_stable_sort.end());
+    auto end_stable_sort = std::chrono::steady_clock::now();
+
+    // Output sorted vectors
+    cout << "sort result:" << endl;
+    for (const auto &elem : vec_sort)
+    {
+        cout << elem.first << ": " << elem.second << endl;
+    }
+    cout << endl;
+
+    cout << "stable_sort result:" << endl;
+    for (const auto &elem : vec_stable_sort)
+    {
+        cout << elem.first << ": " << elem.second << endl;
+    }
+    cout << endl;
+
+    // Output time taken
+    cout << "sort time: " << std::chrono::duration<double>(end_sort - start_sort).count() << " seconds" << endl;
+    cout << "stable_sort time: " << std::chrono::duration<double>(end_stable_sort - start_stable_sort).count() << " seconds" << endl;
+
+    return 0;
+}
+
 int exercise10_20()
 {
+    string::size_type length = 5;
+    vector<string> wds{"bcdede", "defhhaserahoh", "abc", "abdc", "bcdade"};
+    rangeForVector(wds);
+
+    auto f1 = [](const string &str, string::size_type len) -> bool
+    {
+        if (str.size() <= len)
+            return false;
+        else
+            return true;
+    };
+    // bind argument(实参) to the second parameter(形参).
+    auto f2 = std::bind(f1, _1, length);
+
+    auto result = std::count_if(wds.cbegin(), wds.cend(), f2);
+
+    cout << "Words that have length more than " << length << " are: " << result << endl;
+
     return 0;
 }
+
 int exercise10_21()
 {
+    int t = 0;
+    cin >> t;
+    cout << "Input int is: " << t << endl;
+
+    auto f1 = [&t]() -> bool
+    {
+        while (t > 0)
+        {
+            --t;
+        }
+        if (t == 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    };
+    bool result = f1();
+    cout << "current int is " << t << endl;
+    cout << "Is the result of f1 equal to zero ? " << result << endl;
+
     return 0;
 }
 int exercise10_22()
 {
+    string::size_type length = 6;
+    vector<string> wds{"bcdede", "defhhaserahoh", "abc", "abdc", "bcdade"};
+    rangeForVector(wds);
+
+    auto f1 = [](const string &str, string::size_type len) -> bool
+    {
+        if (str.size() <= len)
+            return true;
+        else
+            return false;
+    };
+    // bind argument(实参) to the second parameter(形参).
+    auto f2 = std::bind(f1, _1, length);
+
+    auto result = std::count_if(wds.cbegin(), wds.cend(), f2);
+
+    cout << "Words that have length less than or equal " << length << " are: " << result << endl;
+
     return 0;
 }
 int exercise10_23()
 {
     return 0;
 }
+
 int exercise10_24()
 {
+    auto check_size = [](const string &str, string::size_type len) -> bool
+    {
+        if (str.size() >= len)
+            return true;
+        else
+            return false;
+    };
+
+    vector<int> intV{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, -100};
+    string sample("wds");
+
+    auto f2 = bind(check_size, sample, _1);
+
+    auto itInt = find_if(intV.cbegin(), intV.cend(), f2);
+
+    cout << *itInt << endl;
+
     return 0;
 }
+
+void biggiesUsingBind(vector<string> &words, vector<string>::size_type wordSize)
+{
+    elimDups(words);
+    auto check_size = [](const string &str, string::size_type len) -> bool
+    {
+        if (str.size() < len)
+            return true;
+        else
+            return false;
+    };
+    auto f2 = bind(check_size, _1, wordSize);
+    auto it = stable_partition(words.begin(), words.end(), f2);
+
+    if (it != words.end())
+    {
+        cout << "Biggies found: ";
+        while (it != words.end())
+        {
+            cout << *(it++) << " ";
+        }
+    }
+    else
+    {
+        cout << "Biggies not found. ";
+    }
+    cout << endl;
+}
+
 int exercise10_25()
 {
+    vector<string> wds{"bcdede", "defhhaserahoh", "abc", "abdc", "bcdade"};
+    // vector<string> wds{"apple", "banana", "orange", "banana", "apple"};
+    cout << "Original: " << endl;
+    rangeForVector(wds);
+
+    biggiesUsingBind(wds, wds.size());
+
     return 0;
 }
 int exercise10_26()

@@ -9,6 +9,8 @@
 #include <numeric>
 #include <list>
 #include <iterator>
+#include <chrono>
+#include <functional>
 using std::cerr;
 using std::cin;
 using std::cout;
@@ -19,6 +21,13 @@ using std::size_t;
 using std::string;
 using std::vector;
 using std::list;
+using std::sort;
+using std::stable_sort;
+using std::partition;
+using std::stable_partition;
+using std::find;
+using std::find_if;
+using namespace std::placeholders;
 // #define NDEBUG
 
 typedef string::size_type pos;
@@ -135,6 +144,9 @@ int exercise10_18();
 // paritioned sequence.
 int exercise10_19();
 
+// actully this example cannot show the difference between sort and stable sort.
+int compare_sort_and_stable_sort();
+
 // Exercise 10.20: The library defines an algorithm named count_if. Like
 // find_if, this function takes a pair of iterators denoting an input range and
 // a predicate that it applies to each element in the given range. count_if
@@ -152,8 +164,13 @@ int exercise10_21();
 // Exercise 10.22: Rewrite the program to count words of size 6 or less using
 // functions in place of the lambdas.
 int exercise10_22();
+
 // Exercise 10.23: How many arguments does bind take?
+// Answer: bind takes two arguments, the first one is the predicate(a lambda func or some other func),
+//  the second argument is arglist.
+// auto newCallable = bind(callable, arg_list);
 int exercise10_23();
+
 // Exercise 10.24: Use bind and check_size to find the first element in a
 // vector of ints that has a value greater than the length of a specified
 // string value.
@@ -163,6 +180,7 @@ int exercise10_24();
 // of biggies that uses partition. Rewrite that function to use
 // check_size and bind.
 int exercise10_25();
+
 // Exercise 10.26: Explain the differences among the three kinds of insert
 // iterators.
 int exercise10_26();
