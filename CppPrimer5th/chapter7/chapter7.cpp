@@ -114,6 +114,11 @@ Sales_data add(const Sales_data &lhs, const Sales_data &rhs)
     return sum;
 }
 
+bool Sales_data::operator==(const Sales_data &a) const
+{
+    return (a.bookNo == bookNo) && (a.units_sold == units_sold) && (a.revenue == revenue);
+}
+
 // transactions contain ISBN, number of copies sold, and sales price
 istream &read(istream &is, Sales_data &item)
 {
@@ -128,6 +133,32 @@ ostream &print(ostream &os, const Sales_data &item)
     os << item.isbn() << " " << item.units_sold << " "
        << item.revenue << " " << item.avg_price();
     return os;
+}
+
+std::istream &
+operator>>(std::istream &in, Sales_data &s)
+{
+    double price;
+    in >> s.bookNo >> s.units_sold >> price;
+    // check that the inputs succeeded
+    if (in)
+        s.revenue = s.units_sold * price;
+    else
+        s = Sales_data(); // input failed: reset object to default state
+    return in;
+}
+
+std::ostream &
+operator<<(std::ostream &out, const Sales_data &s)
+{
+    out << s.isbn() << " " << s.units_sold << " "
+        << s.revenue << " " << s.avg_price();
+    return out;
+}
+
+bool compareIsbn(const Sales_data &a, const Sales_data &b)
+{
+    return (a.isbn() < b.isbn()) ? true : false;
 }
 
 Type initVal()
@@ -433,18 +464,20 @@ int exercise7_57()
 
     return 0;
 }
-int exercise7_58() {
-    
+int exercise7_58()
+{
+
     Example ex1;
 
     cout << ex1.rate << ", " << ex1.vecSize << endl;
-    
-    for (const auto & a : Example::vec)
+
+    for (const auto &a : Example::vec)
     {
         cout << a << ", ";
     }
-    
-     return 0; }
+
+    return 0;
+}
 
 unsigned long g_a = 0, g_b = 0;
 

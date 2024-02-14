@@ -76,10 +76,12 @@ private:
 
 class Sales_data
 {
+    friend std::istream& operator>>(std::istream&, Sales_data&);
+    friend std::ostream& operator<<(std::ostream&, const Sales_data&);
     friend Sales_data add(const Sales_data &, const Sales_data &);
     friend std::ostream &print(std::ostream &, const Sales_data &);
     friend std::istream &read(std::istream &, Sales_data &);
-
+    
 public:
     // constructors
     Sales_data() = default;
@@ -93,7 +95,7 @@ public:
     Sales_data &combine(const Sales_data &);
     // Sales_data &combine(Sales_data);
     // Sales_data &combine(const Sales_data&) const;
-
+    bool operator==(const Sales_data &b) const;
 
     double avg_price() const { return units_sold ? revenue / units_sold : 0; }
 
@@ -107,6 +109,9 @@ private:
 Sales_data add(const Sales_data &, const Sales_data &);
 std::ostream &print(std::ostream &, const Sales_data &);
 std::istream &read(std::istream &, Sales_data &);
+std::istream& operator>>(std::istream&, Sales_data&);
+std::ostream& operator<<(std::ostream&, const Sales_data&);
+bool compareIsbn(const Sales_data &a, const Sales_data &b);
 
 typedef double Type;
 Type initVal();

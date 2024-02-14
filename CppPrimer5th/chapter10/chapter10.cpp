@@ -256,11 +256,6 @@ int exercise10_11()
     return 0;
 }
 
-bool compareIsbn(const Sales_data &a, const Sales_data &b)
-{
-    return (a.isbn() < b.isbn()) ? true : false;
-}
-
 int exercise10_12()
 {
     Sales_data a("9", 10, 1.1);
@@ -590,6 +585,7 @@ int exercise10_21()
 
     return 0;
 }
+
 int exercise10_22()
 {
     string::size_type length = 6;
@@ -612,6 +608,7 @@ int exercise10_22()
 
     return 0;
 }
+
 int exercise10_23()
 {
     return 0;
@@ -678,71 +675,291 @@ int exercise10_25()
 
     return 0;
 }
+
 int exercise10_26()
 {
     return 0;
 }
+
 int exercise10_27()
 {
+    list<string> wds{"abdce", "bcd", "abd", "defhhaserahoh", "abc", "abc", "abd"};
+    rangeForContainer(wds);
+    list<string> wds_u1, wds_u2, wds_u3;
+
+    cout << "use inserter" << endl;
+    unique_copy(wds.begin(), wds.end(), std::inserter(wds_u1, wds_u1.end()));
+    rangeForContainer(wds_u1);
+
+    cout << "use back inserter" << endl;
+    unique_copy(wds.begin(), wds.end(), std::back_inserter(wds_u2));
+    rangeForContainer(wds_u2);
+
+    // cout << "use front inserter" << endl;
+    // vector and string container have NO push_front method.
+
+    cout << "use front inserter" << endl;
+    unique_copy(wds.begin(), wds.end(), std::front_inserter(wds_u3));
+    rangeForContainer(wds_u3);
+
     return 0;
 }
+
 int exercise10_28()
 {
+    vector<int> wds{1, 2, 3, 4, 5, 6, 7, 8, 9};
+    rangeForContainer(wds);
+    vector<int> wds_u1, wds_u2, wds_u3;
+
+    cout << "use inserter" << endl;
+    unique_copy(wds.begin(), wds.end(), std::inserter(wds_u1, wds_u1.end()));
+    rangeForContainer(wds_u1);
+
+    cout << "use back inserter" << endl;
+    unique_copy(wds.begin(), wds.end(), std::back_inserter(wds_u2));
+    rangeForContainer(wds_u2);
+
+    // cout << "use front inserter" << endl;
+    // vector and string container have NO push_front method.
     return 0;
 }
+
 int exercise10_29()
 {
+    std::istream_iterator<string> it_cin(cin), it_eof;
+
+    vector<string> wds(it_cin, it_eof);
+
+    rangeForContainer(wds);
+
     return 0;
 }
+
 int exercise10_30()
 {
+
+    std::istream_iterator<int> it_cin(cin), it_eof;
+    std::ostream_iterator<int> it_cout(cout, " , ");
+
+    vector<int> wds(it_cin, it_eof);
+
+    cout << "Before sort: " << endl;
+    rangeForContainer(wds);
+
+    sort(wds.begin(), wds.end());
+    cout << "After sort: " << endl;
+    // rangeForContainer(wds);
+
+    copy(wds.begin(), wds.end(), it_cout);
+
     return 0;
 }
+
 int exercise10_31()
 {
+
+    std::istream_iterator<int> it_cin(cin), it_eof;
+    std::ostream_iterator<int> it_cout(cout, " , ");
+
+    vector<int> wds(it_cin, it_eof);
+
+    cout << "Before sort: " << endl;
+    rangeForContainer(wds);
+
+    sort(wds.begin(), wds.end());
+
+    // rangeForContainer(wds);
+    cout << "After sort and unique: " << endl;
+    unique_copy(wds.begin(), wds.end(), it_cout);
+
     return 0;
 }
+
 int exercise10_32()
 {
+    // Example input:
+    // 11-11 30 10.09
+    // 11-11 1 9.99
+    // 11-22 30 9.88
+    // 2222-1 50 1.11
+
+    std::istream_iterator<Sales_data> it_cin(cin), it_eof;
+    std::ostream_iterator<Sales_data> it_cout(cout, " || ");
+
+    vector<Sales_data> sds(it_cin, it_eof);
+
+    // instead of rangeForContainer method.
+    copy(sds.begin(), sds.end(), it_cout);
+
+    sort(sds.begin(), sds.end(), compareIsbn);
+
+    // instead of rangeForContainer method.
+    copy(sds.begin(), sds.end(), it_cout);
+
+    auto it = find_if(sds.begin(), sds.end(), [](Sales_data &a)
+                      { return (a.avg_price() > 10.00) ? true : false; });
+
+    cout << "First sales data that has avg price > 10 is :" << *it << endl;
+
+    Sales_data target("2222-1", 50, 1.11); // this constructor cout 2.
+    auto it2 = find(sds.begin(), sds.end(), target);
+
+    cout << "First sales data that equal with target is :" << *it2 << endl;
+
+    auto sum = accumulate(sds.begin(), sds.end(), 0.0, [](double a, Sales_data &b)
+                          { return a + b.avg_price(); });
+
+    cout << sum << endl;
+
     return 0;
 }
+
 int exercise10_33()
 {
+    string prefix("/home/tianyh/projects/hellocpp/CppPrimer5th/chapter10/data/");
+    string inFile("in10_33"), out1File("out1_10_33"), out2File("out2_10_33");
+
+    ifstream ins(prefix + inFile);
+    ofstream out1s(prefix + out1File), out2s(prefix + out2File);
+
+    std::istream_iterator<int> it_ins(ins), it_eof;
+    std::ostream_iterator<int> it_out1(out1s, " | "), it_out2(out2s, " || ");
+
+    vector<int> vec_int(it_ins, it_eof);
+
+    partition_copy(vec_int.begin(), vec_int.end(), it_out1, it_out2, [](int a)
+                   { return a % 2; });
+
     return 0;
 }
+
 int exercise10_34()
 {
+    vector<int> wds{1, 2, 3, 4, 5, 6, 7, 8, 9};
+
+    for (auto it = wds.crbegin(); it != wds.crend(); ++it)
+    {
+        cout << *it << ", ";
+    }
+
     return 0;
 }
+
 int exercise10_35()
 {
+    vector<int> wds{1, 2, 3, 4, 5, 6, 7, 8, 9};
+
+    for (auto it = wds.end(); it > wds.begin();)
+    {
+        cout << *(--it) << ", ";
+    }
+
     return 0;
 }
 int exercise10_36()
 {
+    vector<int> wds{1, 2, 0, 4, 5, 6, 0, 8, 9};
+    std::ostream_iterator<int> it_cout(cout, " || ");
+    auto it1 = find(wds.rbegin(), wds.rend(), 0);
+
+    cout << "From tail to it1: " << endl;
+    std::copy(wds.rbegin(), it1, it_cout);
+
+    cout << "From begin to it1: " << endl;
+    std::copy(wds.begin(), it1.base(), it_cout);
+
     return 0;
 }
+
 int exercise10_37()
 {
+    vector<int> wds{1, 2, 0, 4, 5, 6, 0, 8, 9, 10};
+
+    std::ostream_iterator<int> it_cout(cout, " || ");
+
+    list<int> t_list(wds.rbegin() + 2, wds.rbegin() + 7);
+
+    copy(t_list.cbegin(), t_list.cend(), it_cout);
+
     return 0;
 }
+
 int exercise10_38()
 {
     return 0;
 }
+
 int exercise10_39()
 {
     return 0;
 }
+
 int exercise10_40()
 {
     return 0;
 }
 int exercise10_41()
 {
+    vector<int> wds{1, 2, 0, 4, 5, 6, 0, 8, 9, 10};
+    vector<int> wds1(wds), wds2(wds);
+
+    std::ostream_iterator<int> it_cout(cout, " || ");
+
+    copy(wds.cbegin(), wds.cend(), it_cout);
+    cout << endl
+         << " replace(beg, end, old_val, new_val); \t\t";
+    std::replace(wds.begin(), wds.end(), 0, 1111);
+    copy(wds.cbegin(), wds.cend(), it_cout);
+
+    cout << endl
+         << "replace_if(beg, end, pred, new_val); \t\t";
+    auto f1 = [](int val)
+    { return val == 0; };
+    std::replace_if(wds1.begin(), wds1.end(), f1, 1111);
+    copy(wds1.cbegin(), wds1.cend(), it_cout);
+
+    cout << endl
+         << "replace_copy(beg, end, dest, old_val, new_val); ";
+    vector<int> wds3(wds2.size());
+
+    std::replace_copy(wds2.begin(), wds2.end(), wds3.begin(), 0, 1111);
+    copy(wds3.cbegin(), wds3.cend(), it_cout);
+
+    cout << endl
+         << "replace_copy_if(beg, end, dest, pred, new_val); ";
+    vector<int> wds4(wds2.size());
+
+    std::replace_copy_if(wds2.begin(), wds2.end(), wds4.begin(), f1, 1111);
+    copy(wds4.cbegin(), wds4.cend(), it_cout);
+
+    cout << endl;
     return 0;
 }
+
+void elimDupsList(list<string> &words)
+{
+    std::ostream_iterator<string> it_cout(cout, " || ");
+
+    cout << "Before sort: " << endl;
+    copy(words.cbegin(), words.cend(), it_cout);
+
+    // sort words alphabetically so we can find the duplicates
+    words.sort();
+    cout << endl << "After sort: " << endl;
+    copy(words.cbegin(), words.cend(), it_cout);
+
+    // unique words and erase non-unique elements
+    words.unique();
+    cout << endl << "After unique: " << endl;
+    copy(words.cbegin(), words.cend(), it_cout);
+    cout << endl;
+}
+
 int exercise10_42()
 {
+    list<string> wds{"abdce", "bcd", "abd", "defhhaserahoh", "abc", "abc", "abd"};
+
+    elimDupsList(wds);
+
     return 0;
 }

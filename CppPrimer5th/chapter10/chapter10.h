@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <string>
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <cctype>
 #include <algorithm>
@@ -17,6 +18,8 @@ using std::cout;
 using std::endl;
 using std::istream;
 using std::ostream;
+using std::ifstream;
+using std::ofstream;
 using std::size_t;
 using std::string;
 using std::vector;
@@ -27,6 +30,8 @@ using std::partition;
 using std::stable_partition;
 using std::find;
 using std::find_if;
+using std::unique;
+using std::unique_copy;
 using namespace std::placeholders;
 // #define NDEBUG
 
@@ -43,6 +48,16 @@ int rangeForVector(vector<T> a)
     return 0;
 }
 
+template <typename T>
+int rangeForContainer(T& a)
+{
+    for (auto b : a)
+    {
+        cout << b << ",";
+    }
+    cout << endl;
+    return 0;
+}
 
 // Exercise 10.1: The algorithm header defines a function named count
 // that, like find, takes a pair of iterators and a value. count returns a count
@@ -183,7 +198,12 @@ int exercise10_25();
 
 // Exercise 10.26: Explain the differences among the three kinds of insert
 // iterators.
+// Answer: en we call front_inserter(c), we get an insert iterator that successively calls
+// push_front. As each element is inserted, it becomes the new first element in c.
+// Therefore, front_inserter yields an iterator that reverses the order of the
+// sequence that it inserts; inserter and back_inserter don’t.
 int exercise10_26();
+
 // Exercise 10.27: In addition to unique (§ 10.2.3, p. 384), the library
 // defines function named unique_copy that takes a third iterator denoting a
 // destination into which to copy the unique elements. Write a program that
@@ -205,12 +225,13 @@ int exercise10_29();
 // Exercise 10.30: Use stream iterators, sort, and copy to read a sequence
 // of integers from the standard input, sort them, and then write them back to
 // the standard output.
-
 int exercise10_30();
+
 // Exercise 10.31: Update the program from the previous exercise so that it
 // prints only the unique elements. Your program should use unqiue_copy (§
 // 10.4.1, p. 403).
 int exercise10_31();
+
 // Exercise 10.32: Rewrite the bookstore problem from § 1.6 (p. 24) using a
 // vector to hold the transactions and various algorithms to do the processing.
 // Use sort with your compareIsbn function from § 10.3.1 (p. 387) to
@@ -231,19 +252,39 @@ int exercise10_34();
 
 // Exercise 10.35: Now print the elements in reverse order using ordinary iterators.
 int exercise10_35();
+
 // Exercise 10.36: Use find to find the last element in a list of ints with value 0.
 int exercise10_36();
+
 // Exercise 10.37: Given a vector that has ten elements, copy the elements
 // from positions 3 through 7 in reverse order to a list.
 int exercise10_37();
 
 // Exercise 10.38: List the five iterator categories and the operations that each supports.
+// Answer: 
+// Catagory                 |   Functions required
+// Input iterator           |   Read, but not write; single-pass, increment only
+// Output iterator          |   Write, but not read; single-pass, increment only
+// Forward iterator         |   Read and write; multi-pass, increment_only
+// Bidirectional iterator   |   Read and write; multi-pass, increment and decrement
+// Random-access iterator   |   Read and write; multi-pass, full iterator arithmetic
 int exercise10_38();
+
 // Exercise 10.39: What kind of iterator does a list have? What about a vector?
+// Answer: list have bidirectional iterator; vector have random-access iterator when used with continuous storage.
 int exercise10_39();
-// Exercise 10.40: What kinds of iterators do you think copy requires? 
-// What about reverse or unique?
+
+// Exercise 10.40: What kinds of iterators do you think copy requires? What about reverse or unique?
+// Answer: In the context of iterators, "single-pass" means that you can only traverse the elements of the container once using that particular iterator instance. 
+// Once you reach the end of the container with a single-pass iterator, you cannot use that iterator instance to traverse the container again. 
+// If you attempt to reuse the iterator after it has reached the end, the results are undefined.
+// To traverse the container again, you typically need to obtain a new iterator instance,
+// such as by beginning the traversal from the start of the container again.
+// Single-pass iterators are typically used in scenarios where the underlying data source can only be read once or where the iterator's position becomes invalid if the underlying data changes. 
+// For example, input streams (std::istream_iterator) are single-pass because you cannot seek backward in an input stream to read the same data again.
+// In practice, most of the iterators provided by the C++ STL are not single-pass. The single-pass category is relatively rare and typically only applies to certain specialized iterator types or input streams.
 int exercise10_40();
+
 // Exercise 10.41: Based only on the algorithm and argument names, describe
 // the operation that the each of the following library algorithms performs:
 // replace(beg, end, old_val, new_val);
@@ -251,6 +292,7 @@ int exercise10_40();
 // replace_copy(beg, end, dest, old_val, new_val);
 // replace_copy_if(beg, end, dest, pred, new_val);
 int exercise10_41();
+
 // Exercise 10.42: Reimplement the program that eliminated duplicate words
 // that we wrote in § 10.2.3 (p. 383) to use a list instead of a vector.
 int exercise10_42();
