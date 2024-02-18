@@ -4,11 +4,15 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <list>
+#include <deque>
 #include <cctype>
 #include <map>
 #include <set>
 #include <unordered_map>
 #include <unordered_set>
+#include <iterator>
+#include <algorithm>
 using std::cerr;
 using std::cin;
 using std::cout;
@@ -20,6 +24,10 @@ using std::vector;
 // #define NDEBUG
 
 // Exercise 11.1: Describe the differences between a map and a vector.
+// Answer: (1) vector is kind of key-value pair with it's key are integers(value's position, starting from 0 to n); 
+// (2) map is also key-value pair while map's key is not strictly integers.  Values in a map are found by a key rather than
+// by their position. Given a map of names to phone numbers, we’d use a person’s name
+// as a subscript to fetch that person’s phone number.
 int exercise11_1();
 
 // Exercise 11.2: Give an example of when each of list, vector, deque,

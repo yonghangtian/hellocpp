@@ -7,16 +7,106 @@ int exercise11_1()
 
 int exercise11_2()
 {
+    vector<string> vecStr{"i", "am ", "a vector"};
+    std::list<string> listStr(vecStr.begin(), vecStr.end());
+    std::deque<string> dequeStr(vecStr.begin(), vecStr.end());
+    std::set<string> setStr(vecStr.begin(), vecStr.end());
+    std::map<int, string> mapStr;
+
+    std::ostream_iterator<string> it_cout(cout, " || ");
+
+    for (int temp = 0; temp != vecStr.size(); ++temp)
+    {
+        mapStr[temp] = vecStr[temp];
+    }
+
+    cout << "vector: ";
+    std::copy(vecStr.begin(), vecStr.end(), it_cout);
+    cout << endl
+         << "list: ";
+    std::copy(listStr.begin(), listStr.end(), it_cout);
+    cout << endl
+         << "deque: ";
+    std::copy(dequeStr.begin(), dequeStr.end(), it_cout);
+    cout << endl
+         << "set: ";
+    std::copy(setStr.begin(), setStr.end(), it_cout);
+    cout << endl
+         << "map: ";
+
+    for (auto &it : mapStr)
+    {
+        cout << it.first << ", " << it.second;
+    }
+    cout << endl;
     return 0;
 }
 
 int exercise11_3()
 {
+    // example.  example,  Example tian yonghang yonghang
+    std::map<string, int> wordsCnt;
+
+    string word;
+
+    while (cin >> word)
+    {
+        ++wordsCnt[word];
+    }
+
+    for (auto &it : wordsCnt)
+    {
+        cout << "Word " << it.first << " has been seen " << it.second << " times." << endl;
+    }
+
     return 0;
+}
+
+string simply_word(const string &word)
+{
+
+    string temp;
+    // 方法1： 预先分配足够的空间
+    // temp.resize(word.size());
+    // 将大写字母转换为小写
+    // std::transform(word.begin(), word.end(), temp.begin(),
+    //     [](unsigned char c) { return std::tolower(c); });
+
+    // 方法2： 使用back_inserter
+    auto it = std::back_inserter(temp);
+
+    // 将大写字母转换为小写
+    std::transform(word.begin(), word.end(), it,
+                   [](unsigned char c)
+                   { return std::tolower(c); });
+
+    // 移除除字母以外的所有字符
+    temp.erase(std::remove_if(temp.begin(), temp.end(),
+                              [](char c)
+                              { return !std::isalpha(c); }),
+               temp.end());
+
+    return temp;
 }
 
 int exercise11_4()
 {
+    // cin inputs:  example.  example,  Example tian yonghang yonghang
+    std::map<string, int> wordsCnt;
+
+    string word;
+
+    while (cin >> word)
+    {
+        string simplyWord = simply_word(word);
+        ++wordsCnt[simplyWord];
+    }
+
+    for (auto &it : wordsCnt)
+    {
+        cout << "Word " << it.first << " has been seen " << it.second << " times." << endl;
+    }
+
     return 0;
 }
 
