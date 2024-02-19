@@ -9,7 +9,7 @@ enable_testing()
 #add_executable(HelloCpp main.cpp CppPrimerPlus/chapter13.cpp)
 #add_executable(HelloCpp main.cpp CppPrimerPlus/chapter17/chapter17.cpp)
 #add_executable(HelloCpp main.cpp CppPrimer5th/chapter10/chapter10.cpp CppPrimer5th/chapter7/chapter7.cpp)
-add_executable(HelloCpp main.cpp CppPrimer5th/chapter11/chapter11.cpp)
+add_executable(HelloCpp main.cpp CppPrimer5th/chapter11/chapter11.cpp CppPrimer5th/chapter7/chapter7.cpp)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

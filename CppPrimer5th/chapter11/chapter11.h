@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <string>
 #include <iostream>
+#include <sstream>
 #include <vector>
 #include <list>
 #include <deque>
@@ -45,10 +46,12 @@ int exercise11_4();
 // Exercises Section 11.2.1
 // Exercise 11.5: Explain the difference between a map and a set. When
 // might you use one or the other?
+// Answer: ask chatgpt.
 int exercise11_5();
 
 // Exercise 11.6: Explain the difference between a set and a list. When
 // might you use one or the other?
+// Answer: ask chatgpt.
 int exercise11_6();
 
 // Exercise 11.7: Define a map for which the key is the family’s last name and
@@ -58,16 +61,24 @@ int exercise11_7();
 
 // Exercise 11.8: Write a program that stores the excluded words in a vector
 // instead of in a set. What are the advantages to using a set?
+// Answer: not easy to find whether a word is a vector or not;
+//  not easy to check whether vector contains duplicates words or not.
 int exercise11_8();
 
 // Exercises Section 11.2.2
 // Exercise 11.9: Define a map that associates words with a list of line
 // numbers on which the word might occur.
+// Answer: meanless question, same with 11.7.
 int exercise11_9();
 
 // Exercise 11.10: Could we define a map from vector<int>::iterator to
 // int? What about from list<int>::iterator to int? In each case, if
 // not, why not?
+// Answer: gengerated by chatgpt.
+// In C++, you cannot directly define a map from `vector<int>::iterator` to `int` or from `list<int>::iterator` to `int`. This is because `vector<int>::iterator` and `list<int>::iterator` are not pointers, but rather iterator objects that may be invalidated when elements are added or removed from the respective containers (`vector` or `list`). 
+// For example, if you were to create a map from `vector<int>::iterator` to `int`, and then you added or removed elements from the vector, the iterators would be invalidated, leading to undefined behavior when you try to access them. Similarly, for `list`, iterators could be invalidated due to insertions and deletions.
+// Regarding the "strict weak ordering" requirement for the keys of a map in C++, `vector<int>::iterator` does satisfy this requirement. According to the C++ standard library, the `std::map` requires its keys to meet the requirements of "LessThanComparable" and "Strict Weak Ordering", which essentially means that the keys must have a defined order and that this order is consistent and transitive.
+// Since `vector<int>::iterator` provides the necessary comparison operators (`<`, `>`, `<=`, `>=`) for iterators and ensures a well-defined order, it satisfies the requirements for being used as keys in a `std::map`. However, as mentioned earlier, it's not practical to directly use iterators as keys due to potential invalidation issues. Instead, you would typically use the values pointed to by the iterators as keys.
 int exercise11_10();
 
 // Exercise 11.11: Redefine bookstore without using decltype.
