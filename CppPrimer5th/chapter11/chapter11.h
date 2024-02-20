@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <string>
 #include <iostream>
+#include <fstream>
 #include <sstream>
 #include <vector>
 #include <list>
@@ -12,6 +13,7 @@
 #include <set>
 #include <unordered_map>
 #include <unordered_set>
+#include <utility>
 #include <iterator>
 #include <algorithm>
 using std::cerr;
@@ -164,11 +166,20 @@ int exercise11_25();
 // the subscript operator return? Give a concrete example—that is, define a map
 // and then write the types that can be used to subscript the map and the type
 // that would be returned from the subscript operator.
+// Answer: (1) map<key_type, mapped_type>::key_type can be used to subscript a map;
+// (2) the subscript operator return the value of mapped_type of a map;
 int exercise11_26();
 
 // Exercises Section 11.3.5
 // Exercise 11.27: What kinds of problems would you use count to solve?
 // When might you use find instead?
+// Answer: Which operation to use depends on what problem
+// we are trying to solve. If all we care about is whether a particular element is in the
+// container, it is probably best to use find. For the containers that can hold only
+// unique keys, it probably doesn’t matter whether we use find or count. However, for
+// the containers with multiple keys, count has to do more work: If the element is
+// present, it still has to count how many elements have the same key. If we don’t need
+// the count, it’s best to use find:
 int exercise11_27();
 
 // Exercise 11.28: Define and initialize a variable to hold the result of calling
@@ -191,6 +202,7 @@ int exercise11_31();
 
 // Exercise 11.32: Using the multimap from the previous exercise, write a
 // program to print the list of authors and their works alphabetically.
+// Answer: dont konw the meaning, multimap<string, string> is in alphabetical order.
 int exercise11_32();
 
 // Exercises Section 11.3.6
@@ -200,12 +212,17 @@ int exercise11_33();
 
 // Exercise 11.34: What would happen if we used the subscript operator
 // instead of find in the transform function?
+// Answer: the subscript operator will create 
+// a value-initialized element with given key if given key is not find in map!!!
 int exercise11_34();
 
 // Exercise 11.35: In buildMap, what effect, if any, would there be from
 // rewriting
 // trans_map[key] = value.substr(1);
 // as trans_map.insert({key, value.substr(1)})?
+// Answer: If there is no duplicate rules, two ways do the same func;
+// If there are duplicate rules, trans_map[key] = value.substr(1); will make the last rule take effect;
+// and trans_map.insert({key, value.substr(1)}) will make the first rule take effect.
 int exercise11_35();
 
 // Exercise 11.36: Our program does no checking on the validity of either
@@ -213,14 +230,18 @@ int exercise11_35();
 // all sensible. What would happen if a line in that file has a key, one space,
 // and then the end of the line? Predict the behavior and then check it against
 // your version of the program.
+// Answer: Firstly, our program checked "value.size() > 1"; secondly, my program removed all header space, then checked value.size() > 1
 int exercise11_36();
 
 // Exercises Section 11.4
 // Exercise 11.37: What are the advantages of an unordered container as
 // compared to the ordered version of that container? What are the advantages
 // of the ordered version?
+// Answer: when ordered container, it's easier to find element's range using lower_bound, upper_bound funcs;
+// when unordered container, better performance.
 int exercise11_37();
 
 // Exercise 11.38: Rewrite the word-counting (§ 11.1, p. 421) and word-transformation (§ 11.3.6, p. 440) programs to use an unordered_map.
+// Answer: I'll only rewrite word-transform.
 int exercise11_38();
 #endif
