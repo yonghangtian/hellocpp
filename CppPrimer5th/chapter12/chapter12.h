@@ -2,6 +2,7 @@
 #define CPPPRIMER5THCHAPTER12
 #include <cstdlib>
 #include <string>
+#include <vector>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -29,19 +30,26 @@ int exercise12_1();
 
 // Exercise 12.2: Write your own version of the StrBlob class including the
 // const versions of front and back.
+// Answer: I use ../examples/12/StrBlob.h instead;
 int exercise12_2();
 
 // Exercise 12.3: Does this class need const versions of push_back and
 // pop_back? If so, add them. If not, why aren’t they needed?
+// Answer: actually no need, as push_back and pop_back funcs both return void.
 int exercise12_3();
 
 // Exercise 12.4:  In our check function we didn’t check whether i was
 // greater than zero. Why is it okay to omit that check? 
+// Answer: i is of type "std::vector<std::string>::size_type ",
+//  size_type is long unsigned int in gcc version 11.3.0 (Ubuntu 11.3.0-1ubuntu1~22.04) .
 int exercise12_4();
 
 // Exercise 12.5: We did not make the constructor that takes an
 // initializer_list explicit (§ 7.5.4, p. 296). Discuss the pros and
 // cons of this design choice.
+// Answer: StrBlob class does not have funcs that beyond the capacity of string's vector.
+// pros: alow two ways converation ( "=" or "{} init")
+// Cons: there might be confusing( or unexpected ) converation. 
 int exercise12_5();
 
 // Exercises Section 12.1.2
@@ -62,6 +70,7 @@ int exercise12_7();
 //     // ...
 //     return p;
 // }
+// Answer: p is not of type bool.
 int exercise12_8();
 
 // Exercise 12.9: Explain what happens in the following code:
