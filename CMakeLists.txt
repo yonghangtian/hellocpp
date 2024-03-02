@@ -10,6 +10,7 @@ enable_testing()
 #add_executable(HelloCpp main.cpp CppPrimerPlus/chapter17/chapter17.cpp)
 #add_executable(HelloCpp main.cpp CppPrimer5th/chapter10/chapter10.cpp CppPrimer5th/chapter7/chapter7.cpp)
 add_executable(HelloCpp main.cpp CppPrimer5th/chapter12/chapter12.cpp)
+target_link_libraries(HelloCpp mysqlcppconn)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

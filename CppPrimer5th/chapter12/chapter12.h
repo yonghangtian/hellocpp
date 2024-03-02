@@ -7,12 +7,18 @@
 #include <fstream>
 #include <sstream>
 #include <cctype>
-#include <utility>
+#include <utility> 
 #include <iterator>
 #include <algorithm>
 #include <memory>
+#include <mysql_driver.h>
+#include <mysql_connection.h>
+#include <cppconn/driver.h>
+#include <cppconn/exception.h>
+#include <cppconn/resultset.h>
+#include <cppconn/statement.h>
 using std::cerr;
-using std::cin;
+using std::cin; 
 using std::cout;
 using std::endl;
 using std::istream;
@@ -121,6 +127,7 @@ int exercise12_14();
 
 // Exercise 12.15: Rewrite the first exercise to use a lambda (§ 10.3.2, p.
 // 388) in place of the end_connection function.
+// Answer: same with 12_14.
 int exercise12_15();
 
 // Exercises Section 12.1.5
