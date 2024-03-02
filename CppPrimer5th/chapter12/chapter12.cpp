@@ -133,39 +133,71 @@ int exercise12_9()
 {
 
     int *q = new int(42), *r = new int(100);
-    cout << "*r " << *r  << " *q " << *q << "\n";
+    cout << "*r " << *r << " *q " << *q << "\n";
     delete r;
     r = q;
-    cout << "*r " << *r  << " *q " << *q << "\n";
+    cout << "*r " << *r << " *q " << *q << "\n";
     auto q2 = std::make_shared<int>(42), r2 = std::make_shared<int>(100);
-    cout << "*r2 " << *r2  << " *q2 " << *q2 << "\n";
-    cout << "before r2 = q2, r2 use cout " << r2.use_count()  << "\n"; 
-    cout << "before r2 = q2, q2 use cout " << q2.use_count()  << "\n";
+    cout << "*r2 " << *r2 << " *q2 " << *q2 << "\n";
+    cout << "before r2 = q2, r2 use cout " << r2.use_count() << "\n";
+    cout << "before r2 = q2, q2 use cout " << q2.use_count() << "\n";
     r2 = q2;
-    cout << "after r2 = q2, r2 use cout " << r2.use_count()  << "\n"; 
-    cout << "after r2 = q2, q2 use cout " << q2.use_count()  << "\n";
-    cout << "*r2 " << *r2  << " *q2 " << *q2 << "\n";
+    cout << "after r2 = q2, r2 use cout " << r2.use_count() << "\n";
+    cout << "after r2 = q2, q2 use cout " << q2.use_count() << "\n";
+    cout << "*r2 " << *r2 << " *q2 " << *q2 << "\n";
 
     return 0;
 }
 
+void processSharedPointer(std::shared_ptr<int> ptr)
+{
+    cout << ptr.use_count() << "\n";
+} // ptr goes out of scope and is destroyed
+
 int exercise12_10()
 {
+    int *p(new int(41));
+    processSharedPointer(std::shared_ptr<int>(p));
+
+    // p is a dangling pointer!
+    cout << *p << endl;
+
+    // p(new int(42));
+
     return 0;
 }
 
 int exercise12_11()
 {
+    std::shared_ptr<int> p(new int(41));
+    // free(): double free detected in tcache 2
+    // We shouldn't init two unique shared ptr to the same memory.
+    processSharedPointer(std::shared_ptr<int>(p.get()));
+
     return 0;
 }
 
 int exercise12_12()
 {
+
+    auto p = new int(1);
+    auto sp = std::make_shared<int>(41);
+    processSharedPointer(sp);
+    // error: could not convert ‘p’ from ‘int*’ to ‘std::shared_ptr<int>’
+    //  processSharedPointer(new int());
+    //  error: could not convert ‘p’ from ‘int*’ to ‘std::shared_ptr<int>’
+    //  processSharedPointer(p);
+    processSharedPointer(std::shared_ptr<int>(p));
+
     return 0;
 }
 
 int exercise12_13()
 {
+    auto sp = std::make_shared<int>();
+    auto p = sp.get();
+    delete p;
+
     return 0;
 }
 

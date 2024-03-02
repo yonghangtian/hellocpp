@@ -10,6 +10,7 @@
 #include <utility>
 #include <iterator>
 #include <algorithm>
+#include <memory>
 using std::cerr;
 using std::cin;
 using std::cout;
@@ -80,6 +81,8 @@ int exercise12_8();
 // r2 = q2;
 int exercise12_9();
 
+void processSharedPointer(std::shared_ptr<int> ptr);
+
 // Exercises Section 12.1.3
 // Exercise 12.10: Explain whether the following call to the process function
 // defined on page 464 is correct. If not, how would you correct the call?
@@ -89,6 +92,7 @@ int exercise12_10();
 
 // Exercise 12.11: What would happen if we called process as follows?
 // process(shared_ptr<int>(p.get()));
+// Answer: We shouldn't init two unique shared ptr to the same memory.
 int exercise12_11();
 
 // Exercise 12.12: Using the declarations of p and sp explain each of the
@@ -96,21 +100,23 @@ int exercise12_11();
 // is illegal, explain why:
 // auto p = new int();
 // auto sp = make_shared<int>();
-// (a) process(sp);
-// (b) process(new int());
-// (c) process(p);
-// (d) process(shared_ptr<int>(p));
+// (a) process(sp);   legal
+// (b) process(new int()); illegal
+// (c) process(p); illegal
+// (d) process(shared_ptr<int>(p)); legal
 int exercise12_12();
 
 // Exercise 12.13: What happens if we execute the following code?
 // auto sp = make_shared<int>();
 // auto p = sp.get();
 // delete p;
+// Answer: double free or corruption (out) Aborted
 int exercise12_13();
 
 // Exercises Section 12.1.4
 // Exercise 12.14: Write your own version of a function that uses a
 // shared_ptr to manage a connection.
+// Answer: let's create an mysql connection program, make our knowledge useful.
 int exercise12_14();
 
 // Exercise 12.15: Rewrite the first exercise to use a lambda (§ 10.3.2, p.
