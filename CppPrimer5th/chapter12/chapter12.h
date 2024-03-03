@@ -30,7 +30,7 @@ using std::string;
 
 // below part for mysqlcppconn8.3.0, installed on project root downloaded from oracle official website.
 // Guide: https://mp.weixin.qq.com/s/5gFwZU7mHkXHsa6m8houzg
-# include "mysql/jdbc.h"
+#include "mysql/jdbc.h"
 
 
 // Exercises Section 12.1.1

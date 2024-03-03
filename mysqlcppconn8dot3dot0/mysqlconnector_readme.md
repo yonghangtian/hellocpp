@@ -14,17 +14,18 @@ step 3:
 
 step 4: modify CMakeLists.txt to use it: 
 >    include_directories("mysqlcppconn8dot3dot0/include")
+>
 >    target_link_libraries(HelloCpp "/home/tianyh/projects/hellocpp/mysqlcppconn8dot3dot0/lib64/libmysqlcppconn.so")
 
 step 5: include header file, for example: in chapter12.h:
->    # include "mysql/jdbc.h"
+>    #include "mysql/jdbc.h"
 
 
 # Part 2: For mysql connector/c++ 1.1.12 
 mysql connector/c++ 1.1.12 is installed directly from apt-get in ubuntu22.04 lts,
 it's help doc is https://dev.mysql.com/doc/connector-cpp/1.1/en/connector-cpp-getting-started-examples.html
 >    ~$ sudo apt install libmysqlcppconn-dev
-
+>
 >    ~$ sudo apt list --installed | grep mysql
 >>      libmysqlclient21/jammy-updates,jammy-security,now 8.0.36-0ubuntu0.22.04.1 amd64 [installed,automatic]
 >>      libmysqlcppconn-dev/jammy,now 1.1.12-4ubuntu2 amd64 [installed]
@@ -42,13 +43,16 @@ step 1: make sure you apt works:
 >    $ sudo find /usr -type f -name "mysql_connection.h"
 >>    /usr/include/mysql_connection.h
 >    ^C
+>
 >    $ sudo find /usr -type f -name "libmysqlcppconn*"
 >>    /usr/lib/x86_64-linux-gnu/libmysqlcppconn.so.7.1.1.12
 >>    /usr/lib/x86_64-linux-gnu/libmysqlcppconn-static.a
+>
 >    $ sudo find /usr -type l -name "libmysqlcppconn*"
 >>    /usr/lib/x86_64-linux-gnu/libmysqlcppconn.so.7
 >>    /usr/lib/x86_64-linux-gnu/libmysqlcppconn.a
 >>    /usr/lib/x86_64-linux-gnu/libmysqlcppconn.so
+>
 >    $ ll /usr/lib/x86_64-linux-gnu/libmysqlcppconn.so
 >>    lrwxrwxrwx 1 root root 20 Mar 23  2020 /usr/lib/x86_64-linux-gnu/libmysqlcppconn.so -> libmysqlcppconn.so.7
 
@@ -56,9 +60,14 @@ step 2: modify CMakeLists.txt to use it:
 >    target_link_libraries(HelloCpp mysqlcppconn)
 
 step 3: include header file, for example: in chapter12.h:
->    #include <mysql_connection.h>
->    #include <cppconn/driver.h>
->    #include <cppconn/exception.h>
->    #include <cppconn/resultset.h>
->    #include <cppconn/statement.h>
->    #include <cppconn/prepared_statement.h>
+>  #include <mysql_connection.h>
+>
+>  #include <cppconn/driver.h>
+>
+>  #include <cppconn/exception.h>
+>
+>  #include <cppconn/resultset.h>
+>
+>  #include <cppconn/statement.h>
+>
+>  #include <cppconn/prepared_statement.h>
