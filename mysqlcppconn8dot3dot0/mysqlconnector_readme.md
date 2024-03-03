@@ -5,13 +5,17 @@ it's help doc is https://dev.mysql.com/doc/relnotes/connector-cpp/en/news-8-3-0.
 ## this project(exercise12_15) use it in this way:
 step 1: 
 >    tar -zxvf ${mysqlconnector}.tar.gz
+
 step 2: 
 >    cp -r ${mysqlconnector}/include ${project_root}/mysqlcppconn8dot3dot0/
+
 step 3: 
 >    cp -r ${mysqlconnector}/lib64 ${project_root}/mysqlcppconn8dot3dot0/
+
 step 4: modify CMakeLists.txt to use it: 
 >    include_directories("mysqlcppconn8dot3dot0/include")
 >    target_link_libraries(HelloCpp "/home/tianyh/projects/hellocpp/mysqlcppconn8dot3dot0/lib64/libmysqlcppconn.so")
+
 step 5: include header file, for example: in chapter12.h:
 >    # include "mysql/jdbc.h"
 
@@ -50,6 +54,7 @@ step 1: make sure you apt works:
 
 step 2: modify CMakeLists.txt to use it: 
 >    target_link_libraries(HelloCpp mysqlcppconn)
+
 step 3: include header file, for example: in chapter12.h:
 >    #include <mysql_connection.h>
 >    #include <cppconn/driver.h>
