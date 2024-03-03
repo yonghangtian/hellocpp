@@ -157,6 +157,8 @@ int exercise12_16();
 int exercise12_17();
 
 // Exercise 12.18: Why doesn’t shared_ptr have a release member?
+// Answer: there might be multiple shared_ptr point to the same memory. 
+// If shared_ptr has release member, one shared_ptr call release, then the ownership of the memory will be removed for all existing shared_ptr.
 int exercise12_18();
 
 // Exercises Section 12.1.6

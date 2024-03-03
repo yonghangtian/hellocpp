@@ -334,11 +334,43 @@ int exercise12_15()
 
 int exercise12_16()
 {
+    std::unique_ptr<int> p1(new int(1024));
+    //     [build] /home/tianyh/projects/hellocpp/CppPrimer5th/chapter12/chapter12.cpp:339:35: error: use of deleted function ‘std::unique_ptr<_Tp, _Dp>::unique_ptr(const std::unique_ptr<_Tp, _Dp>&) [with _Tp = int; _Dp = std::default_delete<int>]’
+    // [build]   339 |         std::unique_ptr<int> p2 = p1;
+    // [build]       |                                   ^~
+    // [build] In file included from /usr/include/c++/11/memory:76,
+    // [build]                  from /home/tianyh/projects/hellocpp/CppPrimer5th/chapter12/chapter12.h:13,
+    // [build]                  from /home/tianyh/projects/hellocpp/CppPrimer5th/chapter12/chapter12.cpp:1:
+    // [build] /usr/include/c++/11/bits/unique_ptr.h:468:7: note: declared here
+    // [build]   468 |       unique_ptr(const unique_ptr&) = delete;
+    // [build]       |       ^~~~~~~~~~
+
+    // std::unique_ptr<int> p2 = p1;
     return 0;
 }
 
 int exercise12_17()
 {
+    int ix = 1024, *pi = &ix, *pi2 = new int(2048);
+    // Error
+    // std::unique_ptr<int>  p0(ix);
+    // Error: munmap_chunk(): invalid pointer
+    // std::unique_ptr<int>  p1(pi);
+
+    std::unique_ptr<int> p2(pi2);
+    cout << *p2 << "\n";
+
+    // Error: munmap_chunk(): invalid pointer
+    // std::unique_ptr<int> p3(&ix);
+
+    std::unique_ptr<int> p4(new int(2048));
+    cout << *p4 << "\n";
+
+    // Error: 
+    // free(): double free detected in tcache 2. 
+    // Aborted
+    std::unique_ptr<int>  p5(p2.get());
+
     return 0;
 }
 
