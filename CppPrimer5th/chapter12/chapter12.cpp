@@ -217,13 +217,13 @@ int exercise12_14()
 {
     // mysql official working example:
     // https://dev.mysql.com/doc/connector-cpp/1.1/en/connector-cpp-examples-complete-example-2.html
-    
+
     sql::Connection *con;
     sql::Statement *stmt;
     try
     {
         // 创建MySQL连接
-        sql::Driver *driver = sql::mysql::get_driver_instance();
+        sql::Driver *driver = get_driver_instance();
         con = driver->connect("tcp://127.0.0.1:3306", "root", "950724");
 
         // 连接到hellocpp数据库
@@ -252,7 +252,6 @@ int exercise12_14()
 
         // 使用自定义函数
         std::shared_ptr<sql::Connection> sp_conn(con, endMySqlConnection);
-        
 
         // Test Point 1: 检查con和stmt的内存是否被释放了，如果不报错，说明没有被释放;如果报段错误，说明被释放了。
         con->setSchema("hellocpp");
@@ -272,17 +271,64 @@ int exercise12_14()
     // Exception has occurred.
     // Segmentation fault
     con->setSchema("hellocpp");
-    
+
     // Test point 3: 检查stmt的内存是否被释放了，如果不报错，说明没有被释放;如果报段错误，说明被释放了。
     // Exception has occurred.
     // Segmentation fault
     stmt = con->createStatement();
-    
+
     return 0;
 }
 
+// 2024-March-3 Let's try to use mysql connector/c++ 8.3.0
 int exercise12_15()
 {
+
+    sql::Connection *con;
+    sql::Statement *stmt;
+    try
+    {
+        // 创建MySQL连接
+        sql::Driver *driver = get_driver_instance();
+        con = driver->connect("tcp://127.0.0.1:3306", "root", "950724");
+
+        // 连接到hellocpp数据库
+        con->setSchema("hellocpp");
+
+        // 先执行一条插入语句，再执行一条查询语句
+        stmt = con->createStatement();
+        stmt->execute("insert into connection_record(func_name, start_time) values('exercise12_14', now());");
+        // stmt->execute("insert into connection_record(func_name, start_time) values(now(), now());");
+        // stmt->execute("delete from connection_record where id = 10;");
+        sql::ResultSet *res = stmt->executeQuery("select * from connection_record;");
+        while (res->next())
+        {
+            cout << res->getString("id") << " " << res->getString("func_name") << " " << res->getString("start_time") << endl;
+        }
+
+        // 第一种方法：直接清理清理连接资源
+        // cleanPointers(res, stmt, con);
+
+        // 第二种方法： 定义shared_pinter，使连接资源自动释放（细化为：（1）使用lambda自定义释放函数；（2）使用常规函数自定义释放程序）
+        // 使用 lambda表达式
+        std::shared_ptr<sql::ResultSet> sp_res(res, [](sql::ResultSet *resultSet)
+                                               { delete resultSet; });
+        std::shared_ptr<sql::Statement> sp_stmt(stmt, [](sql::Statement *statement)
+                                                { delete statement; });
+
+        // 使用自定义函数
+        std::shared_ptr<sql::Connection> sp_conn(con, endMySqlConnection);
+    }
+    catch (sql::SQLException &e)
+    {
+        cout << "# ERR: SQLException in " << __FILE__;
+        cout << "(" << __FUNCTION__ << ") on line "
+             << __LINE__ << endl;
+        cout << "# ERR: " << e.what();
+        cout << " (MySQL error code: " << e.getErrorCode();
+        cout << ", SQLState: " << e.getSQLState() << " )" << endl;
+    }
+
     return 0;
 }
 
