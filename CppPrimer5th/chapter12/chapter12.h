@@ -165,6 +165,7 @@ int exercise12_18();
 // Exercise 12.19: Define your own version of StrBlobPtr and update your
 // StrBlob class with the appropriate friend declaration and begin and end
 // members.
+// Answer: Just use example code, not necessary to duplicate those work.
 int exercise12_19();
 
 // Exercise 12.20: Write a program that reads an input file a line at a time
@@ -177,6 +178,8 @@ int exercise12_20();
 // std::string& deref() const
 // { return (*check(curr, "dereference past end"))[curr]; }
 // Which version do you think is better and why?
+// Answer: I like two-line version of deref(), 
+// as two-line version is easier to understand it's logic, and easier to debug when check func throw exception
 int exercise12_21();
 
 // Exercise 12.22: What changes would need to be made to StrBlobPtr to

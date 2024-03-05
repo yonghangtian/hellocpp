@@ -1,5 +1,5 @@
 #include "chapter12.h"
-#include "../examples/12/StrBlob.h"
+#include "StrBlob.h"
 
 int exercise12_1()
 {
@@ -386,6 +386,23 @@ int exercise12_19()
 
 int exercise12_20()
 {
+    string prefix("/home/tianyh/projects/hellocpp/CppPrimer5th/chapter12/data/");
+    string inFile("input_StrBlob");
+
+    std::ifstream ins(prefix + inFile);
+    std::istream_iterator<string> it_ins(ins), it_eof;
+
+    StrBlob a;
+    for (; it_ins != it_eof; ++it_ins)
+    {
+        a.push_back(*it_ins);
+    }
+
+    for (StrBlobPtr a_ptr = a.begin(); neq(a_ptr,a.end()); a_ptr.incr())
+    {
+        cout << a_ptr.deref() << "\n";
+    }
+    
     return 0;
 }
 
@@ -396,6 +413,23 @@ int exercise12_21()
 
 int exercise12_22()
 {
+    string prefix("/home/tianyh/projects/hellocpp/CppPrimer5th/chapter12/data/");
+    string inFile("input_StrBlob");
+
+    std::ifstream ins(prefix + inFile);
+    std::istream_iterator<string> it_ins(ins), it_eof;
+
+    StrBlob a;
+    for (; it_ins != it_eof; ++it_ins)
+    {
+        a.push_back(*it_ins);
+    }
+
+    for (ConstStrBlobPtr a_ptr = a.cbegin(); neq(a_ptr,a.cend()); a_ptr.incr())
+    {
+        cout << a_ptr.deref() << "\n";
+    }
+    
     return 0;
 }
 

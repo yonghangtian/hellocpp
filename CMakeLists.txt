@@ -12,7 +12,6 @@ enable_testing()
 add_executable(HelloCpp main.cpp CppPrimer5th/chapter12/chapter12.cpp)
 
 
-
 # mysqlcppconn1.1.12:  below part for mysqlcppconn1.1.12, installed on ubuntu22.04 using apt-get.
 # target_link_libraries(HelloCpp mysqlcppconn)
 
@@ -21,7 +20,6 @@ add_executable(HelloCpp main.cpp CppPrimer5th/chapter12/chapter12.cpp)
 # 对于链接器的搜索路径，你可以在CMakeLists.txt中使用link_directories命令来添加。但是，更推荐的做法是在target_link_libraries命令中直接指定库的完整路径，因为这样做更加明确且不容易受到其他项目设置的影响
 include_directories("mysqlcppconn8dot3dot0/include")
 target_link_libraries(HelloCpp "/home/tianyh/projects/hellocpp/mysqlcppconn8dot3dot0/lib64/libmysqlcppconn.so")
-
 
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
