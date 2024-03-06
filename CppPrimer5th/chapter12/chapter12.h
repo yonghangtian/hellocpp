@@ -11,6 +11,7 @@
 #include <iterator>
 #include <algorithm>
 #include <memory>
+#include <new>
 using std::cerr;
 using std::cin; 
 using std::cout;
@@ -203,10 +204,20 @@ int exercise12_24();
 // Exercise 12.25: Given the following new expression, how would you
 // delete pa?
 // int *pa = new int[10];
+// Answer: delete [] pa;
 int exercise12_25();
 
 // Exercises Section 12.2.2
 // Exercise 12.26: Rewrite the program on page 481 using an allocator.
+// Original code:
+// int n = 10;
+// string * const p = new string[n];
+// string s; 
+// string *q = p;
+// while (cin >> s && (q != p+n))
+// {*q++ = s;}
+// const size_t size = q - p;
+// delete [] p;
 int exercise12_26();
 
 // Exercises Section 12.3.1

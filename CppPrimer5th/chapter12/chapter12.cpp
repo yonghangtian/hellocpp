@@ -366,10 +366,10 @@ int exercise12_17()
     std::unique_ptr<int> p4(new int(2048));
     cout << *p4 << "\n";
 
-    // Error: 
-    // free(): double free detected in tcache 2. 
+    // Error:
+    // free(): double free detected in tcache 2.
     // Aborted
-    std::unique_ptr<int>  p5(p2.get());
+    // std::unique_ptr<int>  p5(p2.get());
 
     return 0;
 }
@@ -398,11 +398,11 @@ int exercise12_20()
         a.push_back(*it_ins);
     }
 
-    for (StrBlobPtr a_ptr = a.begin(); neq(a_ptr,a.end()); a_ptr.incr())
+    for (StrBlobPtr a_ptr = a.begin(); neq(a_ptr, a.end()); a_ptr.incr())
     {
         cout << a_ptr.deref() << "\n";
     }
-    
+
     return 0;
 }
 
@@ -425,31 +425,113 @@ int exercise12_22()
         a.push_back(*it_ins);
     }
 
-    for (ConstStrBlobPtr a_ptr = a.cbegin(); neq(a_ptr,a.cend()); a_ptr.incr())
+    for (ConstStrBlobPtr a_ptr = a.cbegin(); neq(a_ptr, a.cend()); a_ptr.incr())
     {
         cout << a_ptr.deref() << "\n";
     }
-    
+
     return 0;
+}
+
+int count_size_c_str(char *str)
+{
+    int temp = 0;
+
+    while (str[temp++] != '\0')
+    {
+    }
+
+    return --temp;
 }
 
 int exercise12_23()
 {
+    char *temp1 = "this is a temp1", *temp2 = "this is a temp2";
+    string temp3("this is a temp3"), temp4("this is a temp4");
+
+    int size_temp1 = count_size_c_str(temp1), size_temp2 = count_size_c_str(temp2), i = 0;
+
+    char *temp5 = new char[size_temp1 + size_temp2 + 1];
+
+    // dont want to include cstrint header into my program ;)
+    for (; i < size_temp1; ++i)
+    {
+        temp5[i] = temp1[i];
+    }
+    for (; i < size_temp1 + size_temp2; ++i)
+    {
+        temp5[i] = temp2[i - size_temp1];
+    }
+    temp5[i] = '\0';
+
+    cout << temp5 << "\n";
+    delete[] temp5;
+
+    string temp6 = temp3 + temp4;
+    cout << temp6 << "\n";
     return 0;
 }
 
 int exercise12_24()
 {
+    string temp1;
+    cout << "Please input one line: "
+         << "\n";
+    getline(cin, temp1);
+
+    cout << "Your input line is " << temp1 << "\n";
+
+    char *temp2 = new char[temp1.size() * 2];
+    int i = 0;
+
+    for (; i <= temp1.size(); ++i)
+    {
+        temp2[i] = temp1[i];
+        if (i == temp1.size())
+            temp2[i] = '\0';
+    }
+
+    cout << "(In dynamically allocated memory )Your input line is " << temp1 << "\n";
+
+    delete temp2;
     return 0;
 }
 
 int exercise12_25()
 {
+    int *pa = new int[10]();
+    pa[9] = 10;
+
+    for (int i = 0; i < 10; ++i)
+    {
+        cout << pa[i] << " ";
+    }
+
+    delete[] pa;
     return 0;
 }
 
 int exercise12_26()
 {
+    int n = 10;
+    std::allocator<string> alloc;
+    string *const p = alloc.allocate(n);
+    string s;
+    string *q = p;
+    while (cin >> s && (q != p + n))
+    {
+        alloc.construct(q++, s);
+    }
+
+    const size_t size = q - p;
+
+    // print and destory string in reverse order.
+    while (q != p)
+    {
+        cout << *(--q) << " ";
+        alloc.destroy(q);
+    }
+
     return 0;
 }
 
