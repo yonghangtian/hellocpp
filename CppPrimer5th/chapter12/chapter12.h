@@ -15,6 +15,7 @@
 #include <map>
 #include <set>
 #include <stdexcept>
+#include "StrBlob.h"
 using std::cerr;
 using std::cin;
 using std::cout;
@@ -247,8 +248,44 @@ public:
                 std::shared_ptr<std::vector<string>> c,
                 std::shared_ptr<std::set<int>> l) : word(w), frequency(f), contents(c), line_nums(l) {}
 
+    inline std::set<int>::iterator begin() { return line_nums->begin();}
+    inline std::set<int>::iterator end() {return line_nums->end();}
+    inline std::shared_ptr<std::vector<string>> get_file() { return contents; }
+
 private:
     std::shared_ptr<std::vector<string>> contents;
+    string word;
+    int frequency;
+    std::shared_ptr<std::set<int>> line_nums;
+};
+
+class QueryResultStrBlob;
+class TextQueryStrBlob
+{
+public:
+    TextQueryStrBlob(std::ifstream &in_file);
+    QueryResultStrBlob query(const string &word);
+
+private:
+    // contents: index is line number, string is line content.
+    StrBlob contents;
+    // words_map: string is word, and set<int> is a set of line number in which word appears at least once.
+    std::shared_ptr<std::map<string, std::set<int>>> words_map;
+    // word_count: string is word, and int is the frequency of word.
+    std::shared_ptr<std::map<string, int>> word_count;
+};
+
+class QueryResultStrBlob
+{
+    friend std::ostream &print(std::ostream &os, QueryResultStrBlob result);
+
+public:
+    QueryResultStrBlob(const string w, int f,
+                       StrBlob c,
+                       std::shared_ptr<std::set<int>> l) : word(w), frequency(f), contents(c), line_nums(l) {}
+
+private:
+    StrBlob contents;
     string word;
     int frequency;
     std::shared_ptr<std::set<int>> line_nums;
@@ -265,20 +302,26 @@ int exercise12_27();
 // with a user to query for words in that file. Use vector, map, and set
 // containers to hold the data for the file and to generate the results for the
 // queries.
+// Answer: meanless question.
 int exercise12_28();
 
 // Exercise 12.29: We could have written the loop to manage the interaction
 // with the user as a do while (§ 5.4.4, p. 189) loop. Rewrite the loop to use
 // a do while. Explain which version you prefer and why.
+// Answer: I prefer while, as I can see the condition directly and no need to add ";" in the end.
 int exercise12_29();
 
 // Exercises Section 12.3.2
 // Exercise 12.30: Define your own versions of the TextQuery and
 // QueryResult classes and execute the runQueries function from § 12.3.1 (p. 486).
+// Answer: see int exercise12_27();
 int exercise12_30();
 
 // Exercise 12.31: What difference(s) would it make if we used a vector
 // instead of a set to hold the line numbers? Which approach is better? Why?
+// Answer:If one word appears twice in a line,
+//  vector can record the exact times(take same line number twice) the word appears,
+// while, set can only record the word once, as set dont take duplicate line number.
 int exercise12_31();
 
 // Exercise 12.32: Rewrite the TextQuery and QueryResult classes to use

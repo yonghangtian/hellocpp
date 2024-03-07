@@ -1,5 +1,4 @@
 #include "chapter12.h"
-#include "StrBlob.h"
 
 int exercise12_1()
 {
@@ -618,6 +617,88 @@ std::ostream &print(std::ostream &os, QueryResult result)
     return os;
 }
 
+TextQueryStrBlob::TextQueryStrBlob(std::ifstream &in_file)
+{
+    std::map<string, int> wds_cnt;
+    std::map<string, std::set<int>> word_lines_map;
+
+    string temp;
+    int line = 0;
+
+    while (getline(in_file, temp))
+    {
+        contents.push_back(temp);
+        std::istringstream in_str(temp);
+        string word;
+        while (in_str >> word)
+        {
+            ++(wds_cnt.insert({word, 0}).first->second);
+            word_lines_map[word].insert(line);
+        }
+        ++line;
+    }
+
+    words_map = std::make_shared<std::map<string, std::set<int>>>(word_lines_map);
+    word_count = std::make_shared<std::map<string, int>>(wds_cnt);
+
+#ifndef NDEBUG
+    cout << "print TextQuery's contents: \n";
+    contents.show_data();
+    cout << "print TextQuery's word count: \n";
+    for (auto &item : *(word_count))
+    {
+        cout << item.first << ", " << item.second << "||";
+    }
+    cout << "\n"
+         << "print TextQuery's words map: \n";
+    std::ostream_iterator<int> it_cout2(cout, ",");
+    for (auto &item : *(words_map))
+    {
+        cout << " || " << item.first << " ";
+        std::copy(item.second.begin(), item.second.end(), it_cout2);
+    }
+    cout << "\n";
+#endif
+}
+
+QueryResultStrBlob TextQueryStrBlob::query(const string &word)
+{
+    auto iter = word_count->find(word);
+    if (iter == word_count->end())
+    {
+        throw std::runtime_error("Not found\n");
+    }
+    std::shared_ptr<std::set<int>> line_set = std::make_shared<std::set<int>>(words_map->find(word)->second);
+    int freq = iter->second;
+
+#ifndef NDEBUG
+    cout << "\n"
+         << "print QueryResult's word and frequency: \n";
+    cout << word << " , " << freq;
+    cout << "\n"
+         << "print QueryResult's line set: \n";
+    std::ostream_iterator<int> it_cout2(cout, ",");
+    std::copy(line_set->begin(), line_set->end(), it_cout2);
+#endif
+
+    QueryResultStrBlob result(word, freq, contents, line_set);
+    return result;
+}
+
+std::ostream &print(std::ostream &os, QueryResultStrBlob result)
+{
+
+    cout << "The word " << result.word << " has appeared " << result.frequency << " times.\n";
+    cout << "Here are detail info:\n";
+    for (auto line : *(result.line_nums))
+    {
+        StrBlobPtr a(result.contents, line);
+        cout << "( " << line << " )"
+             << "   " << a.deref() << "\n";
+    }
+    return os;
+}
+
 void runQueries(std::ifstream &infile)
 {
     // infile is an ifstream that is the file we want to query
@@ -661,8 +742,42 @@ int exercise12_28()
     return 0;
 }
 
+void runQueriesDoWhile(std::ifstream &infile)
+{
+    // infile is an ifstream that is the file we want to query
+    TextQuery tq(infile); // store the file and build the query map
+    // // iterate with the user: prompt for a word to find and print results
+
+    do
+    {
+        cout << "enter word to look for, or q to quit: ";
+
+        string s;
+        // stop if we hit end-of-file on the input or if a 'q' is entered
+        if (!(cin >> s) || s == "q")
+            break;
+        // run the query and print the results
+        try
+        {
+            print(cout, tq.query(s)) << endl;
+        }
+        catch (std::runtime_error e)
+        {
+            cout << "# ERR: Exception in " << __FILE__;
+            cout << "(" << __FUNCTION__ << ") on line "
+                 << __LINE__ << endl;
+            cout << "# ERR: " << e.what();
+            break;
+        }
+    } while (true);
+}
+
 int exercise12_29()
 {
+    std::ifstream inFile("CppPrimer5th/chapter12/data/input_text.txt");
+
+    runQueriesDoWhile(inFile);
+
     return 0;
 }
 
@@ -676,12 +791,55 @@ int exercise12_31()
     return 0;
 }
 
+void runQueriesStrBlob(std::ifstream &infile)
+{
+    // infile is an ifstream that is the file we want to query
+    TextQueryStrBlob tq(infile); // store the file and build the query map
+    // // iterate with the user: prompt for a word to find and print results
+    while (true)
+    {
+        cout << "enter word to look for, or q to quit: ";
+
+        string s;
+        // stop if we hit end-of-file on the input or if a 'q' is entered
+        if (!(cin >> s) || s == "q")
+            break;
+        // run the query and print the results
+        try
+        {
+            print(cout, tq.query(s)) << endl;
+        }
+        catch (std::runtime_error e)
+        {
+            cout << "# ERR: Exception in " << __FILE__;
+            cout << "(" << __FUNCTION__ << ") on line "
+                 << __LINE__ << endl;
+            cout << "# ERR: " << e.what();
+            break;
+        }
+    }
+}
+
 int exercise12_32()
 {
+    std::ifstream inFile("CppPrimer5th/chapter12/data/input_text.txt");
+
+    runQueriesStrBlob(inFile);
+
     return 0;
 }
 
 int exercise12_33()
 {
+    std::ifstream inFile("CppPrimer5th/chapter12/data/input_text.txt");
+
+    TextQuery tq(inFile);
+    QueryResult qr = tq.query("//");
+    cout << "\n";
+    std::ostream_iterator<int> it_cout1(cout, ",");
+    std::copy(qr.begin(), qr.end(), it_cout1);
+    cout << "\n";
+    std::ostream_iterator<string> it_cout2(cout, "\n");
+    std::copy(qr.get_file()->begin(), qr.get_file()->end(), it_cout2);
     return 0;
 }
