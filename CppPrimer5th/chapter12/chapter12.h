@@ -7,13 +7,16 @@
 #include <fstream>
 #include <sstream>
 #include <cctype>
-#include <utility> 
+#include <utility>
 #include <iterator>
 #include <algorithm>
 #include <memory>
 #include <new>
+#include <map>
+#include <set>
+#include <stdexcept>
 using std::cerr;
-using std::cin; 
+using std::cin;
 using std::cout;
 using std::endl;
 using std::istream;
@@ -32,7 +35,6 @@ using std::string;
 // below part for mysqlcppconn8.3.0, installed on project root downloaded from oracle official website.
 // Guide: https://mp.weixin.qq.com/s/5gFwZU7mHkXHsa6m8houzg
 #include "mysql/jdbc.h"
-
 
 // Exercises Section 12.1.1
 // Exercise 12.1: How many elements do b1 and b2 have at the end of this
@@ -54,7 +56,7 @@ int exercise12_2();
 int exercise12_3();
 
 // Exercise 12.4:  In our check function we didn’t check whether i was
-// greater than zero. Why is it okay to omit that check? 
+// greater than zero. Why is it okay to omit that check?
 // Answer: i is of type "std::vector<std::string>::size_type ",
 //  size_type is long unsigned int in gcc version 11.3.0 (Ubuntu 11.3.0-1ubuntu1~22.04) .
 int exercise12_4();
@@ -64,7 +66,7 @@ int exercise12_4();
 // cons of this design choice.
 // Answer: StrBlob class does not have funcs that beyond the capacity of string's vector.
 // pros: alow two ways converation ( "=" or "{} init")
-// Cons: there might be confusing( or unexpected ) converation. 
+// Cons: there might be confusing( or unexpected ) converation.
 int exercise12_5();
 
 // Exercises Section 12.1.2
@@ -158,7 +160,7 @@ int exercise12_16();
 int exercise12_17();
 
 // Exercise 12.18: Why doesn’t shared_ptr have a release member?
-// Answer: there might be multiple shared_ptr point to the same memory. 
+// Answer: there might be multiple shared_ptr point to the same memory.
 // If shared_ptr has release member, one shared_ptr call release, then the ownership of the memory will be removed for all existing shared_ptr.
 int exercise12_18();
 
@@ -179,7 +181,7 @@ int exercise12_20();
 // std::string& deref() const
 // { return (*check(curr, "dereference past end"))[curr]; }
 // Which version do you think is better and why?
-// Answer: I like two-line version of deref(), 
+// Answer: I like two-line version of deref(),
 // as two-line version is easier to understand it's logic, and easier to debug when check func throw exception
 int exercise12_21();
 
@@ -212,13 +214,45 @@ int exercise12_25();
 // Original code:
 // int n = 10;
 // string * const p = new string[n];
-// string s; 
+// string s;
 // string *q = p;
 // while (cin >> s && (q != p+n))
 // {*q++ = s;}
 // const size_t size = q - p;
 // delete [] p;
 int exercise12_26();
+
+class QueryResult;
+class TextQuery
+{
+public:
+    TextQuery(std::ifstream &in_file);
+    QueryResult query(const string &word);
+
+private:
+    // contents: index is line number, string is line content.
+    std::shared_ptr<std::vector<string>> contents;
+    // words_map: string is word, and set<int> is a set of line number in which word appears at least once.
+    std::shared_ptr<std::map<string, std::set<int>>> words_map;
+    // word_count: string is word, and int is the frequency of word.
+    std::shared_ptr<std::map<string, int>> word_count;
+};
+
+class QueryResult
+{
+    friend std::ostream &print(std::ostream &os, QueryResult result);
+
+public:
+    QueryResult(const string w, int f,
+                std::shared_ptr<std::vector<string>> c,
+                std::shared_ptr<std::set<int>> l) : word(w), frequency(f), contents(c), line_nums(l) {}
+
+private:
+    std::shared_ptr<std::vector<string>> contents;
+    string word;
+    int frequency;
+    std::shared_ptr<std::set<int>> line_nums;
+};
 
 // Exercises Section 12.3.1
 // Exercise 12.27: The TextQuery and QueryResult classes use only
@@ -257,6 +291,5 @@ int exercise12_32();
 // by a given query, and a member named get_file that returns a
 // shared_ptr to the file in the QueryResult object.
 int exercise12_33();
-
 
 #endif

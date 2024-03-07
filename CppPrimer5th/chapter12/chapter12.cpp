@@ -535,8 +535,124 @@ int exercise12_26()
     return 0;
 }
 
+TextQuery::TextQuery(std::ifstream &in_file)
+{
+    std::vector<string> lines;
+    std::map<string, int> wds_cnt;
+    std::map<string, std::set<int>> word_lines_map;
+
+    string temp;
+    int line = 0;
+
+    while (getline(in_file, temp))
+    {
+        lines.push_back(temp);
+        std::istringstream in_str(temp);
+        string word;
+        while (in_str >> word)
+        {
+            ++(wds_cnt.insert({word, 0}).first->second);
+            word_lines_map[word].insert(line);
+        }
+        ++line;
+    }
+
+    contents = std::make_shared<std::vector<string>>(lines);
+    words_map = std::make_shared<std::map<string, std::set<int>>>(word_lines_map);
+    word_count = std::make_shared<std::map<string, int>>(wds_cnt);
+
+#ifndef NDEBUG
+    cout << "print TextQuery's contents: \n";
+    std::ostream_iterator<string> it_cout1(cout, "\n");
+    std::copy(contents->begin(), contents->end(), it_cout1);
+    cout << "print TextQuery's word count: \n";
+    for (auto &item : *(word_count))
+    {
+        cout << item.first << ", " << item.second << "||";
+    }
+    cout << "\n"
+         << "print TextQuery's words map: \n";
+    std::ostream_iterator<int> it_cout2(cout, ",");
+    for (auto &item : *(words_map))
+    {
+        cout << " || " << item.first << " ";
+        std::copy(item.second.begin(), item.second.end(), it_cout2);
+    }
+    cout << "\n";
+#endif
+}
+
+QueryResult TextQuery::query(const string &word)
+{
+    auto iter = word_count->find(word);
+    if (iter == word_count->end())
+    {
+        throw std::runtime_error("Not found\n");
+    }
+    std::shared_ptr<std::set<int>> line_set = std::make_shared<std::set<int>>(words_map->find(word)->second);
+    int freq = iter->second;
+
+#ifndef NDEBUG
+    cout << "\n"
+         << "print QueryResult's word and frequency: \n";
+    cout << word << " , " << freq;
+    cout << "\n"
+         << "print QueryResult's line set: \n";
+    std::ostream_iterator<int> it_cout2(cout, ",");
+    std::copy(line_set->begin(), line_set->end(), it_cout2);
+#endif
+
+    QueryResult result(word, freq, contents, line_set);
+    return result;
+}
+
+std::ostream &print(std::ostream &os, QueryResult result)
+{
+    cout << "The word " << result.word << " has appeared " << result.frequency << " times.\n";
+    cout << "Here are detail info:\n";
+    for (auto line : *(result.line_nums))
+    {
+        cout << "( " << line << " )"
+             << "   " << result.contents->at(line) << "\n";
+    }
+    return os;
+}
+
+void runQueries(std::ifstream &infile)
+{
+    // infile is an ifstream that is the file we want to query
+    TextQuery tq(infile); // store the file and build the query map
+    // // iterate with the user: prompt for a word to find and print results
+    while (true)
+    {
+        cout << "enter word to look for, or q to quit: ";
+
+        string s;
+        // stop if we hit end-of-file on the input or if a 'q' is entered
+        if (!(cin >> s) || s == "q")
+            break;
+        // run the query and print the results
+        try
+        {
+            print(cout, tq.query(s)) << endl;
+        }
+        catch (std::runtime_error e)
+        {
+            cout << "# ERR: Exception in " << __FILE__;
+            cout << "(" << __FUNCTION__ << ") on line "
+                 << __LINE__ << endl;
+            cout << "# ERR: " << e.what();
+            break;
+        }
+    }
+}
+
 int exercise12_27()
 {
+    std::ifstream inFile("CppPrimer5th/chapter12/data/input_text.txt");
+
+    runQueries(inFile);
+
     return 0;
 }
 
