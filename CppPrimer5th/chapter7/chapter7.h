@@ -70,7 +70,8 @@ public:
 
 private:
     pos cursor = 0;
-    pos height = 0, width = 0;
+    pos height = 0;
+    pos width = 0;
     std::string contents;
 };
 
@@ -89,7 +90,7 @@ public:
     Sales_data(const std::string &s, unsigned n, double p) : bookNo(s), units_sold(n), revenue(p * n) { cout << 2 << endl; }
     Sales_data(const std::string &s) : Sales_data(s, 0, 0.0) { cout << 1 << endl; }
     Sales_data(unsigned n, std::istream &is = cin);
-
+    ~Sales_data(){ cout << "sales data destoryed. \n"; }
     // operations on Sales_data objects
     std::string isbn() const { return bookNo; }
     Sales_data &combine(const Sales_data &);
@@ -121,7 +122,7 @@ public:
     Type setVal(Type);
     Type initVal();
     Exercise(string str = "example") : valStr(str) {}
-    Exercise(istream &in = cin) { cin >> valStr; }
+    Exercise(istream &in = cin) { in >> valStr; }
 
 private:
     int val;

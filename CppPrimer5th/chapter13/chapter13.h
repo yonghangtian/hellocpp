@@ -15,6 +15,8 @@
 #include <map>
 #include <set>
 #include <stdexcept>
+#include "../chapter7/chapter7.h"
+#include "../chapter12/StrBlob.h"
 using std::cerr;
 using std::cin;
 using std::cout;
@@ -37,14 +39,85 @@ using std::string;
 // Guide: https://mp.weixin.qq.com/s/5gFwZU7mHkXHsa6m8houzg
 #include "mysql/jdbc.h"
 
+class HasPtr
+{
+public:
+    friend ostream &operator<<(ostream &os, const HasPtr &hp);
+    
+    HasPtr(const std::string &s = std::string()) : ps(new std::string(s)), i(0) { cout << "(" << __FUNCTION__ << ")" << " HasPtr()\n";  }
+    HasPtr(const HasPtr &hp) : ps(new std::string(*hp.ps)), i(hp.i) { cout << "(" << __FUNCTION__ << ")" << " HasPtr(const HasPtr &)\n";  }
+    ~HasPtr()
+    {   
+        cout << "(" << __FUNCTION__ << ")" << " ~HasPtr()\n" ;
+        cout << "String \"" << *ps << "\" is destoryed\n";
+        delete ps;
+    }
+
+    inline HasPtr &operator=(const HasPtr &hp)
+    {
+        string *temp = new string(*hp.ps);
+        delete ps;
+        ps = temp;
+        i = hp.i;
+        cout << "(" << __FUNCTION__ << ")" << " HasPtr &operator=(const HasPtr &)\n";
+        return *this;
+    }
+
+private:
+    std::string *ps;
+    int i;
+};
+
+class numbered {  
+private:  
+    static int serialNumberCounter; // Static counter for generating unique serial numbers  
+    int mysn; // Data member to store the unique serial number  
+  
+public:  
+    // Default constructor  
+    numbered() {  
+        // Increment the static counter to generate a unique serial number  
+        mysn = ++serialNumberCounter;  
+          
+        // Optional: Print the generated serial number to the console  
+        cout << "Object created with serial number: " << mysn << endl;  
+    }  
+    
+    numbered(const numbered &)
+    {
+        mysn = ++serialNumberCounter;
+        cout << "(" << __FUNCTION__ << ")" << " numbered(const numbered &)\n";
+    }
+
+    // Getter function to retrieve the serial number  
+    int getSerialNumber() const {  
+        return mysn;  
+    }  
+};  
+
 // Exercises Section 13.1.1
 // Exercise 13.1: What is a copy constructor? When is it used?
+// Answer: (1)When we use copy initialization, we are asking the compiler to copy
+// the right-hand operand into the object being created, converting that operand if
+// necessary (§ 7.5.4, p. 294).
+// (2) Copy initialization happens not only when we define variables using an =, but also when we
+// • Pass an object as an argument to a parameter of nonreference type
+// • Return an object from a function that has a nonreference return type
+// • Brace initialize the elements in an array or the members of an aggregate class
+// (§ 7.5.5, p. 298)
 int exercise13_1();
 
-// Exercise 13.2 : Explain why the following declaration is illegal : Sales_data::Sales_data(Sales_data rhs);
+// Exercise 13.2 : Explain why the following declaration is illegal :
+// Sales_data::Sales_data(Sales_data rhs);
+// Answer: The fact that the copy constructor is used to initialize nonreference parameters of
+// class type explains why the copy constructor’s own parameter must be a reference. If
+// that parameter were not a reference, then the call would never succeed—to call the
+// copy constructor, we’d need to use the copy constructor to copy the argument, but to
+// copy the argument, we’d need to call the copy constructor, and so on indefinitely.
 int exercise13_2();
 
-// Exercise 13.3 : What happens when we copy a StrBlob ? What about  StrBlobPtrs?
+// Exercise 13.3 : What happens when we copy a StrBlob ? What about StrBlobPtrs?
+// Answer: copy works, as the complier generate synthesized copy constructor.
 int exercise13_3();
 
 // Exercise 13.4: Assuming Point is a class type with a public copy constructor,
@@ -56,6 +129,7 @@ int exercise13_3();
 //  return *heap;
 // }
 int exercise13_4();
+
 // Exercise 13.5: Given the following sketch of a class, write a copy
 // constructor that copies all the members. Your constructor should dynamically
 // allocate a new string (§ 12.1.2, p.458) and copy the object to which ps
@@ -73,6 +147,12 @@ int exercise13_5();
 // Exercise 13.6: What is a copy-assignment operator? When is this operator
 // used? What does the synthesized copy-assignment operator do? When is it
 // synthesized?
+// Answer: (1) & (2) when we assign one initialized item to another initialized item, copy-assignment requries.
+// (3) it assigns each nonstatic
+// member of the right-hand object to the corresponding member of the left-hand object
+// using the copy-assignment operator for the type of that member. Array members are
+// assigned by assigning each element of the array. The synthesized copy-assignment
+// operator returns a reference to its left-hand object.
 int exercise13_6();
 
 // Exercise 13.7: What happens when we assign one StrBlob to another?
@@ -84,11 +164,20 @@ int exercise13_7();
 // assignment operator should copy the object to which ps points.
 int exercise13_8();
 
-// Exercises Section 13.1.3 
-// Exercise 13.9 : What is a destructor ? What does the synthesized destructor do ? When is a destructor synthesized ? 
+// Exercises Section 13.1.3
+// Exercise 13.9 : What is a destructor ? What does the synthesized destructor do ? When is a destructor synthesized ?
+// Answer: (1) The destructor operates inversely to the constructors: Constructors initialize the
+// nonstatic data members of an object and may do other work; destructors do
+// whatever work is needed to free the resources used by an object and destroy the
+// nonstatic data members of the object.
+// (2)  a destructor has a function body and a destruction part. In a destructor, the function body is executed
+// first and then the members are destroyed. Members are destroyed in reverse order
+// from the order in which they were initialized.
 int exercise13_9();
 
-// Exercise 13.10 : What happens when a StrBlob object is destroyed about a StrBlobPtr? 
+// Exercise 13.10 : What happens when a StrBlob object is destroyed? What about a StrBlobPtr?
+// Answer: (1) when StrBlob is destoryed, the reference counter decrease;
+// (2) when StrBlobPtr is destoryed, the weak-ptr is destoryed directly.
 int exercise13_10();
 
 // Exercise 13.11 : Add a destructor to your HasPtr class from the previous exercises.
@@ -106,8 +195,7 @@ int exercise13_12();
 // constructors is to define a simple class with these members in which each
 // member prints its name:
 // struct X { X() {std::cout << "X()" << std::endl;} X(const X&) {std::cout << "X(const X&)" <<
-// std::endl;}
-// };
+// std::endl;}};
 // Add the copy-assignment operator and destructor to X and write a program using
 // X objects in various ways: Pass them as nonreference and reference parameters;
 // dynamically allocate them; put them in containers; and so forth. Study the output
@@ -124,6 +212,7 @@ int exercise13_13();
 // numbered a, b = a, c = b;
 // f(a); f(b); f(c);
 // what output does the following code produce?
+// Answer: in the end , a == b == c, therefore, f(a); f(b); f(c) will output a.mysn three times.
 int exercise13_14();
 
 // Exercise 13.15: Assume numbered has a copy constructor that generates a
@@ -186,7 +275,7 @@ int exercise13_24();
 // like a value. Also assume that we want to continue to use a shared_ptr so
 // that our StrBlobPtr class can still use a weak_ptr to the vector. Your
 // revised class will need a copy constructor and copy-assignment operator but
-// will not need a destructor. Explain what the copy constructor and copy-assignment 
+// will not need a destructor. Explain what the copy constructor and copy-assignment
 // operators must do. Explain why the class does not need a destructor.
 int exercise13_25();
 
@@ -194,7 +283,7 @@ int exercise13_25();
 // the previous exercise.
 int exercise13_26();
 
-// Exercises Section 13.2.2 
+// Exercises Section 13.2.2
 // Exercise 13.27 : Define your own reference - counted version of HasPtr.
 int exercise13_27();
 
@@ -341,7 +430,7 @@ int exercise13_55();
 
 // Exercise 13.56: What would happen if we defined sorted as:
 // Foo Foo::sorted() const & {
-//  Foo ret(*this); 
+//  Foo ret(*this);
 //  return ret.sorted();
 // }
 int exercise13_56();
