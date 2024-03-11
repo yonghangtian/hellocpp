@@ -17,7 +17,7 @@ add_compile_options(-Wall -Wextra)
 #add_executable(HelloCpp main.cpp CppPrimerPlus/chapter17/chapter17.cpp)
 #add_executable(HelloCpp main.cpp CppPrimer5th/chapter10/chapter10.cpp CppPrimer5th/chapter7/chapter7.cpp)
 # add_executable(HelloCpp main.cpp CppPrimer5th/chapter12/chapter12.cpp)
-add_executable(HelloCpp main.cpp CppPrimer5th/chapter13/chapter13.cpp)
+add_executable(HelloCpp main.cpp CppPrimer5th/chapter13/chapter13.cpp CppPrimer5th/chapter12/chapter12.cpp CppPrimer5th/chapter7/chapter7.cpp)
 
 
 # mysqlcppconn1.1.12(CppPrimer5th:exercise12_14):  below part for mysqlcppconn1.1.12, installed on ubuntu22.04 using apt-get.
@@ -35,5 +35,5 @@ include(CPack)
 
 
 # 安装cppcheck: 将cppcheck添加到编译目标之后
-add_custom_command(TARGET HelloCpp POST_BUILD COMMAND ${CPPCHECK_EXECUTABLE} --enable=all --suppress=missingIncludeSystem
+add_custom_command(TARGET HelloCpp POST_BUILD COMMAND ${CPPCHECK_EXECUTABLE} --enable=warning
                     --std=c++11 --force --quiet --project=compile_commands.json COMMENT "Running cppcheck after build")

@@ -1,7 +1,8 @@
 #include "chapter13.h"
 
-// Initialize the static counter to 0  
-int numbered::serialNumberCounter = 0; 
+// Initialize the static counter to 0
+int numbered::serialNumberCounter = 0;
+int employee::serialNumberCounter = 0;
 
 ostream &operator<<(ostream &os, const HasPtr &hp)
 {
@@ -136,6 +137,8 @@ int exercise13_12()
 
     cout << fcn(c, b) << "\n";
 
+    cout << b << "\n";
+
     return 0;
 }
 
@@ -178,8 +181,7 @@ int exercise13_13()
 
 void f(numbered s) { cout << s.getSerialNumber() << endl; }
 
-void f_const(const numbered & s) { cout << s.getSerialNumber() << endl; }
-
+void f_const(const numbered &s) { cout << s.getSerialNumber() << endl; }
 
 int exercise13_14()
 {
@@ -219,16 +221,46 @@ int exercise13_17()
 
 int exercise13_18()
 {
+    employee a;
+    employee b = a, c = b;
+
+    a.getEmployeeInfo();
+    b.getEmployeeInfo();
+    c.getEmployeeInfo();
+
     return 0;
 }
 
 int exercise13_19()
 {
+    employee a;
+    employee b = a, c = b;
+    b.setName("tian");
+    c.setName("yonghang");
+    a.getEmployeeInfo();
+    b.getEmployeeInfo();
+    c.getEmployeeInfo();
+
     return 0;
 }
 
 int exercise13_20()
 {
+    std::ifstream inFile("/home/tianyh/projects/hellocpp/CppPrimer5th/chapter12/data/input_text.txt");
+    if (inFile.is_open())
+    {
+        TextQuery tq(inFile);
+        QueryResult qr = tq.query("//");
+        print(cout, qr) << endl;
+
+        TextQuery tq2 = tq;
+        QueryResult qr2 = qr;
+        print(cout, qr2) << endl;
+        qr2 = tq2.query("program");
+        print(cout, qr2) << endl;
+    }
+
+    inFile.close();
     return 0;
 }
 

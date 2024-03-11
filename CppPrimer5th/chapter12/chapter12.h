@@ -23,7 +23,7 @@ using std::endl;
 using std::istream;
 using std::ostream;
 using std::string;
-// #define NDEBUG
+//#define NDEBUG
 
 // below part for mysqlcppconn1.1.12, installed on ubuntu22.04 using apt-get.
 // #include <mysql_connection.h>
@@ -36,6 +36,74 @@ using std::string;
 // below part for mysqlcppconn8.3.0, installed on project root downloaded from oracle official website.
 // Guide: https://mp.weixin.qq.com/s/5gFwZU7mHkXHsa6m8houzg
 #include "mysql/jdbc.h"
+
+class QueryResult;
+class TextQuery
+{
+public:
+    TextQuery(std::ifstream &in_file);
+    QueryResult query(const string &word);
+
+private:
+    // contents: index is line number, string is line content.
+    std::shared_ptr<std::vector<string>> contents;
+    // words_map: string is word, and set<int> is a set of line number in which word appears at least once.
+    std::shared_ptr<std::map<string, std::set<int>>> words_map;
+    // word_count: string is word, and int is the frequency of word.
+    std::shared_ptr<std::map<string, int>> word_count;
+};
+
+class QueryResult
+{
+    friend std::ostream &print(std::ostream &os, QueryResult result);
+
+public:
+    QueryResult(const string w, int f,
+                std::shared_ptr<std::vector<string>> c,
+                std::shared_ptr<std::set<int>> l) : word(w), frequency(f), contents(c), line_nums(l) {}
+
+    inline std::set<int>::iterator begin() { return line_nums->begin();}
+    inline std::set<int>::iterator end() {return line_nums->end();}
+    inline std::shared_ptr<std::vector<string>> get_file() { return contents; }
+
+private:
+    std::shared_ptr<std::vector<string>> contents;
+    string word;
+    int frequency;
+    std::shared_ptr<std::set<int>> line_nums;
+};
+
+class QueryResultStrBlob;
+class TextQueryStrBlob
+{
+public:
+    TextQueryStrBlob(std::ifstream &in_file);
+    QueryResultStrBlob query(const string &word);
+
+private:
+    // contents: index is line number, string is line content.
+    StrBlob contents;
+    // words_map: string is word, and set<int> is a set of line number in which word appears at least once.
+    std::shared_ptr<std::map<string, std::set<int>>> words_map;
+    // word_count: string is word, and int is the frequency of word.
+    std::shared_ptr<std::map<string, int>> word_count;
+};
+
+class QueryResultStrBlob
+{
+    friend std::ostream &print(std::ostream &os, QueryResultStrBlob result);
+
+public:
+    QueryResultStrBlob(const string w, int f,
+                       StrBlob c,
+                       std::shared_ptr<std::set<int>> l) : word(w), frequency(f), contents(c), line_nums(l) {}
+
+private:
+    StrBlob contents;
+    string word;
+    int frequency;
+    std::shared_ptr<std::set<int>> line_nums;
+};
 
 // Exercises Section 12.1.1
 // Exercise 12.1: How many elements do b1 and b2 have at the end of this
@@ -222,74 +290,6 @@ int exercise12_25();
 // const size_t size = q - p;
 // delete [] p;
 int exercise12_26();
-
-class QueryResult;
-class TextQuery
-{
-public:
-    TextQuery(std::ifstream &in_file);
-    QueryResult query(const string &word);
-
-private:
-    // contents: index is line number, string is line content.
-    std::shared_ptr<std::vector<string>> contents;
-    // words_map: string is word, and set<int> is a set of line number in which word appears at least once.
-    std::shared_ptr<std::map<string, std::set<int>>> words_map;
-    // word_count: string is word, and int is the frequency of word.
-    std::shared_ptr<std::map<string, int>> word_count;
-};
-
-class QueryResult
-{
-    friend std::ostream &print(std::ostream &os, QueryResult result);
-
-public:
-    QueryResult(const string w, int f,
-                std::shared_ptr<std::vector<string>> c,
-                std::shared_ptr<std::set<int>> l) : word(w), frequency(f), contents(c), line_nums(l) {}
-
-    inline std::set<int>::iterator begin() { return line_nums->begin();}
-    inline std::set<int>::iterator end() {return line_nums->end();}
-    inline std::shared_ptr<std::vector<string>> get_file() { return contents; }
-
-private:
-    std::shared_ptr<std::vector<string>> contents;
-    string word;
-    int frequency;
-    std::shared_ptr<std::set<int>> line_nums;
-};
-
-class QueryResultStrBlob;
-class TextQueryStrBlob
-{
-public:
-    TextQueryStrBlob(std::ifstream &in_file);
-    QueryResultStrBlob query(const string &word);
-
-private:
-    // contents: index is line number, string is line content.
-    StrBlob contents;
-    // words_map: string is word, and set<int> is a set of line number in which word appears at least once.
-    std::shared_ptr<std::map<string, std::set<int>>> words_map;
-    // word_count: string is word, and int is the frequency of word.
-    std::shared_ptr<std::map<string, int>> word_count;
-};
-
-class QueryResultStrBlob
-{
-    friend std::ostream &print(std::ostream &os, QueryResultStrBlob result);
-
-public:
-    QueryResultStrBlob(const string w, int f,
-                       StrBlob c,
-                       std::shared_ptr<std::set<int>> l) : word(w), frequency(f), contents(c), line_nums(l) {}
-
-private:
-    StrBlob contents;
-    string word;
-    int frequency;
-    std::shared_ptr<std::set<int>> line_nums;
-};
 
 // Exercises Section 12.3.1
 // Exercise 12.27: The TextQuery and QueryResult classes use only

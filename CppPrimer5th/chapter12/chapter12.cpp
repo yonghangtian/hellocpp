@@ -540,7 +540,7 @@ TextQuery::TextQuery(std::ifstream &in_file)
     std::map<string, int> wds_cnt;
     std::map<string, std::set<int>> word_lines_map;
 
-    string temp;
+    string temp("");
     int line = 0;
 
     while (getline(in_file, temp))
@@ -599,6 +599,7 @@ QueryResult TextQuery::query(const string &word)
          << "print QueryResult's line set: \n";
     std::ostream_iterator<int> it_cout2(cout, ",");
     std::copy(line_set->begin(), line_set->end(), it_cout2);
+    cout << "\n";
 #endif
 
     QueryResult result(word, freq, contents, line_set);
@@ -730,10 +731,11 @@ void runQueries(std::ifstream &infile)
 
 int exercise12_27()
 {
-    std::ifstream inFile("CppPrimer5th/chapter12/data/input_text.txt");
-
-    runQueries(inFile);
-
+    std::ifstream inFile("/home/tianyh/projects/hellocpp/CppPrimer5th/chapter12/data/input_text.txt");
+    if (inFile.is_open())
+    {
+        runQueries(inFile);
+    }
     return 0;
 }
 
@@ -774,10 +776,11 @@ void runQueriesDoWhile(std::ifstream &infile)
 
 int exercise12_29()
 {
-    std::ifstream inFile("CppPrimer5th/chapter12/data/input_text.txt");
-
-    runQueriesDoWhile(inFile);
-
+    std::ifstream inFile("/home/tianyh/projects/hellocpp/CppPrimer5th/chapter12/data/input_text.txt");
+    if (inFile.is_open())
+    {
+        runQueriesDoWhile(inFile);
+    }
     return 0;
 }
 
@@ -822,24 +825,28 @@ void runQueriesStrBlob(std::ifstream &infile)
 
 int exercise12_32()
 {
-    std::ifstream inFile("CppPrimer5th/chapter12/data/input_text.txt");
-
-    runQueriesStrBlob(inFile);
-
+    std::ifstream inFile("/home/tianyh/projects/hellocpp/CppPrimer5th/chapter12/data/input_text.txt");
+    if (inFile.is_open())
+    {
+        runQueriesStrBlob(inFile);
+    }
     return 0;
 }
 
 int exercise12_33()
 {
-    std::ifstream inFile("CppPrimer5th/chapter12/data/input_text.txt");
-
-    TextQuery tq(inFile);
-    QueryResult qr = tq.query("//");
-    cout << "\n";
-    std::ostream_iterator<int> it_cout1(cout, ",");
-    std::copy(qr.begin(), qr.end(), it_cout1);
-    cout << "\n";
-    std::ostream_iterator<string> it_cout2(cout, "\n");
-    std::copy(qr.get_file()->begin(), qr.get_file()->end(), it_cout2);
+    std::ifstream inFile("/home/tianyh/projects/hellocpp/CppPrimer5th/chapter12/data/input_text.txt");
+    if (inFile.is_open())
+    {
+        TextQuery tq(inFile);
+        QueryResult qr = tq.query("//");
+        cout << "\n";
+        std::ostream_iterator<int> it_cout1(cout, ",");
+        std::copy(qr.begin(), qr.end(), it_cout1);
+        cout << "\n";
+        std::ostream_iterator<string> it_cout2(cout, "\n");
+        std::copy(qr.get_file()->begin(), qr.get_file()->end(), it_cout2);
+    }
+    inFile.close();
     return 0;
 }

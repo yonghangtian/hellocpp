@@ -16,6 +16,7 @@
 #include <set>
 #include <stdexcept>
 #include "../chapter7/chapter7.h"
+#include "../chapter12/chapter12.h"
 #include "../chapter12/StrBlob.h"
 using std::cerr;
 using std::cin;
@@ -94,6 +95,39 @@ public:
         return mysn;  
     }  
 };  
+
+class employee {  
+private:  
+    static int serialNumberCounter; // Static counter for generating unique serial numbers  
+    int employeeNum;
+    string name; // Data member to store the unique serial number  
+  
+public:  
+    // Default constructor  
+    employee(const string & str = string("")) {  
+        // Increment the static counter to generate a unique serial number  
+        employeeNum = ++serialNumberCounter;  
+        name = str;
+        // Optional: Print the generated serial number to the console  
+        cout << "Employ number: " << employeeNum << endl;  
+    }  
+    
+    employee(const employee & temp)
+    {
+        employeeNum = ++serialNumberCounter;
+        name = temp.name;
+        cout << "(" << __FUNCTION__ << ")" << " employee(const employee &)\n";
+    }
+
+    void getEmployeeInfo() const {  
+        cout << "Employee number: " << employeeNum << " name: " << name << "\n";
+    }  
+
+    void setName(const string & str)
+    {
+        name = str;
+    }
+}; 
 
 // Exercises Section 13.1.1
 // Exercise 13.1: What is a copy constructor? When is it used?
@@ -233,13 +267,16 @@ int exercise13_17();
 // Exercise 13.18: Define an Employee class that contains an employee name
 // and a unique employee identifier. Give the class a default constructor and a
 // constructor that takes a string representing the employee’s name. Each
-// constructor should generate a unique ID by incrementing a static data
-// member.
+// constructor should generate a unique ID by incrementing a static data member.
+// Answer: static number are separate from class's instances, 
+// no matter how many instances one class have, it only have one static number.
+// Therefore, synthesized copy constructor does not copy or modify static number.
 int exercise13_18();
 
 // Exercise 13.19: Does your Employee class need to define its own versions
 // of the copy-control members? If so, why? If not, why not? Implement
 // whatever copy-control members you think Employee needs.
+// Answer: (1) yes, it need, as no two employee have same employee number;
 int exercise13_19();
 
 // Exercise 13.20: Explain what happens when we copy, assign, or destroy
@@ -250,6 +287,7 @@ int exercise13_20();
 // need to define their own versions of the copy-control members? If so, why?
 // If not, why not? Implement whichever copy-control operations you think
 // these classes require.
+// Answer: no need to implement, as all element in TextQuery and QueryReuslt are shared_ptr or string or int.
 int exercise13_21();
 
 // Exercises Section 13.2
