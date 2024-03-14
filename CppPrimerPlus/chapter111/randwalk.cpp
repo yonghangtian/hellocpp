@@ -12,7 +12,7 @@ int main()
     using VECTOR::Vector;
     ofstream outFile;
     // cpp默认接收的是绝对路径
-    char filename[100] = "/home/tianyh/projects/helloworld/CppPrimerPlus/chapter111/randwalk_record.txt";
+    char filename[100] = "/home/tian/projects/helloworld/CppPrimerPlus/chapter111/randwalk_record.txt";
     outFile.open(filename);
     
     if (!outFile.is_open())  // failed to open file

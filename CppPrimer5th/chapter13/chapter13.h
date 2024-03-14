@@ -29,16 +29,16 @@ using std::string;
 // #define NDEBUG
 
 // below part for mysqlcppconn1.1.12, installed on ubuntu22.04 using apt-get.
-// #include <mysql_connection.h>
-// #include <cppconn/driver.h>
-// #include <cppconn/exception.h>
-// #include <cppconn/resultset.h>
-// #include <cppconn/statement.h>
-// #include <cppconn/prepared_statement.h>
+#include <mysql_connection.h>
+#include <cppconn/driver.h>
+#include <cppconn/exception.h>
+#include <cppconn/resultset.h>
+#include <cppconn/statement.h>
+#include <cppconn/prepared_statement.h>
 
 // below part for mysqlcppconn8.3.0, installed on project root downloaded from oracle official website.
 // Guide: https://mp.weixin.qq.com/s/5gFwZU7mHkXHsa6m8houzg
-#include "mysql/jdbc.h"
+// #include "mysql/jdbc.h"
 
 class HasPtr
 {

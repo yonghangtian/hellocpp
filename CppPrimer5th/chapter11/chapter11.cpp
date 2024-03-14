@@ -881,7 +881,7 @@ int wordTransform(std::ifstream &map_file, std::ifstream &in_file, std::ofstream
 
 int exercise11_33()
 {
-    string prefix("/home/tianyh/projects/hellocpp/CppPrimer5th/chapter11/data/");
+    string prefix("/home/tian/projects/hellocpp/CppPrimer5th/chapter11/data/");
     string mapFile("map11_33"), inFile("in11_33"), outFile("out11_33");
 
     std::ifstream mapIns(prefix + mapFile), dataIns(prefix + inFile);
@@ -974,7 +974,7 @@ int wordTransformUnordered(std::ifstream &map_file, std::ifstream &in_file, std:
 
 int exercise11_38()
 {    
-    string prefix("/home/tianyh/projects/hellocpp/CppPrimer5th/chapter11/data/");
+    string prefix("/home/tian/projects/hellocpp/CppPrimer5th/chapter11/data/");
     string mapFile("map11_33"), inFile("in11_33"), outFile("out11_38");
 
     std::ifstream mapIns(prefix + mapFile), dataIns(prefix + inFile);

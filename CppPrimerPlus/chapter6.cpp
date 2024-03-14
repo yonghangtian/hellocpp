@@ -211,7 +211,7 @@ int chapter6_8()
 { 
     ifstream inFile;
     // cpp默认接收的是绝对路径
-    char filename[100] = "/home/tianyh/projects/helloworld/CppPrimerPlus/chapter6_8.txt";
+    char filename[100] = "/home/tian/projects/helloworld/CppPrimerPlus/chapter6_8.txt";
     //char filename[100] = "../chapter6_8.txt";
     inFile.open(filename);
 
@@ -256,7 +256,7 @@ int chapter6_9()
 { 
     ifstream inFile;
     // cpp默认接收的是绝对路径
-    char filename[100] = "/home/tianyh/projects/helloworld/CppPrimerPlus/chapter6_9.txt";
+    char filename[100] = "/home/tian/projects/helloworld/CppPrimerPlus/chapter6_9.txt";
     inFile.open(filename);
     if (!inFile.is_open())  // failed to open file
     {

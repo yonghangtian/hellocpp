@@ -816,7 +816,7 @@ int exercise10_32()
 
 int exercise10_33()
 {
-    string prefix("/home/tianyh/projects/hellocpp/CppPrimer5th/chapter10/data/");
+    string prefix("/home/tian/projects/hellocpp/CppPrimer5th/chapter10/data/");
     string inFile("in10_33"), out1File("out1_10_33"), out2File("out2_10_33");
 
     ifstream ins(prefix + inFile);

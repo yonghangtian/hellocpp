@@ -334,12 +334,12 @@ int exercise12_15()
 int exercise12_16()
 {
     std::unique_ptr<int> p1(new int(1024));
-    //     [build] /home/tianyh/projects/hellocpp/CppPrimer5th/chapter12/chapter12.cpp:339:35: error: use of deleted function ‘std::unique_ptr<_Tp, _Dp>::unique_ptr(const std::unique_ptr<_Tp, _Dp>&) [with _Tp = int; _Dp = std::default_delete<int>]’
+    //     [build] /home/tian/projects/hellocpp/CppPrimer5th/chapter12/chapter12.cpp:339:35: error: use of deleted function ‘std::unique_ptr<_Tp, _Dp>::unique_ptr(const std::unique_ptr<_Tp, _Dp>&) [with _Tp = int; _Dp = std::default_delete<int>]’
     // [build]   339 |         std::unique_ptr<int> p2 = p1;
     // [build]       |                                   ^~
     // [build] In file included from /usr/include/c++/11/memory:76,
-    // [build]                  from /home/tianyh/projects/hellocpp/CppPrimer5th/chapter12/chapter12.h:13,
-    // [build]                  from /home/tianyh/projects/hellocpp/CppPrimer5th/chapter12/chapter12.cpp:1:
+    // [build]                  from /home/tian/projects/hellocpp/CppPrimer5th/chapter12/chapter12.h:13,
+    // [build]                  from /home/tian/projects/hellocpp/CppPrimer5th/chapter12/chapter12.cpp:1:
     // [build] /usr/include/c++/11/bits/unique_ptr.h:468:7: note: declared here
     // [build]   468 |       unique_ptr(const unique_ptr&) = delete;
     // [build]       |       ^~~~~~~~~~
@@ -385,7 +385,7 @@ int exercise12_19()
 
 int exercise12_20()
 {
-    string prefix("/home/tianyh/projects/hellocpp/CppPrimer5th/chapter12/data/");
+    string prefix("/home/tian/projects/hellocpp/CppPrimer5th/chapter12/data/");
     string inFile("input_StrBlob");
 
     std::ifstream ins(prefix + inFile);
@@ -412,7 +412,7 @@ int exercise12_21()
 
 int exercise12_22()
 {
-    string prefix("/home/tianyh/projects/hellocpp/CppPrimer5th/chapter12/data/");
+    string prefix("/home/tian/projects/hellocpp/CppPrimer5th/chapter12/data/");
     string inFile("input_StrBlob");
 
     std::ifstream ins(prefix + inFile);
@@ -731,7 +731,7 @@ void runQueries(std::ifstream &infile)
 
 int exercise12_27()
 {
-    std::ifstream inFile("/home/tianyh/projects/hellocpp/CppPrimer5th/chapter12/data/input_text.txt");
+    std::ifstream inFile("/home/tian/projects/hellocpp/CppPrimer5th/chapter12/data/input_text.txt");
     if (inFile.is_open())
     {
         runQueries(inFile);
@@ -776,7 +776,7 @@ void runQueriesDoWhile(std::ifstream &infile)
 
 int exercise12_29()
 {
-    std::ifstream inFile("/home/tianyh/projects/hellocpp/CppPrimer5th/chapter12/data/input_text.txt");
+    std::ifstream inFile("/home/tian/projects/hellocpp/CppPrimer5th/chapter12/data/input_text.txt");
     if (inFile.is_open())
     {
         runQueriesDoWhile(inFile);
@@ -825,7 +825,7 @@ void runQueriesStrBlob(std::ifstream &infile)
 
 int exercise12_32()
 {
-    std::ifstream inFile("/home/tianyh/projects/hellocpp/CppPrimer5th/chapter12/data/input_text.txt");
+    std::ifstream inFile("/home/tian/projects/hellocpp/CppPrimer5th/chapter12/data/input_text.txt");
     if (inFile.is_open())
     {
         runQueriesStrBlob(inFile);
@@ -835,7 +835,7 @@ int exercise12_32()
 
 int exercise12_33()
 {
-    std::ifstream inFile("/home/tianyh/projects/hellocpp/CppPrimer5th/chapter12/data/input_text.txt");
+    std::ifstream inFile("/home/tian/projects/hellocpp/CppPrimer5th/chapter12/data/input_text.txt");
     if (inFile.is_open())
     {
         TextQuery tq(inFile);

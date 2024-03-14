@@ -32,7 +32,7 @@ int chapter17_1()
 int chapter17_2()
 {
 
-    std::string prefix = "/home/tianyh/projects/helloworld/CppPrimerPlus/chapter17/";
+    std::string prefix = "/home/tian/projects/helloworld/CppPrimerPlus/chapter17/";
 
     std::string outputFileName;
     cout << "Please enter the file name: " << endl;
@@ -69,8 +69,8 @@ int chapter17_2()
 int chapter17_3()
 {
 
-    std::string file1 = "/home/tianyh/projects/helloworld/CppPrimerPlus/chapter17/result.txt";
-    std::string prefix = "/home/tianyh/projects/helloworld/CppPrimerPlus/chapter17/";
+    std::string file1 = "/home/tian/projects/helloworld/CppPrimerPlus/chapter17/result.txt";
+    std::string prefix = "/home/tian/projects/helloworld/CppPrimerPlus/chapter17/";
 
     std::ifstream inputFile(file1);
 
@@ -115,9 +115,9 @@ int chapter17_3()
 
 int chapter17_4()
 {
-    std::string file1 = "/home/tianyh/projects/helloworld/CppPrimerPlus/chapter17/result.txt";
-    std::string file2 = "/home/tianyh/projects/helloworld/CppPrimerPlus/chapter17/temp.txt";
-    std::string prefix = "/home/tianyh/projects/helloworld/CppPrimerPlus/chapter17/";
+    std::string file1 = "/home/tian/projects/helloworld/CppPrimerPlus/chapter17/result.txt";
+    std::string file2 = "/home/tian/projects/helloworld/CppPrimerPlus/chapter17/temp.txt";
+    std::string prefix = "/home/tian/projects/helloworld/CppPrimerPlus/chapter17/";
 
     std::ifstream inputFile1(file1);
 
@@ -199,9 +199,9 @@ int chapter17_5()
     using std::ofstream;
     using std::vector;
 
-    ifstream patfile("/home/tianyh/projects/helloworld/CppPrimerPlus/chapter17/pat.dat");
-    ifstream matfile("/home/tianyh/projects/helloworld/CppPrimerPlus/chapter17/mat.dat");
-    ofstream matnpatfile("/home/tianyh/projects/helloworld/CppPrimerPlus/chapter17/matnpat.dat");
+    ifstream patfile("/home/tian/projects/helloworld/CppPrimerPlus/chapter17/pat.dat");
+    ifstream matfile("/home/tian/projects/helloworld/CppPrimerPlus/chapter17/mat.dat");
+    ofstream matnpatfile("/home/tian/projects/helloworld/CppPrimerPlus/chapter17/matnpat.dat");
     check(patfile, "pat.dat");
     check(matfile, "mat.dat");
     check(matnpatfile, "matnpat.dat");
@@ -625,7 +625,7 @@ int chapter17_6()
     cout << "You may enter of to " << MAX << " employees" << endl;
     int count = 0;
     char ch;
-    string file1 = "/home/tianyh/projects/helloworld/CppPrimerPlus/chapter17/employeeList.dat";
+    string file1 = "/home/tian/projects/helloworld/CppPrimerPlus/chapter17/employeeList.dat";
     // Read from employeeList.dat file
     std::ifstream fin;
     fin.open(file1);
@@ -757,7 +757,7 @@ int chapter17_7()
 {
     std::vector<string> vostr;
     string temp;
-    string file1 = "/home/tianyh/projects/helloworld/CppPrimerPlus/chapter17/strings.dat";
+    string file1 = "/home/tian/projects/helloworld/CppPrimerPlus/chapter17/strings.dat";
     // acquire strings
     cout << "Enter strings (empty line to quit):\n";
     while (getline(cin, temp) && temp[0] != '\0')

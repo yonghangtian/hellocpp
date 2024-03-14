@@ -432,7 +432,7 @@ int exercise5_16()
     // read grades from file.
     vector<int> gradesA, gradesB;
     int grade = 0;
-    string filePath = "/home/tianyh/projects/hellocpp/CppPrimer5th/chapter5/data/grades";
+    string filePath = "/home/tian/projects/hellocpp/CppPrimer5th/chapter5/data/grades";
     ifstream fileA(filePath);
 
     if (!fileA.is_open())

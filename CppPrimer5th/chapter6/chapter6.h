@@ -39,7 +39,7 @@ int exercise6_8();
 // previous section. Use these files to understand how your compiler supports
 // separate compilation.
 // cc -c main.cpp
-// cc -c /home/tianyh/projects/hellocpp/CppPrimer5th/chapter6/chapter6.h
+// cc -c /home/tian/projects/hellocpp/CppPrimer5th/chapter6/chapter6.h
 // gcc main.o chapter6.o -o main -std=c++11 -lm -lstdc++
 int exercise6_9();
 

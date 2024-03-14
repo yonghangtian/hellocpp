@@ -246,7 +246,7 @@ int exercise13_19()
 
 int exercise13_20()
 {
-    std::ifstream inFile("/home/tianyh/projects/hellocpp/CppPrimer5th/chapter12/data/input_text.txt");
+    std::ifstream inFile("/home/tian/projects/hellocpp/CppPrimer5th/chapter12/data/input_text.txt");
     if (inFile.is_open())
     {
         TextQuery tq(inFile);

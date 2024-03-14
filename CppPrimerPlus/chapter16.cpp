@@ -91,10 +91,10 @@ int chapter16_3()
 {
     const int NUM = 26;
     
-	std::ifstream myfile("/home/tianyh/projects/helloworld/CppPrimerPlus/chapter16_3.txt");
+	std::ifstream myfile("/home/tian/projects/helloworld/CppPrimerPlus/chapter16_3.txt");
 	if (!myfile.good())
 	{
-		std::cerr << "Unable to open /home/tianyh/projects/helloworld/CppPrimerPlus/chapter16_3.txt" << endl;
+		std::cerr << "Unable to open /home/tian/projects/helloworld/CppPrimerPlus/chapter16_3.txt" << endl;
 		exit(EXIT_FAILURE);
 	}
 

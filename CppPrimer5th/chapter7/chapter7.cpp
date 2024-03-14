@@ -496,11 +496,11 @@ void thread_routine(unsigned long *a)
     }
 }
 
-// tianyh@tian-mb13:~/projects/hellocpp/build$ taskset -c 0 ./HelloCpp
+// tian@tian-mb13:~/projects/hellocpp/build$ taskset -c 0 ./HelloCpp
 // pre:-1, cur:0
 // pre:-1, cur:0
 // g_a: 2.13e+09 g_b: 2.14e+09
-// tianyh@tian-mb13:~/projects/hellocpp/build$ taskset -c 0,10 ./HelloCpp
+// tian@tian-mb13:~/projects/hellocpp/build$ taskset -c 0,10 ./HelloCpp
 // pre:-1, cur:10pre:-1, cur:0
 // g_a: 1.41e+09 g_b: 1.41e+0
 // 测试结果显示：两个线程绑定在同一个核上时，计算效果比两个线程放在两个核心上效果更好。
