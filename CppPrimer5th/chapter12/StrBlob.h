@@ -51,12 +51,29 @@ public:
     // constructors
     StrBlob() : data(std::make_shared<std::vector<std::string>>()) {}
     StrBlob(std::initializer_list<std::string> il);
-
     // explicit StrBlob(std::initializer_list<std::string> il);
+
+    // value like copy constructor
+    StrBlob(const StrBlob & sb) : data(std::make_shared<std::vector<std::string>>(*sb.data)) {}; 
+
+
+    // value like copy assign operator
+    StrBlob & operator=(const StrBlob & sb)
+    {
+        std::cout << "Before assignment, data use count " << data.use_count() << " \n";
+        if (data == sb.data)
+        {
+            return *this;
+        }
+        auto temp = std::make_shared<std::vector<std::string>>(*sb.data);
+        data = temp;
+        std::cout << "After assignment, data use count " << data.use_count() << " \n";
+        return *this;
+    }
 
     // size operations
     size_type size() const { return data->size(); }
-    bool empty() const { return data->empty(); }
+    bool empty() const { return data->empty(); }  
 
     // add and remove elements
     void push_back(const std::string &t) { data->push_back(t); }
@@ -78,7 +95,8 @@ public:
         return data->back();
     };
     void show_data()
-    {
+    {   
+        std::cout << "Current data use count " << data.use_count() << " \n";
         for (auto temp: *data)
         {
             std::cout << temp << " , ";

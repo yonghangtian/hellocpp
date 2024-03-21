@@ -276,6 +276,7 @@ int exercise13_22()
 
 int exercise13_23()
 {
+    exercise13_13();
     return 0;
 }
 
@@ -291,6 +292,22 @@ int exercise13_25()
 
 int exercise13_26()
 {
+    StrBlob a({"abc", "def"});
+    StrBlob b;
+    a.show_data();
+    b.show_data();
+
+// Before assignment, data use count 1 
+// After assignment, data use count 2 
+// temp also point to the shared pointer.
+    b = a;
+//     Current data use count 1 
+// abc , def , 
+// temp was destoryed.
+    b.show_data();
+// Current data use count 1 
+// abc , def , 
+    a.show_data();
     return 0;
 }
 

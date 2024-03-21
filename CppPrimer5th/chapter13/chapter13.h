@@ -44,23 +44,42 @@ class HasPtr
 {
 public:
     friend ostream &operator<<(ostream &os, const HasPtr &hp);
-    
-    HasPtr(const std::string &s = std::string()) : ps(new std::string(s)), i(0) { cout << "(" << __FUNCTION__ << ")" << " HasPtr()\n";  }
-    HasPtr(const HasPtr &hp) : ps(new std::string(*hp.ps)), i(hp.i) { cout << "(" << __FUNCTION__ << ")" << " HasPtr(const HasPtr &)\n";  }
+
+    HasPtr(const std::string &s = std::string()) : ps(new std::string(s)), i(0)
+    {
+        cout << "(" << __FUNCTION__ << ")"
+             << " HasPtr()\n";
+    }
+    HasPtr(const HasPtr &hp) : ps(new std::string(*hp.ps)), i(hp.i)
+    {
+        cout << "(" << __FUNCTION__ << ")"
+             << " HasPtr(const HasPtr &)\n";
+    }
     ~HasPtr()
-    {   
-        cout << "(" << __FUNCTION__ << ")" << " ~HasPtr()\n" ;
+    {
+        cout << "(" << __FUNCTION__ << ")"
+             << " ~HasPtr()\n";
         cout << "String \"" << *ps << "\" is destoryed\n";
         delete ps;
     }
 
+    inline bool operator==(const HasPtr &hp)
+    {
+        return (ps == hp.ps) && (i == hp.i);
+    }
+
     inline HasPtr &operator=(const HasPtr &hp)
     {
+        if (*this == hp)
+        {
+            return *this;
+        }
         string *temp = new string(*hp.ps);
         delete ps;
         ps = temp;
         i = hp.i;
-        cout << "(" << __FUNCTION__ << ")" << " HasPtr &operator=(const HasPtr &)\n";
+        cout << "(" << __FUNCTION__ << ")"
+             << " HasPtr &operator=(const HasPtr &)\n";
         return *this;
     }
 
@@ -69,65 +88,73 @@ private:
     int i;
 };
 
-class numbered {  
-private:  
-    static int serialNumberCounter; // Static counter for generating unique serial numbers  
-    int mysn; // Data member to store the unique serial number  
-  
-public:  
-    // Default constructor  
-    numbered() {  
-        // Increment the static counter to generate a unique serial number  
-        mysn = ++serialNumberCounter;  
-          
-        // Optional: Print the generated serial number to the console  
-        cout << "Object created with serial number: " << mysn << endl;  
-    }  
-    
+class numbered
+{
+private:
+    static int serialNumberCounter; // Static counter for generating unique serial numbers
+    int mysn;                       // Data member to store the unique serial number
+
+public:
+    // Default constructor
+    numbered()
+    {
+        // Increment the static counter to generate a unique serial number
+        mysn = ++serialNumberCounter;
+
+        // Optional: Print the generated serial number to the console
+        cout << "Object created with serial number: " << mysn << endl;
+    }
+
     numbered(const numbered &)
     {
         mysn = ++serialNumberCounter;
-        cout << "(" << __FUNCTION__ << ")" << " numbered(const numbered &)\n";
+        cout << "(" << __FUNCTION__ << ")"
+             << " numbered(const numbered &)\n";
     }
 
-    // Getter function to retrieve the serial number  
-    int getSerialNumber() const {  
-        return mysn;  
-    }  
-};  
+    // Getter function to retrieve the serial number
+    int getSerialNumber() const
+    {
+        return mysn;
+    }
+};
 
-class employee {  
-private:  
-    static int serialNumberCounter; // Static counter for generating unique serial numbers  
+class employee
+{
+private:
+    static int serialNumberCounter; // Static counter for generating unique serial numbers
     int employeeNum;
-    string name; // Data member to store the unique serial number  
-  
-public:  
-    // Default constructor  
-    employee(const string & str = string("")) {  
-        // Increment the static counter to generate a unique serial number  
-        employeeNum = ++serialNumberCounter;  
+    string name; // Data member to store the unique serial number
+
+public:
+    // Default constructor
+    employee(const string &str = string(""))
+    {
+        // Increment the static counter to generate a unique serial number
+        employeeNum = ++serialNumberCounter;
         name = str;
-        // Optional: Print the generated serial number to the console  
-        cout << "Employ number: " << employeeNum << endl;  
-    }  
-    
-    employee(const employee & temp)
+        // Optional: Print the generated serial number to the console
+        cout << "Employ number: " << employeeNum << endl;
+    }
+
+    employee(const employee &temp)
     {
         employeeNum = ++serialNumberCounter;
         name = temp.name;
-        cout << "(" << __FUNCTION__ << ")" << " employee(const employee &)\n";
+        cout << "(" << __FUNCTION__ << ")"
+             << " employee(const employee &)\n";
     }
 
-    void getEmployeeInfo() const {  
+    void getEmployeeInfo() const
+    {
         cout << "Employee number: " << employeeNum << " name: " << name << "\n";
-    }  
+    }
 
-    void setName(const string & str)
+    void setName(const string &str)
     {
         name = str;
     }
-}; 
+};
 
 // Exercises Section 13.1.1
 // Exercise 13.1: What is a copy constructor? When is it used?
@@ -268,7 +295,7 @@ int exercise13_17();
 // and a unique employee identifier. Give the class a default constructor and a
 // constructor that takes a string representing the employee’s name. Each
 // constructor should generate a unique ID by incrementing a static data member.
-// Answer: static number are separate from class's instances, 
+// Answer: static number are separate from class's instances,
 // no matter how many instances one class have, it only have one static number.
 // Therefore, synthesized copy constructor does not copy or modify static number.
 int exercise13_18();
@@ -302,11 +329,13 @@ int exercise13_22();
 // Exercise 13.23: Compare the copy-control members that you wrote for the
 // solutions to the previous section’s exercises to the code presented here. Be
 // sure you understand the differences, if any, between your code and ours.
+// Answer: of cource yes.
 int exercise13_23();
 
 // Exercise 13.24: What would happen if the version of HasPtr in this section
-// didn’t define a destructor? What if HasPtr didn’t define the copy
-// constructor?
+// didn’t define a destructor? What if HasPtr didn’t define the copy constructor?
+// Answer: (1) If no destructor, memory leaks;
+// (2) If no copy constructor, then pointer will be copied directly, not the string that the pointer points to.
 int exercise13_24();
 
 // Exercise 13.25: Assume we want to define a version of StrBlob that acts
