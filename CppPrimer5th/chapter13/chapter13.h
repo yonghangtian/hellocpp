@@ -40,12 +40,21 @@ using std::string;
 // Guide: https://mp.weixin.qq.com/s/5gFwZU7mHkXHsa6m8houzg
 // #include "mysql/jdbc.h"
 
+// This is a value like HasPtr
 class HasPtr
 {
 public:
+    // friend classes
     friend ostream &operator<<(ostream &os, const HasPtr &hp);
-
-    HasPtr(const std::string &s = std::string()) : ps(new std::string(s)), i(0)
+    friend inline void swap(HasPtr &lhs, HasPtr &rhs)
+    {
+        cout << "swap called \n";
+        using std::swap;
+        swap(lhs.ps, rhs.ps); // swap the pointers, not the string data
+        swap(lhs.i, rhs.i);   // swap the int members
+    }
+    // constructors
+    HasPtr(const std::string &s = std::string(), const int m = 0) : ps(new std::string(s)), i(m)
     {
         cout << "(" << __FUNCTION__ << ")"
              << " HasPtr()\n";
@@ -55,6 +64,7 @@ public:
         cout << "(" << __FUNCTION__ << ")"
              << " HasPtr(const HasPtr &)\n";
     }
+
     ~HasPtr()
     {
         cout << "(" << __FUNCTION__ << ")"
@@ -62,30 +72,125 @@ public:
         cout << "String \"" << *ps << "\" is destoryed\n";
         delete ps;
     }
-
-    inline bool operator==(const HasPtr &hp)
+    // overloaded operators
+    inline bool operator<(const HasPtr &hp) const
+    {
+        return (i < hp.i);
+    }
+    inline bool operator==(const HasPtr &hp) const
     {
         return (ps == hp.ps) && (i == hp.i);
     }
+    
+    // (1) const ref verion of operator=
+    // inline HasPtr &operator=(const HasPtr &hp)
+    // {
+    //     if (*this == hp)
+    //     {
+    //         return *this;
+    //     }
+    //     string *temp = new string(*hp.ps);
+    //     delete ps;
+    //     ps = temp;
+    //     i = hp.i;
+    //     cout << "(" << __FUNCTION__ << ")"
+    //          << " HasPtr &operator=(const HasPtr &)\n";
+    //     return *this;
+    // }
 
-    inline HasPtr &operator=(const HasPtr &hp)
+    // (2) copy and swap verion of operator=, this verion is automatically  exception safe and correctly handle self-assignment.
+    inline HasPtr &operator=(HasPtr hp)
     {
-        if (*this == hp)
-        {
-            return *this;
-        }
-        string *temp = new string(*hp.ps);
-        delete ps;
-        ps = temp;
-        i = hp.i;
+        swap(*this, hp);
         cout << "(" << __FUNCTION__ << ")"
-             << " HasPtr &operator=(const HasPtr &)\n";
+             << " HasPtr &operator=(HasPtr &)\n";
         return *this;
     }
 
 private:
     std::string *ps;
     int i;
+};
+
+// This is a pointer like HasPtr
+class PlHasPtr
+{
+public:
+    // friend funcs
+    friend ostream &operator<<(ostream &os, const PlHasPtr &hp);
+    friend inline void swap(PlHasPtr &lhs, PlHasPtr &rhs)
+    {
+        cout << "PlHasPtr swap called \n";
+        using std::swap;
+        swap(lhs.ps, rhs.ps);         // swap the pointers, not the string data
+        swap(lhs.refCnt, rhs.refCnt); // swap the pointers, not the refCnt data
+        swap(lhs.i, rhs.i);           // swap the int members
+    }
+
+    // constructors
+    PlHasPtr(const std::string &s = std::string(), const int m = 0) : ps(new std::string(s)), i(m), refCnt(new int(1))
+    {
+        cout << "(" << __FUNCTION__ << ")"
+             << " PlHasPtr()\n";
+    }
+
+    PlHasPtr(const PlHasPtr &hp) : ps(hp.ps), i(hp.i), refCnt(hp.refCnt)
+    {
+        ++*refCnt;
+        cout << "(" << __FUNCTION__ << ")"
+             << " PlHasPtr(const PlHasPtr &)\n";
+    }
+
+    ~PlHasPtr()
+    {
+        if (--*refCnt == 0)
+        {
+            delete ps;
+            delete refCnt;
+        }
+        cout << "(" << __FUNCTION__ << ")"
+             << " ~PlHasPtr()\n";
+    }
+
+    inline bool operator==(const PlHasPtr &hp)
+    {
+        return (ps == hp.ps) && (i == hp.i);
+    }
+
+    // (1) const ref verion of operator=
+    // inline PlHasPtr &operator=(const PlHasPtr &hp)
+    // {
+    //     cout << "(" << __FUNCTION__ << ")"
+    //          << " PlHasPtr &operator=(const PlHasPtr &)\n";
+    //     if (*this == hp)
+    //     {
+    //         return *this;
+    //     }
+    //     if (--*refCnt == 0)
+    //     {
+    //         delete ps;
+    //         delete refCnt;
+    //     }
+    //     ps = hp.ps;
+    //     i = hp.i;
+    //     refCnt = hp.refCnt;
+    //     ++*refCnt;
+    //     return *this;
+    // }
+
+    // (2) copy and swap verion of operator=, this verion is automatically  exception safe and correctly handle self-assignment.
+    inline PlHasPtr &operator=(PlHasPtr hp)
+    {
+        swap(*this, hp);
+        cout << "(" << __FUNCTION__ << ")"
+             << " PlHasPtr &operator=(PlHasPtr)\n";
+        return *this;
+    }
+
+private:
+    std::string *ps;
+    int i;
+    int *refCnt;
 };
 
 class numbered
@@ -154,6 +259,77 @@ public:
     {
         name = str;
     }
+};
+
+class TreeNode
+{
+public:
+    // friend func
+    friend ostream &operator<<(ostream &os, const TreeNode &tn);
+    // constructors
+    TreeNode(const std::string a = "temp", const int i = 10) : value(a), count(i), left(nullptr), right(nullptr), refCnt(new int(1)){};
+    TreeNode(const TreeNode &tn) : value(tn.value), count(tn.count), left(tn.left), right(tn.right), refCnt(tn.refCnt) { ++*refCnt; };
+    inline bool operator==(const TreeNode &tn)
+    {
+        return (value == tn.value) && (count == tn.count) && (left == tn.left) && (right == tn.right);
+    }
+
+    TreeNode &operator=(const TreeNode &tn)
+    {
+        if (*this == tn)
+        {
+            return *this;
+        }
+        if (--*refCnt == 0)
+        {
+            delete left;
+            delete right;
+        }
+        value = tn.value;
+        count = tn.count;
+        left = tn.left;
+        right = tn.right;
+        refCnt = tn.refCnt;
+        ++*refCnt;
+        return *this;
+    }
+    ~TreeNode()
+    {
+        cout << *this;
+        if ((--*refCnt) == 0)
+        {
+            delete refCnt;
+        }
+    }
+    void setLeft(TreeNode *tn)
+    {
+        left = tn;
+    }
+    void setRight(TreeNode *tn)
+    {
+        right = tn;
+    }
+    TreeNode *getLeft()
+    {
+        return left;
+    }
+    TreeNode *getRight()
+    {
+        return right;
+    }
+
+private:
+    std::string value;
+    int count;
+    TreeNode *left;
+    TreeNode *right;
+    int *refCnt;
+};
+
+class BinStrTree
+{
+private:
+    TreeNode *root;
 };
 
 // Exercises Section 13.1.1
@@ -370,6 +546,7 @@ int exercise13_28();
 // Exercises Section 13.3
 // Exercise 13.29: Explain why the calls to swap inside swap(HasPtr&,
 // HasPtr&) do not cause a recursion loop.
+// Answer: string pointer and int member have std swap func.
 int exercise13_29();
 
 // Exercise 13.30: Write and test a swap function for your valuelike version of
@@ -383,6 +560,10 @@ int exercise13_31();
 
 // Exercise 13.32: Would the pointerlike version of HasPtr benefit from
 // defining a swap function? If so, what is the benefit? If not, why not?
+// Answer: yes.
+// Using the "copy and swap" idiom for implementing the copy assignment operator (operator=) can often be a good practice, 
+// especially when dealing with self-defined classes that manage resources like dynamic memory. 
+// However, whether it's the best approach depends on the specific requirements and characteristics of your class.
 int exercise13_32();
 
 // Exercises Section 13.4

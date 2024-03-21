@@ -6,7 +6,19 @@ int employee::serialNumberCounter = 0;
 
 ostream &operator<<(ostream &os, const HasPtr &hp)
 {
-    os << "ps point to " << *hp.ps << " , i is " << hp.i << "\n";
+    os << "ps point to " << *hp.ps << " , i is " << hp.i << " , ps is " << hp.ps << "\n";
+    return os;
+}
+
+ostream &operator<<(ostream &os, const PlHasPtr &hp)
+{
+    os << "ps point to " << *hp.ps << " , i is " << hp.i << " , refCnt is " << hp.refCnt << "\n";
+    return os;
+}
+
+ostream &operator<<(ostream &os, const TreeNode &tn)
+{
+    os << "string " << tn.value << " , count is " << tn.count << " , left addr is " << tn.left << " , right addr is " << tn.right << " , refCnt is " << *tn.refCnt << "\n";
     return os;
 }
 
@@ -176,6 +188,7 @@ int exercise13_13()
     HasPtr *c = new HasPtr("let's try");
     HasPtr d[3] = {a, b, *c};
     cout << d[0] << d[1] << d[2];
+    delete c;
     return 0;
 }
 
@@ -297,47 +310,120 @@ int exercise13_26()
     a.show_data();
     b.show_data();
 
-// Before assignment, data use count 1 
-// After assignment, data use count 2 
-// temp also point to the shared pointer.
+    // Before assignment, data use count 1
+    // After assignment, data use count 2
+    // temp also point to the shared pointer.
     b = a;
-//     Current data use count 1 
-// abc , def , 
-// temp was destoryed.
+    //     Current data use count 1
+    // abc , def ,
+    // temp was destoryed.
     b.show_data();
-// Current data use count 1 
-// abc , def , 
+    // Current data use count 1
+    // abc , def ,
     a.show_data();
     return 0;
 }
 
 int exercise13_27()
 {
+    PlHasPtr a("this is a HasPtr", 2);
+    PlHasPtr b("second hasptr", 5);
+    cout << a << b;
+    a = b;
+    cout << a;
+    PlHasPtr *c = new PlHasPtr("let's try");
+    PlHasPtr d[3] = {a, b, *c};
+    cout << d[0] << d[1] << d[2];
+    delete c;
     return 0;
 }
 
 int exercise13_28()
 {
+    TreeNode root("root", 10);
+    TreeNode leftLeaf("leftLeaf", 4);
+    TreeNode rightLeaf("rightLeaf", 6);
+
+    root.setLeft(&leftLeaf);
+    root.setRight(&rightLeaf);
+
+    cout << root;
+
+    TreeNode cpRoot;
+    cpRoot = root;
+
+    cout << cpRoot;
+
+    cpRoot.setLeft(new TreeNode("newleft", 5));
+    cpRoot.setRight(new TreeNode("newright", 7));
+    cout << cpRoot;
+
+    delete cpRoot.getLeft();
+    delete cpRoot.getRight();
     return 0;
 }
 
 int exercise13_29()
 {
+    // inline void swap(HasPtr &lhs, HasPtr &rhs)
+    // {
+    //  using std::swap;
+    //  swap(lhs.ps, rhs.ps); // swap the pointers, not the string data
+    //  swap(lhs.i, rhs.i); // swap the int members
+    // }
     return 0;
 }
 
 int exercise13_30()
 {
+    HasPtr a("this is a HasPtr");
+    HasPtr b("second hasptr");
+    cout << a << b;
+    swap(a, b);
+    cout << a << b;
     return 0;
 }
 
 int exercise13_31()
 {
+
+    HasPtr a("this is a HasPtr", 1);
+    HasPtr b("second hasptr", 100);
+    HasPtr c("third hasptr", 2);
+    cout << "a < b : " << (a < b) << "\n";
+    cout << "b < a : " << (b < a) << "\n";
+
+    vector<HasPtr> vec{a,b,c};
+
+    for (const auto & item : vec)
+    {
+        cout << item << "\n";
+    }
+
+    // we're using copy and swap version of operator=
+    std::sort(vec.begin(),vec.end());
+    cout << "After sort \n";
+    for (const auto & item : vec)
+    {
+        cout << item << "\n";
+    }
+// ps point to this is a HasPtr , i is 1 , ps is 0x1f776b0
+// ps point to second hasptr , i is 100 , ps is 0x1f776d0
+// ps point to third hasptr , i is 2 , ps is 0x1f776f0
+// swap called 
+// swap called 
+// swap called 
+// After sort 
+// ps point to this is a HasPtr , i is 1 , ps is 0x1f776b0
+// ps point to third hasptr , i is 2 , ps is 0x1f776f0
+// ps point to second hasptr , i is 100 , ps is 0x1f776d0
+
     return 0;
 }
 
 int exercise13_32()
 {
+    exercise13_27();
     return 0;
 }
 
