@@ -81,7 +81,7 @@ public:
     {
         return (ps == hp.ps) && (i == hp.i);
     }
-    
+
     // (1) const ref verion of operator=
     // inline HasPtr &operator=(const HasPtr &hp)
     // {
@@ -332,6 +332,104 @@ private:
     TreeNode *root;
 };
 
+
+class PlFolder;
+class MessageForPlFolder
+{
+public:
+    friend class PlFolder;
+    friend ostream & operator<<(ostream & os, const MessageForPlFolder & m);
+
+    // folders is implicitly initialized to the empty set
+    explicit MessageForPlFolder(const std::string &str = "") : contents(str) {}
+
+    // copy control to manage pointers to this Message
+    MessageForPlFolder(const MessageForPlFolder &);            // copy constructor
+    MessageForPlFolder &operator=(const MessageForPlFolder &); // copy assignment
+    ~MessageForPlFolder();                          // destructor
+
+    // add/remove this Message from the specified Folder's set of messages
+    void save(PlFolder &);
+    void remove(PlFolder &);
+
+
+private:
+    std::string contents;       // actual message text
+    std::set<PlFolder *> folders; // PlFolders that have this Message. 
+    // utility functions used by copy constructor, assignment, and destructor
+    // add this Message to the Folders that point to the parameter
+    void add_to_Folders(const MessageForPlFolder &);
+    // remove this Message from every Folder in folders
+    void remove_from_Folders();
+};
+
+class PlFolder
+{
+public:
+    friend ostream & operator<<(ostream & os, const PlFolder & f);
+
+    PlFolder() = default;
+    PlFolder(const PlFolder& f) : spMessages(f.spMessages){};  //Folder should act like pointers
+    PlFolder &operator=(const PlFolder &); // copy assignment
+    ~PlFolder(); // Folder need to ask every messages to clean their folder set, then Folder clean it's messages set. 
+    void addMsg(MessageForPlFolder *);
+    void remMsg(MessageForPlFolder *);
+
+private:
+    std::shared_ptr<std::set<MessageForPlFolder *>> spMessages;
+};
+
+class Folder;
+class Message
+{
+public:
+    friend class Folder;
+    friend ostream & operator<<(ostream & os, const Message & m);
+
+    // folders is implicitly initialized to the empty set
+    explicit Message(const std::string &str = "") : contents(str) {}
+
+    // copy control to manage pointers to this Message
+    Message(const Message &);            // copy constructor
+    Message &operator=(const Message &); // copy assignment
+    ~Message();                          // destructor
+
+    // add/remove this Message from the specified Folder's set of messages
+    void save(Folder &);
+    void remove(Folder &);
+
+private:
+    std::string contents;       // actual message text
+    std::set<Folder *> folders; // Folders that have this Message
+    // utility functions used by copy constructor, assignment, and destructor
+    // add this Message to the Folders that point to the parameter
+    void add_to_Folders(const Message &);
+    // remove this Message from every Folder in folders
+    void remove_from_Folders();
+    void addFolder(Folder *);
+    void remFolder(Folder *);
+};
+
+class Folder
+{
+public:
+    friend class Message;
+    friend ostream & operator<<(ostream & os, const Folder & f);
+
+    Folder() = default;
+    Folder(const Folder& f);  //Copy the set and make each message in that set point to me.
+    Folder &operator=(const Folder &); // copy assignment
+    ~Folder(); // Folder need to ask every messages to clean their folder set, then Folder clean it's messages set. 
+
+
+private:
+    std::set<Message *> messages;
+    void addMsg(Message *);
+    void remMsg(Message *);
+    void remove_from_Messages();
+    void add_to_Messages(const Folder &);
+};
+
 // Exercises Section 13.1.1
 // Exercise 13.1: What is a copy constructor? When is it used?
 // Answer: (1)When we use copy initialization, we are asking the compiler to copy
@@ -561,8 +659,8 @@ int exercise13_31();
 // Exercise 13.32: Would the pointerlike version of HasPtr benefit from
 // defining a swap function? If so, what is the benefit? If not, why not?
 // Answer: yes.
-// Using the "copy and swap" idiom for implementing the copy assignment operator (operator=) can often be a good practice, 
-// especially when dealing with self-defined classes that manage resources like dynamic memory. 
+// Using the "copy and swap" idiom for implementing the copy assignment operator (operator=) can often be a good practice,
+// especially when dealing with self-defined classes that manage resources like dynamic memory.
 // However, whether it's the best approach depends on the specific requirements and characteristics of your class.
 int exercise13_32();
 
@@ -570,6 +668,7 @@ int exercise13_32();
 // Exercise 13.33: Why is the parameter to the save and remove members
 // of Message a Folder&? Why didn’t we define that parameter as Folder?
 // Or const Folder&?
+// Answer: we need to call the folder's member func and modity the folder's data member.
 int exercise13_33();
 
 // Exercise 13.34: Write the Message class as described in this section.
@@ -577,10 +676,12 @@ int exercise13_34();
 
 // Exercise 13.35: What would happen if Message used the synthesized
 // versions of the copy-control members?
+// Answer: if so, message cannot control the relation with Folder any more.  
 int exercise13_35();
 
 // Exercise 13.36: Design and implement the corresponding Folder class.
 // That class should hold a set that points to the Messages in that Folder.
+// Answer: done, I implement it in two ways: one works like pointer, one works like value.
 int exercise13_36();
 
 // Exercise 13.37: Add members to the Message class to insert or remove a
@@ -590,6 +691,7 @@ int exercise13_37();
 
 // Exercise 13.38: We did not use copy and swap to define the Message
 // assignment operator. Why do you suppose this is so?
+// Answer: we want to not only swap the value, but also need to modify the value we swapped.
 int exercise13_38();
 
 // Exercises Section 13.5

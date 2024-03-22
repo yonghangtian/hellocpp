@@ -22,6 +22,229 @@ ostream &operator<<(ostream &os, const TreeNode &tn)
     return os;
 }
 
+ostream & operator<<(ostream & os, const MessageForPlFolder & m)
+{
+    os << "Message content: " << m.contents << "\n";
+    for (auto f : m.folders)
+    {
+        os << "---> Folder addr: " << f << "\n"; 
+    }
+    return os;
+}
+
+ostream & operator<<(ostream & os, const PlFolder & f)
+{
+    os << "This is a folder: " << "\n";
+    for (auto m : *f.spMessages)
+    {
+        os << "|----> Message addr: " << m << "\n"; 
+    }
+    return os;
+}
+
+ostream & operator<<(ostream & os, const Message & m)
+{
+    os << "Message content: " << m.contents << "\n";
+    for (auto f : m.folders)
+    {
+        os << "---> Folder addr: " << f << "\n"; 
+    }
+    return os;
+}
+
+ostream & operator<<(ostream & os, const Folder & f)
+{
+    os << "This is a folder: " << "\n";
+    for (auto m : f.messages)
+    {
+        os << "|----> Message addr: " << m << "\n"; 
+    }
+    return os;
+}
+
+// add this Message to Folders that point to m
+void MessageForPlFolder::add_to_Folders(const MessageForPlFolder &m)
+{
+    for (auto f : m.folders) // for each Folder that holds m
+        f->addMsg(this);     // add a pointer to this Message to that Folder
+}
+
+// remove this Message from the corresponding Folders
+void MessageForPlFolder::remove_from_Folders()
+{
+    for (auto f : folders) // for each pointer in folders
+        f->remMsg(this);   // remove this Message from that Folder
+}
+
+MessageForPlFolder::MessageForPlFolder(const MessageForPlFolder &m) : contents(m.contents), folders(m.folders)
+{
+    add_to_Folders(m); // add this Message to the Folders that point to m
+}
+
+MessageForPlFolder &MessageForPlFolder::operator=(const MessageForPlFolder &rhs)
+{
+    // handle self-assignment by removing pointers before inserting them
+    remove_from_Folders();   // update existing Folders
+    contents = rhs.contents; // copy message contents from rhs
+    folders = rhs.folders;   // copy Folder pointers from rhs
+    add_to_Folders(rhs);     // add this Message to those Folders
+    return *this;
+}
+
+MessageForPlFolder::~MessageForPlFolder()
+{
+    remove_from_Folders();
+}
+
+void MessageForPlFolder::save(PlFolder &f)
+{
+    folders.insert(&f); // add the given Folder to our list of Folders
+    f.addMsg(this);     // add this Message to f's set of Messages
+}
+
+void MessageForPlFolder::remove(PlFolder &f)
+{
+    folders.erase(&f); // take the given Folder out of our list of Folders
+    f.remMsg(this);    // remove this Message to f's set of Messages
+}
+
+PlFolder & PlFolder::operator=(const PlFolder & f)
+{
+    if (spMessages == f.spMessages)
+    {
+        return *this;
+    }
+
+    spMessages = f.spMessages;
+    return *this;
+}
+
+PlFolder::~PlFolder()
+{
+    for (auto m : *spMessages)
+    {
+        m->folders.erase(this);
+    }
+}
+
+// add this Message to Folder
+void PlFolder::addMsg(MessageForPlFolder * m)
+{
+    if (!spMessages)
+    {
+        std::set<MessageForPlFolder *> messages;
+        spMessages = std::make_shared<std::set<MessageForPlFolder *>>(messages);
+    }
+    spMessages->insert(m);
+}
+
+// remove this Message to Folder
+void PlFolder::remMsg(MessageForPlFolder * m)
+{
+    spMessages->erase(m);
+}
+
+// add this Message to Folders that point to m
+void Message::add_to_Folders(const Message &m)
+{
+    for (auto f : m.folders) // for each Folder that holds m
+        f->addMsg(this);     // add a pointer to this Message to that Folder
+}
+
+// remove this Message from the corresponding Folders
+void Message::remove_from_Folders()
+{
+    for (auto f : folders) // for each pointer in folders
+        f->remMsg(this);   // remove this Message from that Folder
+}
+
+void Message::addFolder(Folder * f)
+{
+    folders.insert(f);
+}
+
+void Message::remFolder(Folder * f)
+{
+    folders.erase(f);
+}
+
+Message::Message(const Message &m) : contents(m.contents), folders(m.folders)
+{
+    add_to_Folders(m); // add this Message to the Folders that point to m
+}
+
+Message &Message::operator=(const Message &rhs)
+{
+    // handle self-assignment by removing pointers before inserting them
+    remove_from_Folders();   // update existing Folders
+    contents = rhs.contents; // copy message contents from rhs
+    folders = rhs.folders;   // copy Folder pointers from rhs
+    add_to_Folders(rhs);     // add this Message to those Folders
+    return *this;
+}
+
+Message::~Message()
+{
+    remove_from_Folders();
+}
+
+void Message::save(Folder &f)
+{
+    folders.insert(&f); // add the given Folder to our list of Folders
+    f.addMsg(this);     // add this Message to f's set of Messages
+}
+
+void Message::remove(Folder &f)
+{
+    folders.erase(&f); // take the given Folder out of our list of Folders
+    f.remMsg(this);    // remove this Message to f's set of Messages
+}
+
+void Folder::remove_from_Messages()
+{
+    for (auto m : messages)
+    {
+        m->remFolder(this);
+    }
+}
+void Folder::add_to_Messages(const Folder & f)
+{
+    for (auto m : f.messages) // for each Folder that holds m
+        m->addFolder(this); 
+}
+
+Folder::Folder(const Folder& f) : messages(f.messages)
+{
+    for (auto m : messages)
+    {
+        m->addFolder(this);
+    }
+}
+
+Folder & Folder::operator=(const Folder & f)
+{
+    // handle self-assignment by removing pointers before inserting them
+    remove_from_Messages();   // update existing Folders
+    messages = f.messages;   // copy Folder pointers from rhs
+    add_to_Messages(f);     // add this Message to those Folders
+    return *this;
+}
+
+Folder::~Folder()
+{
+    remove_from_Messages();
+}
+
+void Folder::addMsg(Message * m)
+{
+    messages.insert(m);
+}
+
+void Folder::remMsg(Message * m)
+{
+    messages.erase(m);
+}
+
 int exercise13_1()
 {
     return 0;
@@ -393,30 +616,30 @@ int exercise13_31()
     cout << "a < b : " << (a < b) << "\n";
     cout << "b < a : " << (b < a) << "\n";
 
-    vector<HasPtr> vec{a,b,c};
+    vector<HasPtr> vec{a, b, c};
 
-    for (const auto & item : vec)
+    for (const auto &item : vec)
     {
         cout << item << "\n";
     }
 
     // we're using copy and swap version of operator=
-    std::sort(vec.begin(),vec.end());
+    std::sort(vec.begin(), vec.end());
     cout << "After sort \n";
-    for (const auto & item : vec)
+    for (const auto &item : vec)
     {
         cout << item << "\n";
     }
-// ps point to this is a HasPtr , i is 1 , ps is 0x1f776b0
-// ps point to second hasptr , i is 100 , ps is 0x1f776d0
-// ps point to third hasptr , i is 2 , ps is 0x1f776f0
-// swap called 
-// swap called 
-// swap called 
-// After sort 
-// ps point to this is a HasPtr , i is 1 , ps is 0x1f776b0
-// ps point to third hasptr , i is 2 , ps is 0x1f776f0
-// ps point to second hasptr , i is 100 , ps is 0x1f776d0
+    // ps point to this is a HasPtr , i is 1 , ps is 0x1f776b0
+    // ps point to second hasptr , i is 100 , ps is 0x1f776d0
+    // ps point to third hasptr , i is 2 , ps is 0x1f776f0
+    // swap called
+    // swap called
+    // swap called
+    // After sort
+    // ps point to this is a HasPtr , i is 1 , ps is 0x1f776b0
+    // ps point to third hasptr , i is 2 , ps is 0x1f776f0
+    // ps point to second hasptr , i is 100 , ps is 0x1f776d0
 
     return 0;
 }
@@ -434,6 +657,34 @@ int exercise13_33()
 
 int exercise13_34()
 {
+    MessageForPlFolder a("this is a");
+    cout << &a  << " <-- a's addr \n";
+    PlFolder one;
+    cout << &one << " <-- one's addr \n";
+    {
+        a.save(one);
+        MessageForPlFolder b("b, it is.");
+        cout << &b << " <-- b's addr \n";
+        b.save(one);
+        PlFolder two;
+        cout << &two << " <-- two's addr \n";
+        b.save(two);
+        PlFolder three(one);
+        cout << a << b << one << two << three;
+
+        one = two;
+        cout << "Test folder assignment \n" << one << two << three;
+        one = three;
+
+        MessageForPlFolder c("c ha");
+        c = b;
+        c.remove(two);
+        cout << "Test message assignment \n" << a << b << c << one << two;
+        
+    }
+    cout << "Out of block(Folder two and Message two are out of scope): \n";
+    cout << a << one;
+
     return 0;
 }
 
@@ -444,6 +695,35 @@ int exercise13_35()
 
 int exercise13_36()
 {
+    Message a("this is a");
+    cout << &a  << " <-- a's addr \n";
+    Folder one;
+    cout << &one << " <-- one's addr \n";
+    {
+        a.save(one);
+        Message b("b, it is.");
+        cout << &b << " <-- b's addr \n";
+        b.save(one);
+        Folder two;
+        cout << &two << " <-- two's addr \n";
+        b.save(two);
+        Folder three(one);
+        cout << a << b << one << two << three;
+
+        one = two;
+        cout << "---------------------------Test folder assignment--------------------------- \n" << a << b << one << two << three;
+        one = three;
+        cout << "---------------------------Test folder assignment(again)--------------------------- \n" << a << b << one << two << three;
+
+        Message c("c ha");
+        c = b;
+        c.remove(two);
+        cout << "---------------------------Test message assignment--------------------------- \n" << a << b << c << one << two << three;
+        
+    }
+    cout << "Out of block(Folder two and Message two are out of scope): \n";
+    cout << a << one;
+
     return 0;
 }
 
