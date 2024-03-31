@@ -22,42 +22,44 @@ ostream &operator<<(ostream &os, const TreeNode &tn)
     return os;
 }
 
-ostream & operator<<(ostream & os, const MessageForPlFolder & m)
+ostream &operator<<(ostream &os, const MessageForPlFolder &m)
 {
     os << "Message content: " << m.contents << "\n";
     for (auto f : m.folders)
     {
-        os << "---> Folder addr: " << f << "\n"; 
+        os << "---> Folder addr: " << f << "\n";
     }
     return os;
 }
 
-ostream & operator<<(ostream & os, const PlFolder & f)
+ostream &operator<<(ostream &os, const PlFolder &f)
 {
-    os << "This is a folder: " << "\n";
+    os << "This is a folder: "
+       << "\n";
     for (auto m : *f.spMessages)
     {
-        os << "|----> Message addr: " << m << "\n"; 
+        os << "|----> Message addr: " << m << "\n";
     }
     return os;
 }
 
-ostream & operator<<(ostream & os, const Message & m)
+ostream &operator<<(ostream &os, const Message &m)
 {
     os << "Message content: " << m.contents << "\n";
     for (auto f : m.folders)
     {
-        os << "---> Folder addr: " << f << "\n"; 
+        os << "---> Folder addr: " << f << "\n";
     }
     return os;
 }
 
-ostream & operator<<(ostream & os, const Folder & f)
+ostream &operator<<(ostream &os, const Folder &f)
 {
-    os << "This is a folder: " << "\n";
+    os << "This is a folder: "
+       << "\n";
     for (auto m : f.messages)
     {
-        os << "|----> Message addr: " << m << "\n"; 
+        os << "|----> Message addr: " << m << "\n";
     }
     return os;
 }
@@ -108,7 +110,7 @@ void MessageForPlFolder::remove(PlFolder &f)
     f.remMsg(this);    // remove this Message to f's set of Messages
 }
 
-PlFolder & PlFolder::operator=(const PlFolder & f)
+PlFolder &PlFolder::operator=(const PlFolder &f)
 {
     if (spMessages == f.spMessages)
     {
@@ -128,7 +130,7 @@ PlFolder::~PlFolder()
 }
 
 // add this Message to Folder
-void PlFolder::addMsg(MessageForPlFolder * m)
+void PlFolder::addMsg(MessageForPlFolder *m)
 {
     if (!spMessages)
     {
@@ -139,7 +141,7 @@ void PlFolder::addMsg(MessageForPlFolder * m)
 }
 
 // remove this Message to Folder
-void PlFolder::remMsg(MessageForPlFolder * m)
+void PlFolder::remMsg(MessageForPlFolder *m)
 {
     spMessages->erase(m);
 }
@@ -158,12 +160,12 @@ void Message::remove_from_Folders()
         f->remMsg(this);   // remove this Message from that Folder
 }
 
-void Message::addFolder(Folder * f)
+void Message::addFolder(Folder *f)
 {
     folders.insert(f);
 }
 
-void Message::remFolder(Folder * f)
+void Message::remFolder(Folder *f)
 {
     folders.erase(f);
 }
@@ -207,13 +209,13 @@ void Folder::remove_from_Messages()
         m->remFolder(this);
     }
 }
-void Folder::add_to_Messages(const Folder & f)
+void Folder::add_to_Messages(const Folder &f)
 {
     for (auto m : f.messages) // for each Folder that holds m
-        m->addFolder(this); 
+        m->addFolder(this);
 }
 
-Folder::Folder(const Folder& f) : messages(f.messages)
+Folder::Folder(const Folder &f) : messages(f.messages)
 {
     for (auto m : messages)
     {
@@ -221,11 +223,11 @@ Folder::Folder(const Folder& f) : messages(f.messages)
     }
 }
 
-Folder & Folder::operator=(const Folder & f)
+Folder &Folder::operator=(const Folder &f)
 {
     // handle self-assignment by removing pointers before inserting them
-    remove_from_Messages();   // update existing Folders
-    messages = f.messages;   // copy Folder pointers from rhs
+    remove_from_Messages(); // update existing Folders
+    messages = f.messages;  // copy Folder pointers from rhs
     add_to_Messages(f);     // add this Message to those Folders
     return *this;
 }
@@ -235,14 +237,97 @@ Folder::~Folder()
     remove_from_Messages();
 }
 
-void Folder::addMsg(Message * m)
+void Folder::addMsg(Message *m)
 {
     messages.insert(m);
 }
 
-void Folder::remMsg(Message * m)
+void Folder::remMsg(Message *m)
 {
     messages.erase(m);
+}
+
+// definition for static data member
+std::allocator<string> StrVec::alloc;
+
+StrVec::StrVec(const StrVec &temp)
+{
+    auto ps_pair = alloc_n_copy(temp.begin(), temp.end());
+    elements = ps_pair.first;
+    first_free = ps_pair.second;
+    cap = ps_pair.second;
+}
+
+StrVec &StrVec::operator=(const StrVec &temp)
+{
+    auto ps_pair = alloc_n_copy(temp.begin(), temp.end());
+    free();
+    elements = ps_pair.first;
+    first_free = ps_pair.second;
+    cap = ps_pair.second;
+
+    return *this;
+}
+
+StrVec::~StrVec() noexcept
+{
+    free();
+}
+
+StrVec::StrVec(std::initializer_list<std::string> temp)
+{
+    // dont know how to do it.
+    auto newdata = alloc_n_copy(temp.begin(), temp.end());
+    elements = newdata.first;
+    first_free = cap = newdata.second;
+}
+
+void StrVec::push_back(const std::string &s)
+{
+    chk_n_alloc();
+    alloc.construct(first_free++, s);
+}
+
+std::pair<std::string *, std::string *> StrVec::alloc_n_copy(const std::string *b, const std::string *e)
+{
+    // Let's try
+    auto const p = alloc.allocate(e - b);
+    return {p, std::uninitialized_copy(b, e, p)};
+}
+
+void StrVec::free()
+{
+    if (elements)
+    {
+        // Way 1: original for loop
+        // for (auto p = first_free; p != elements;)
+        // {
+        //     alloc.destroy(--p);
+        // }
+
+        // Way 2: iterator and lambda
+        auto reverse_begin = boost::make_reverse_iterator(end());  
+        auto reverse_end = boost::make_reverse_iterator(begin());  
+        std::for_each(reverse_begin, reverse_end, [&](string & p) { alloc.destroy(&p);});
+        alloc.deallocate(elements, cap - elements);
+    }
+}
+
+void StrVec::reallocate()
+{
+    auto newcapacity = size() ? 2 * size() : 1;
+
+    auto const p = alloc.allocate(newcapacity);
+    auto dest = p;
+    auto elem = elements;
+    for (size_t i = 0; i != size(); ++i)
+    {
+        alloc.construct(dest++, std::move(*(elem++)));
+    }
+    free();
+    elements = p;
+    first_free = dest;
+    cap = elements + newcapacity;
 }
 
 int exercise13_1()
@@ -658,7 +743,7 @@ int exercise13_33()
 int exercise13_34()
 {
     MessageForPlFolder a("this is a");
-    cout << &a  << " <-- a's addr \n";
+    cout << &a << " <-- a's addr \n";
     PlFolder one;
     cout << &one << " <-- one's addr \n";
     {
@@ -673,14 +758,15 @@ int exercise13_34()
         cout << a << b << one << two << three;
 
         one = two;
-        cout << "Test folder assignment \n" << one << two << three;
+        cout << "Test folder assignment \n"
+             << one << two << three;
         one = three;
 
         MessageForPlFolder c("c ha");
         c = b;
         c.remove(two);
-        cout << "Test message assignment \n" << a << b << c << one << two;
-        
+        cout << "Test message assignment \n"
+             << a << b << c << one << two;
     }
     cout << "Out of block(Folder two and Message two are out of scope): \n";
     cout << a << one;
@@ -696,7 +782,7 @@ int exercise13_35()
 int exercise13_36()
 {
     Message a("this is a");
-    cout << &a  << " <-- a's addr \n";
+    cout << &a << " <-- a's addr \n";
     Folder one;
     cout << &one << " <-- one's addr \n";
     {
@@ -711,15 +797,17 @@ int exercise13_36()
         cout << a << b << one << two << three;
 
         one = two;
-        cout << "---------------------------Test folder assignment--------------------------- \n" << a << b << one << two << three;
+        cout << "---------------------------Test folder assignment--------------------------- \n"
+             << a << b << one << two << three;
         one = three;
-        cout << "---------------------------Test folder assignment(again)--------------------------- \n" << a << b << one << two << three;
+        cout << "---------------------------Test folder assignment(again)--------------------------- \n"
+             << a << b << one << two << three;
 
         Message c("c ha");
         c = b;
         c.remove(two);
-        cout << "---------------------------Test message assignment--------------------------- \n" << a << b << c << one << two << three;
-        
+        cout << "---------------------------Test message assignment--------------------------- \n"
+             << a << b << c << one << two << three;
     }
     cout << "Out of block(Folder two and Message two are out of scope): \n";
     cout << a << one;
@@ -729,6 +817,7 @@ int exercise13_36()
 
 int exercise13_37()
 {
+    exercise13_36();
     return 0;
 }
 
@@ -739,11 +828,23 @@ int exercise13_38()
 
 int exercise13_39()
 {
+    StrVec a;
+    string t1("temp str"), t2("temp str2"), t3("temp str3");
+    a.push_back(t1);
+    a.push_back(t2);
+
+    cout << a.size() << "\n"
+         << a.capacity() << "\n";
+
     return 0;
 }
 
 int exercise13_40()
 {
+    string t1("temp str"), t2("temp str2"), t3("temp str3");
+    StrVec a{t1, t2, t3};
+    cout << a.size() << "\n"
+         << a.capacity() << "\n";
     return 0;
 }
 

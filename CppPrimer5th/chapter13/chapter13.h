@@ -15,6 +15,8 @@
 #include <map>
 #include <set>
 #include <stdexcept>
+#include <boost/iterator/reverse_iterator.hpp>
+#include <initializer_list>
 #include "../chapter7/chapter7.h"
 #include "../chapter12/chapter12.h"
 #include "../chapter12/StrBlob.h"
@@ -332,13 +334,12 @@ private:
     TreeNode *root;
 };
 
-
 class PlFolder;
 class MessageForPlFolder
 {
 public:
     friend class PlFolder;
-    friend ostream & operator<<(ostream & os, const MessageForPlFolder & m);
+    friend ostream &operator<<(ostream &os, const MessageForPlFolder &m);
 
     // folders is implicitly initialized to the empty set
     explicit MessageForPlFolder(const std::string &str = "") : contents(str) {}
@@ -346,16 +347,15 @@ public:
     // copy control to manage pointers to this Message
     MessageForPlFolder(const MessageForPlFolder &);            // copy constructor
     MessageForPlFolder &operator=(const MessageForPlFolder &); // copy assignment
-    ~MessageForPlFolder();                          // destructor
+    ~MessageForPlFolder();                                     // destructor
 
     // add/remove this Message from the specified Folder's set of messages
     void save(PlFolder &);
     void remove(PlFolder &);
 
-
 private:
-    std::string contents;       // actual message text
-    std::set<PlFolder *> folders; // PlFolders that have this Message. 
+    std::string contents;         // actual message text
+    std::set<PlFolder *> folders; // PlFolders that have this Message.
     // utility functions used by copy constructor, assignment, and destructor
     // add this Message to the Folders that point to the parameter
     void add_to_Folders(const MessageForPlFolder &);
@@ -366,12 +366,12 @@ private:
 class PlFolder
 {
 public:
-    friend ostream & operator<<(ostream & os, const PlFolder & f);
+    friend ostream &operator<<(ostream &os, const PlFolder &f);
 
     PlFolder() = default;
-    PlFolder(const PlFolder& f) : spMessages(f.spMessages){};  //Folder should act like pointers
-    PlFolder &operator=(const PlFolder &); // copy assignment
-    ~PlFolder(); // Folder need to ask every messages to clean their folder set, then Folder clean it's messages set. 
+    PlFolder(const PlFolder &f) : spMessages(f.spMessages){}; // Folder should act like pointers
+    PlFolder &operator=(const PlFolder &);                    // copy assignment
+    ~PlFolder();                                              // Folder need to ask every messages to clean their folder set, then Folder clean it's messages set.
     void addMsg(MessageForPlFolder *);
     void remMsg(MessageForPlFolder *);
 
@@ -384,7 +384,7 @@ class Message
 {
 public:
     friend class Folder;
-    friend ostream & operator<<(ostream & os, const Message & m);
+    friend ostream &operator<<(ostream &os, const Message &m);
 
     // folders is implicitly initialized to the empty set
     explicit Message(const std::string &str = "") : contents(str) {}
@@ -414,13 +414,12 @@ class Folder
 {
 public:
     friend class Message;
-    friend ostream & operator<<(ostream & os, const Folder & f);
+    friend ostream &operator<<(ostream &os, const Folder &f);
 
     Folder() = default;
-    Folder(const Folder& f);  //Copy the set and make each message in that set point to me.
+    Folder(const Folder &f);           // Copy the set and make each message in that set point to me.
     Folder &operator=(const Folder &); // copy assignment
-    ~Folder(); // Folder need to ask every messages to clean their folder set, then Folder clean it's messages set. 
-
+    ~Folder();                         // Folder need to ask every messages to clean their folder set, then Folder clean it's messages set.
 
 private:
     std::set<Message *> messages;
@@ -428,6 +427,47 @@ private:
     void remMsg(Message *);
     void remove_from_Messages();
     void add_to_Messages(const Folder &);
+};
+
+class StrVec
+{
+public:
+    // copy control members
+    StrVec() : elements(nullptr), first_free(nullptr), cap(nullptr) {}
+
+    StrVec(const StrVec &);            // copy constructor
+    StrVec &operator=(const StrVec &); // copy assignment
+
+    ~StrVec() noexcept; // destructor
+
+    StrVec(std::initializer_list<std::string>);
+
+    void push_back(const std::string&);  // copy the element
+    // void push_back(std::string&&);       // move the element
+
+	// add elements
+    size_t size() const { return first_free - elements; }
+    size_t capacity() const { return cap - elements; }
+
+	// iterator interface
+	std::string *begin() const { return elements; }
+	std::string *end() const { return first_free; }
+    
+private:
+    static std::allocator<std::string> alloc; // allocates the elements
+
+	// utility functions:
+	//  used by members that add elements to the StrVec
+	void chk_n_alloc() 
+		{ if (size() == capacity()) reallocate(); }
+    // used by the copy constructor, assignment operator, and destructor
+	std::pair<std::string*, std::string*> alloc_n_copy
+	    (const std::string*, const std::string*);
+	void free();             // destroy the elements and free the space
+    void reallocate();       // get more space and copy the existing elements
+    std::string *elements;   // pointer to the first element in the array
+    std::string *first_free; // pointer to the first free element in the array
+    std::string *cap;        // pointer to one past the end of the array
 };
 
 // Exercises Section 13.1.1
@@ -676,7 +716,7 @@ int exercise13_34();
 
 // Exercise 13.35: What would happen if Message used the synthesized
 // versions of the copy-control members?
-// Answer: if so, message cannot control the relation with Folder any more.  
+// Answer: if so, message cannot control the relation with Folder any more.
 int exercise13_35();
 
 // Exercise 13.36: Design and implement the corresponding Folder class.
@@ -687,6 +727,7 @@ int exercise13_36();
 // Exercise 13.37: Add members to the Message class to insert or remove a
 // given Folder* into folders. These members are analogous to Folder’s
 // addMsg and remMsg operations.
+// Answer: done.
 int exercise13_37();
 
 // Exercise 13.38: We did not use copy and swap to define the Message
@@ -704,6 +745,8 @@ int exercise13_40();
 
 // Exercise 13.41: Why did we use postfix increment in the call to
 // construct inside push_back? What would happen if it used the prefix increment?
+// Answer: prefix increment will make first_free be a pointer point to the last element in our vector, 
+// not a pointer point to the first free element. 
 int exercise13_41();
 
 // Exercise 13.42: Test your StrVec class by using it in place of the
@@ -713,6 +756,7 @@ int exercise13_42();
 // Exercise 13.43: Rewrite the free member to use for_each and a lambda
 // (§ 10.3.2, p. 388) in place of the for loop to destroy the elements. Which
 // implementation do you prefer, and why?
+// Answer: iterator and lambda is more suitable, as we dont need to maintain the in/decrement of pointer.
 int exercise13_43();
 
 // Exercise 13.44: Write a class named String that is a simplified version of
