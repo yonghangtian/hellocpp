@@ -30,7 +30,7 @@ using std::string;
 
 // #define NDEBUG
 
-// below part for mysqlcppconn1.1.12, installed on ubuntu22.04 using apt-get.
+// below part for mysqlcppconn1.1.12, installed on project root downloaded from oracle official website.
 #include <mysql_connection.h>
 #include <cppconn/driver.h>
 #include <cppconn/exception.h>
@@ -442,32 +442,133 @@ public:
 
     StrVec(std::initializer_list<std::string>);
 
-    void push_back(const std::string&);  // copy the element
+    void push_back(const std::string &); // copy the element
     // void push_back(std::string&&);       // move the element
 
-	// add elements
+    // add elements
     size_t size() const { return first_free - elements; }
     size_t capacity() const { return cap - elements; }
 
-	// iterator interface
-	std::string *begin() const { return elements; }
-	std::string *end() const { return first_free; }
-    
+    // iterator interface
+    std::string *begin() const { return elements; }
+    std::string *end() const { return first_free; }
+
+    // at function
+    std::string at(size_t i) const
+    {
+        if (i >= size())
+            throw std::runtime_error("Out of range\n");
+
+        return *(elements + i);
+    }
+
 private:
     static std::allocator<std::string> alloc; // allocates the elements
 
-	// utility functions:
-	//  used by members that add elements to the StrVec
-	void chk_n_alloc() 
-		{ if (size() == capacity()) reallocate(); }
+    // utility functions:
+    //  used by members that add elements to the StrVec
+    void chk_n_alloc()
+    {
+        if (size() == capacity())
+            reallocate();
+    }
     // used by the copy constructor, assignment operator, and destructor
-	std::pair<std::string*, std::string*> alloc_n_copy
-	    (const std::string*, const std::string*);
-	void free();             // destroy the elements and free the space
+    std::pair<std::string *, std::string *> alloc_n_copy(const std::string *, const std::string *);
+    void free();             // destroy the elements and free the space
     void reallocate();       // get more space and copy the existing elements
     std::string *elements;   // pointer to the first element in the array
     std::string *first_free; // pointer to the first free element in the array
     std::string *cap;        // pointer to one past the end of the array
+};
+
+class QueryResultUseStrVec;
+class TextQueryUseStrVec
+{
+public:
+    TextQueryUseStrVec(std::ifstream &in_file);
+    QueryResultUseStrVec query(const string &word);
+
+private:
+    // contents: index is line number, string is line content.
+    std::shared_ptr<StrVec> contents;
+    // words_map: string is word, and set<int> is a set of line number in which word appears at least once.
+    std::shared_ptr<std::map<string, std::set<int>>> words_map;
+    // word_count: string is word, and int is the frequency of word.
+    std::shared_ptr<std::map<string, int>> word_count;
+};
+
+class QueryResultUseStrVec
+{
+    friend std::ostream &print(std::ostream &os, QueryResultUseStrVec result);
+
+public:
+    QueryResultUseStrVec(const string w, int f,
+                         std::shared_ptr<StrVec> c,
+                         std::shared_ptr<std::set<int>> l) : word(w), frequency(f), contents(c), line_nums(l) {}
+
+    inline std::set<int>::iterator begin() { return line_nums->begin(); }
+    inline std::set<int>::iterator end() { return line_nums->end(); }
+    inline std::shared_ptr<StrVec> get_file() { return contents; }
+
+private:
+    std::shared_ptr<StrVec> contents;
+    string word;
+    int frequency;
+    std::shared_ptr<std::set<int>> line_nums;
+};
+
+class SelfDefinedStr
+{
+public:
+    friend ostream & operator<<(ostream &, const SelfDefinedStr &);
+
+    // copy control members
+    SelfDefinedStr() : elements(nullptr), first_free(nullptr), cap(nullptr) {}
+
+    SelfDefinedStr(const SelfDefinedStr &);            // copy constructor
+    SelfDefinedStr &operator=(const SelfDefinedStr &); // copy assignment
+
+    ~SelfDefinedStr() noexcept; // destructor
+
+    SelfDefinedStr(const char *); // constructor takes c-type string
+
+    void push_back(const char); // copy the element
+    // void push_back(std::string&&);       // move the element
+
+    // add elements
+    size_t size() const { return first_free - elements; }
+    size_t capacity() const { return cap - elements; }
+
+    // iterator interface
+    char *begin() const { return elements; }
+    char *end() const { return first_free; }
+
+    // at function
+    char at(size_t i) const
+    {
+        if (i >= size())
+            throw std::runtime_error("Out of range\n");
+
+        return *(elements + i);
+    }
+
+private:
+    static std::allocator<char> alloc;
+
+    // utility functions:
+    //  used by members that add elements to the StrVec
+    void chk_n_alloc()
+    {
+        if (size() == capacity())
+            reallocate();
+    }
+    // used by the copy constructor, assignment operator, and destructor
+    std::pair<char *, char *> alloc_n_copy(const char *, const char *);
+    void free();       // destroy the elements and free the space
+    void reallocate(); // get more space and copy the existing elements
+    char *elements;    // pointer to the first element in the array
+    char *first_free;  // pointer to the first free element in the array
+    char *cap;         // pointer to one past the end of the array
 };
 
 // Exercises Section 13.1.1
@@ -745,8 +846,8 @@ int exercise13_40();
 
 // Exercise 13.41: Why did we use postfix increment in the call to
 // construct inside push_back? What would happen if it used the prefix increment?
-// Answer: prefix increment will make first_free be a pointer point to the last element in our vector, 
-// not a pointer point to the first free element. 
+// Answer: prefix increment will make first_free be a pointer point to the last element in our vector,
+// not a pointer point to the first free element.
 int exercise13_41();
 
 // Exercise 13.42: Test your StrVec class by using it in place of the

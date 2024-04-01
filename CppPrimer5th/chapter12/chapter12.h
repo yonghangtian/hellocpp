@@ -25,7 +25,7 @@ using std::ostream;
 using std::string;
 //#define NDEBUG
 
-// below part for mysqlcppconn1.1.12, installed on ubuntu22.04 using apt-get.
+// below part for mysqlcppconn1.1.12, installed on project root downloaded from oracle official website.
 #include <mysql_connection.h>
 #include <cppconn/driver.h>
 #include <cppconn/exception.h>

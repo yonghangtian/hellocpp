@@ -64,6 +64,32 @@ ostream &operator<<(ostream &os, const Folder &f)
     return os;
 }
 
+std::ostream &print(std::ostream &os, QueryResultUseStrVec result)
+{
+    cout << "The word " << result.word << " has appeared " << result.frequency << " times.\n";
+    cout << "Here are detail info:\n";
+    for (auto line : *(result.line_nums))
+    {
+        cout << "( " << line << " )"
+             << "   " << result.contents->at(line) << "\n";
+    }
+    return os;
+}
+
+ostream &operator<<(ostream &os, const SelfDefinedStr &s)
+{
+    os << "This is a SelfDefinedStr: "
+       << "\n";
+    // for (auto a = s.elements; a!=s.first_free;)
+    // {
+    //     os << *(a++);
+    // }
+    std::for_each(s.begin(), s.end(), [&](char & p){
+        os << p;
+    });
+    return os;
+}
+
 // add this Message to Folders that point to m
 void MessageForPlFolder::add_to_Folders(const MessageForPlFolder &m)
 {
@@ -306,9 +332,10 @@ void StrVec::free()
         // }
 
         // Way 2: iterator and lambda
-        auto reverse_begin = boost::make_reverse_iterator(end());  
-        auto reverse_end = boost::make_reverse_iterator(begin());  
-        std::for_each(reverse_begin, reverse_end, [&](string & p) { alloc.destroy(&p);});
+        auto reverse_begin = boost::make_reverse_iterator(end());
+        auto reverse_end = boost::make_reverse_iterator(begin());
+        std::for_each(reverse_begin, reverse_end, [&](string &p)
+                      { alloc.destroy(&p); });
         alloc.deallocate(elements, cap - elements);
     }
 }
@@ -323,6 +350,135 @@ void StrVec::reallocate()
     for (size_t i = 0; i != size(); ++i)
     {
         alloc.construct(dest++, std::move(*(elem++)));
+    }
+    free();
+    elements = p;
+    first_free = dest;
+    cap = elements + newcapacity;
+}
+
+TextQueryUseStrVec::TextQueryUseStrVec(std::ifstream &in_file)
+{
+    StrVec lines;
+    std::map<string, int> wds_cnt;
+    std::map<string, std::set<int>> word_lines_map;
+
+    string temp("");
+    int line = 0;
+
+    while (getline(in_file, temp))
+    {
+        lines.push_back(temp);
+        std::istringstream in_str(temp);
+        string word;
+        while (in_str >> word)
+        {
+            ++(wds_cnt.insert({word, 0}).first->second);
+            word_lines_map[word].insert(line);
+        }
+        ++line;
+    }
+
+    contents = std::make_shared<StrVec>(lines);
+    words_map = std::make_shared<std::map<string, std::set<int>>>(word_lines_map);
+    word_count = std::make_shared<std::map<string, int>>(wds_cnt);
+}
+
+QueryResultUseStrVec TextQueryUseStrVec::query(const string &word)
+{
+    auto iter = word_count->find(word);
+    if (iter == word_count->end())
+    {
+        throw std::runtime_error("Not found\n");
+    }
+    std::shared_ptr<std::set<int>> line_set = std::make_shared<std::set<int>>(words_map->find(word)->second);
+    int freq = iter->second;
+
+    QueryResultUseStrVec result(word, freq, contents, line_set);
+    return result;
+}
+
+// definition for static data member
+std::allocator<char> SelfDefinedStr::alloc;
+
+SelfDefinedStr::SelfDefinedStr(const SelfDefinedStr &temp)
+{
+    auto ps_pair = alloc_n_copy(temp.begin(), temp.end());
+    elements = ps_pair.first;
+    first_free = ps_pair.second;
+    cap = ps_pair.second;
+}
+
+SelfDefinedStr &SelfDefinedStr::operator=(const SelfDefinedStr &temp)
+{
+    auto ps_pair = alloc_n_copy(temp.begin(), temp.end());
+    free();
+    elements = ps_pair.first;
+    first_free = ps_pair.second;
+    cap = ps_pair.second;
+
+    return *this;
+}
+
+SelfDefinedStr::~SelfDefinedStr() noexcept
+{
+    free();
+}
+
+SelfDefinedStr::SelfDefinedStr(const char * temp)
+{
+    // need calc the len of temp
+    size_t len = 0;
+    while(temp[len] != '\0')
+    {   ++len;  }
+    
+    auto newdata = alloc_n_copy(temp, temp+len);
+    elements = newdata.first;
+    first_free = cap = newdata.second;
+}
+
+void SelfDefinedStr::push_back(const char s)
+{
+    chk_n_alloc();
+    alloc.construct(first_free++, s);
+}
+
+std::pair<char *, char *> SelfDefinedStr::alloc_n_copy(const char * b, const char * e)
+{
+    // Let's try
+    auto const p = alloc.allocate(e - b);
+    return {p, std::uninitialized_copy(b, e, p)};
+}
+
+void SelfDefinedStr::free()
+{
+    if (elements)
+    {
+        // Way 1: original for loop
+        // for (auto p = first_free; p != elements;)
+        // {
+        //     alloc.destroy(--p);
+        // }
+
+        // Way 2: iterator and lambda
+        auto reverse_begin = boost::make_reverse_iterator(end());
+        auto reverse_end = boost::make_reverse_iterator(begin());
+        std::for_each(reverse_begin, reverse_end, [&](char & p)
+                      { alloc.destroy(&p); });
+        alloc.deallocate(elements, cap - elements);
+    }
+}
+
+void SelfDefinedStr::reallocate()
+{
+    auto newcapacity = size() ? 2 * size() : 1;
+
+    auto const p = alloc.allocate(newcapacity);
+    auto dest = p;
+    auto elem = elements;
+    for (size_t i = 0; i != size(); ++i)
+    {
+        alloc.construct(dest++, *(elem++));
     }
     free();
     elements = p;
@@ -855,6 +1011,36 @@ int exercise13_41()
 
 int exercise13_42()
 {
+    std::ifstream inFile("/home/tian/projects/hellocpp/CppPrimer5th/chapter12/data/input_text.txt");
+    if (inFile.is_open())
+    {
+        // infile is an ifstream that is the file we want to query
+        TextQueryUseStrVec tq(inFile); // store the file and build the query map
+        // // iterate with the user: prompt for a word to find and print results
+        while (true)
+        {
+            cout << "enter word to look for, or q to quit: ";
+
+            string s;
+            // stop if we hit end-of-file on the input or if a 'q' is entered
+            if (!(cin >> s) || s == "q")
+                break;
+            // run the query and print the results
+            try
+            {
+                print(cout, tq.query(s)) << endl;
+            }
+            catch (std::runtime_error e)
+            {
+                cout << "# ERR: Exception in " << __FILE__;
+                cout << "(" << __FUNCTION__ << ") on line "
+                     << __LINE__ << endl;
+                cout << "# ERR: " << e.what();
+                break;
+            }
+        }
+    }
+
     return 0;
 }
 
@@ -864,7 +1050,20 @@ int exercise13_43()
 }
 
 int exercise13_44()
-{
+{   
+    char * temp = "this is a str";
+    SelfDefinedStr a(temp);
+
+    SelfDefinedStr b = a;
+    b.push_back('h');
+    b.push_back('t');
+    b.push_back('y');
+
+    SelfDefinedStr c;
+
+    cout << a << "\n";
+    cout << b << "\n";
+    cout << c << "\n";
     return 0;
 }
 
