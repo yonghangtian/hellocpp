@@ -438,6 +438,9 @@ public:
     StrVec(const StrVec &);            // copy constructor
     StrVec &operator=(const StrVec &); // copy assignment
 
+    StrVec(StrVec &&) noexcept;            // move constructor
+    StrVec &operator=(StrVec &&) noexcept; // move assignment
+
     ~StrVec() noexcept; // destructor
 
     StrVec(std::initializer_list<std::string>);
@@ -527,6 +530,8 @@ public:
 
     SelfDefinedStr(const SelfDefinedStr &);            // copy constructor
     SelfDefinedStr &operator=(const SelfDefinedStr &); // copy assignment
+    SelfDefinedStr(SelfDefinedStr &&) noexcept;            // move constructor
+    SelfDefinedStr &operator=(SelfDefinedStr &&) noexcept; // move assignment
 
     ~SelfDefinedStr() noexcept; // destructor
 
@@ -868,6 +873,9 @@ int exercise13_44();
 
 // Exercises Section 13.6.1
 // Exercise 13.45: Distinguish between an rvalue reference and an lvalue reference.
+// Answer: rvalue references have the important property that they may be bound only to an object that
+// is about to be destroyed. As a result, we are free to “move” resources from an rvalue
+// reference to another object.
 int exercise13_45();
 
 // Exercise 13.46: Which kind of reference can be bound to the following initializers?
@@ -902,6 +910,7 @@ int exercise13_50();
 // Exercise 13.51: Although unique_ptrs cannot be copied, in § 12.1.5 (p.
 // 471) we wrote a clone function that returned a unique_ptr by value.
 // Explain why that function is legal and how it works.
+// Answer: there must be a mechanism that take care of rvalue unqiue_ptr.
 int exercise13_51();
 
 // Exercise 13.52: Explain in detail what happens in the assignments of the

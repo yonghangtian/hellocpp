@@ -84,9 +84,8 @@ ostream &operator<<(ostream &os, const SelfDefinedStr &s)
     // {
     //     os << *(a++);
     // }
-    std::for_each(s.begin(), s.end(), [&](char & p){
-        os << p;
-    });
+    std::for_each(s.begin(), s.end(), [&](char &p)
+                  { os << p; });
     return os;
 }
 
@@ -295,6 +294,25 @@ StrVec &StrVec::operator=(const StrVec &temp)
     return *this;
 }
 
+StrVec::StrVec(StrVec &&s) noexcept
+    : elements(s.elements), first_free(s.first_free), cap(s.cap)
+{
+    s.elements = s.first_free = s.cap = nullptr;
+}
+
+StrVec &StrVec::operator=(StrVec &&s) noexcept
+{
+    if (this != &s)
+    {
+        free();
+        elements = s.elements;
+        first_free = s.first_free;
+        cap = s.cap;
+        s.elements = s.first_free = s.cap = nullptr;
+    }
+    return *this;
+}
+
 StrVec::~StrVec() noexcept
 {
     free();
@@ -403,6 +421,7 @@ std::allocator<char> SelfDefinedStr::alloc;
 
 SelfDefinedStr::SelfDefinedStr(const SelfDefinedStr &temp)
 {
+    cout << "SelfDefinedStr(const SelfDefinedStr &temp) \n";
     auto ps_pair = alloc_n_copy(temp.begin(), temp.end());
     elements = ps_pair.first;
     first_free = ps_pair.second;
@@ -411,6 +430,7 @@ SelfDefinedStr::SelfDefinedStr(const SelfDefinedStr &temp)
 
 SelfDefinedStr &SelfDefinedStr::operator=(const SelfDefinedStr &temp)
 {
+    cout << "SelfDefinedStr &operator=(const SelfDefinedStr &temp) \n";
     auto ps_pair = alloc_n_copy(temp.begin(), temp.end());
     free();
     elements = ps_pair.first;
@@ -420,19 +440,42 @@ SelfDefinedStr &SelfDefinedStr::operator=(const SelfDefinedStr &temp)
     return *this;
 }
 
+SelfDefinedStr::SelfDefinedStr(SelfDefinedStr &&sds) noexcept
+    : elements(sds.elements), first_free(sds.first_free), cap(sds.cap)
+{
+    cout << "SelfDefinedStr(SelfDefinedStr && sds) noexcept \n";
+    sds.elements = sds.first_free = sds.cap = nullptr;
+}
+
+SelfDefinedStr &SelfDefinedStr::operator=(SelfDefinedStr &&sds) noexcept
+{
+    cout << "SelfDefinedStr &operator=(SelfDefinedStr && sds) noexcept  \n";
+    if (this != &sds)
+    {
+        free();
+        elements = sds.elements;
+        first_free = sds.first_free;
+        cap = sds.cap;
+        sds.elements = sds.first_free = sds.cap = nullptr;
+    }
+    return *this;
+}
+
 SelfDefinedStr::~SelfDefinedStr() noexcept
 {
     free();
 }
 
-SelfDefinedStr::SelfDefinedStr(const char * temp)
+SelfDefinedStr::SelfDefinedStr(const char *temp)
 {
     // need calc the len of temp
     size_t len = 0;
-    while(temp[len] != '\0')
-    {   ++len;  }
-    
-    auto newdata = alloc_n_copy(temp, temp+len);
+    while (temp[len] != '\0')
+    {
+        ++len;
+    }
+
+    auto newdata = alloc_n_copy(temp, temp + len);
     elements = newdata.first;
     first_free = cap = newdata.second;
 }
@@ -443,7 +486,7 @@ void SelfDefinedStr::push_back(const char s)
     alloc.construct(first_free++, s);
 }
 
-std::pair<char *, char *> SelfDefinedStr::alloc_n_copy(const char * b, const char * e)
+std::pair<char *, char *> SelfDefinedStr::alloc_n_copy(const char *b, const char *e)
 {
     // Let's try
     auto const p = alloc.allocate(e - b);
@@ -463,7 +506,7 @@ void SelfDefinedStr::free()
         // Way 2: iterator and lambda
         auto reverse_begin = boost::make_reverse_iterator(end());
         auto reverse_end = boost::make_reverse_iterator(begin());
-        std::for_each(reverse_begin, reverse_end, [&](char & p)
+        std::for_each(reverse_begin, reverse_end, [&](char &p)
                       { alloc.destroy(&p); });
         alloc.deallocate(elements, cap - elements);
     }
@@ -1050,8 +1093,8 @@ int exercise13_43()
 }
 
 int exercise13_44()
-{   
-    char * temp = "this is a str";
+{
+    char *temp = "this is a str";
     SelfDefinedStr a(temp);
 
     SelfDefinedStr b = a;
@@ -1072,8 +1115,21 @@ int exercise13_45()
     return 0;
 }
 
+int f()
+{
+    return 1;
+}
+
 int exercise13_46()
 {
+
+    std::vector<int> vi(100);
+    int &&r1 = f();
+    int &r2 = vi[0];
+    int &r3 = r1;
+    int &&r4 = vi[0] * f();
+
+    cout << "r1 : " << r1 << ", r2 : " << r2 << ", r3 : " << r3 << ", r4 : " << r4;
     return 0;
 }
 
@@ -1084,16 +1140,76 @@ int exercise13_47()
 
 int exercise13_48()
 {
+    // SelfDefinedStr::SelfDefinedStr(const SelfDefinedStr &temp)
+    // SelfDefinedStr::SelfDefinedStr(const SelfDefinedStr &temp)
+    // SelfDefinedStr::SelfDefinedStr(const SelfDefinedStr &temp)
+    // SelfDefinedStr::SelfDefinedStr(const SelfDefinedStr &temp)
+    // SelfDefinedStr::SelfDefinedStr(const SelfDefinedStr &temp)
+    // SelfDefinedStr::SelfDefinedStr(const SelfDefinedStr &temp)
+    // SelfDefinedStr::SelfDefinedStr(const SelfDefinedStr &temp)
+
+    char *temp = "this is a str";
+    SelfDefinedStr a(temp);
+
+    SelfDefinedStr b = a;
+    b.push_back('h');
+    b.push_back('t');
+    b.push_back('y');
+
+    SelfDefinedStr c("another str");
+
+    vector<SelfDefinedStr> vec{a, b, c};
     return 0;
 }
 
 int exercise13_49()
 {
+// (1) 这些是Push_back时调用的
+// SelfDefinedStr(const SelfDefinedStr &temp) 
+// SelfDefinedStr(const SelfDefinedStr &temp) 
+// SelfDefinedStr(SelfDefinedStr && sds) noexcept 
+
+// (2) 这些是vector在reallocate时调用的
+// SelfDefinedStr(const SelfDefinedStr &temp) 
+// SelfDefinedStr(SelfDefinedStr && sds) noexcept 
+// SelfDefinedStr(SelfDefinedStr && sds) noexcept 
+    vector<SelfDefinedStr> vec;
+    char *temp = "this is a str";
+    SelfDefinedStr a(temp);
+
+    // SelfDefinedStr b = a;
+    // b.push_back('h');
+    // b.push_back('t');
+    // b.push_back('y');
+    SelfDefinedStr c("another str");
+    SelfDefinedStr d = "another str1111";
+    vec.push_back(a);
+    vec.push_back(c);
+    vec.push_back(d);
     return 0;
 }
 
 int exercise13_50()
 {
+// (1) 这些是Push_back时调用的
+// SelfDefinedStr(SelfDefinedStr && sds) noexcept 
+// SelfDefinedStr(const SelfDefinedStr &temp) 
+// SelfDefinedStr(SelfDefinedStr && sds) noexcept 
+
+// (2) 这些是vector在reallocate时调用的
+// SelfDefinedStr(const SelfDefinedStr &temp) 
+// SelfDefinedStr(SelfDefinedStr && sds) noexcept 
+// SelfDefinedStr(SelfDefinedStr && sds) noexcept 
+
+    vector<SelfDefinedStr> vec;
+    char *temp = "this is a str";
+    SelfDefinedStr a(temp);
+
+    SelfDefinedStr c("another str");
+    SelfDefinedStr d = "another str1111";
+    vec.push_back(std::move(a));
+    vec.push_back(c);
+    vec.push_back(d);
     return 0;
 }
 
