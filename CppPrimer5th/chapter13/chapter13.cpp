@@ -328,8 +328,18 @@ StrVec::StrVec(std::initializer_list<std::string> temp)
 
 void StrVec::push_back(const std::string &s)
 {
+    cout << "(" << __FUNCTION__ << ")"
+         << " push_back(const std::string &s)\n";
     chk_n_alloc();
     alloc.construct(first_free++, s);
+}
+
+void StrVec::push_back(std::string &&s)
+{
+    cout << "(" << __FUNCTION__ << ")"
+         << " push_back(std::string &&s)\n";
+    chk_n_alloc();
+    alloc.construct(first_free++, std::move(s));
 }
 
 std::pair<std::string *, std::string *> StrVec::alloc_n_copy(const std::string *b, const std::string *e)
@@ -527,6 +537,34 @@ void SelfDefinedStr::reallocate()
     elements = p;
     first_free = dest;
     cap = elements + newcapacity;
+}
+
+Foo Foo::sorted() &&
+{
+    std::sort(data.begin(), data.end());
+    return *this;
+}
+
+// working version
+// Foo Foo::sorted() const &
+// {
+//     Foo ret(*this);
+//     std::sort(ret.data.begin(), ret.data.end());
+//     return ret;
+// }
+
+// For exercise13_56
+// Foo Foo::sorted() const &
+// {
+//     Foo ret(*this);
+//     // Error: Segmentation fault, as ret is a lvalue, ret.sorted() call "Foo sorted() const &" endless.
+//     return ret.sorted();
+// }
+
+// For exercise13_57, Foo(*this) is rvalue, so Foo(*this).sorted() calls "Foo Foo::sorted() &&"
+Foo Foo::sorted() const &
+{
+    return Foo(*this).sorted();
 }
 
 int exercise13_1()
@@ -1164,15 +1202,15 @@ int exercise13_48()
 
 int exercise13_49()
 {
-// (1) 这些是Push_back时调用的
-// SelfDefinedStr(const SelfDefinedStr &temp) 
-// SelfDefinedStr(const SelfDefinedStr &temp) 
-// SelfDefinedStr(SelfDefinedStr && sds) noexcept 
+    // (1) 这些是Push_back时调用的
+    // SelfDefinedStr(const SelfDefinedStr &temp)
 
-// (2) 这些是vector在reallocate时调用的
-// SelfDefinedStr(const SelfDefinedStr &temp) 
-// SelfDefinedStr(SelfDefinedStr && sds) noexcept 
-// SelfDefinedStr(SelfDefinedStr && sds) noexcept 
+    // SelfDefinedStr(const SelfDefinedStr &temp)
+    // SelfDefinedStr(SelfDefinedStr && sds) noexcept
+
+    // SelfDefinedStr(const SelfDefinedStr &temp)
+    // SelfDefinedStr(SelfDefinedStr && sds) noexcept
+    // SelfDefinedStr(SelfDefinedStr && sds) noexcept
     vector<SelfDefinedStr> vec;
     char *temp = "this is a str";
     SelfDefinedStr a(temp);
@@ -1191,15 +1229,16 @@ int exercise13_49()
 
 int exercise13_50()
 {
-// (1) 这些是Push_back时调用的
-// SelfDefinedStr(SelfDefinedStr && sds) noexcept 
-// SelfDefinedStr(const SelfDefinedStr &temp) 
-// SelfDefinedStr(SelfDefinedStr && sds) noexcept 
-
-// (2) 这些是vector在reallocate时调用的
-// SelfDefinedStr(const SelfDefinedStr &temp) 
-// SelfDefinedStr(SelfDefinedStr && sds) noexcept 
-// SelfDefinedStr(SelfDefinedStr && sds) noexcept 
+    // 0x7fff14b4ff00
+    // SelfDefinedStr(SelfDefinedStr && sds) noexcept
+    // 0x7fff14b4ff00, 0x1742570
+    // SelfDefinedStr(const SelfDefinedStr &temp)
+    // SelfDefinedStr(SelfDefinedStr && sds) noexcept
+    // 0x7fff14b4ff00, 0x1742590, 0x17425a8
+    // SelfDefinedStr(const SelfDefinedStr &temp)
+    // SelfDefinedStr(SelfDefinedStr && sds) noexcept
+    // SelfDefinedStr(SelfDefinedStr && sds) noexcept
+    // 0x7fff14b4ff00, 0x17425f0, 0x1742608, 0x1742620
 
     vector<SelfDefinedStr> vec;
     char *temp = "this is a str";
@@ -1207,9 +1246,13 @@ int exercise13_50()
 
     SelfDefinedStr c("another str");
     SelfDefinedStr d = "another str1111";
+    cout << &vec << "\n";
     vec.push_back(std::move(a));
+    cout << &vec << ", " << &vec[0] << "\n";
     vec.push_back(c);
+    cout << &vec << ", " << &vec[0] << ", " << &vec[1] << "\n";
     vec.push_back(d);
+    cout << &vec << ", " << &vec[0] << ", " << &vec[1] << ", " << &vec[2] << "\n";
     return 0;
 }
 
@@ -1220,31 +1263,95 @@ int exercise13_51()
 
 int exercise13_52()
 {
+    string temp("this is a temp");
+    HasPtr a(temp, 1);
+    temp.push_back('a');
+    cout << "temp addr: " << &temp << "\n";
+    HasPtr b(temp, 2);
+    HasPtr c, d;
+    cout << a << b << c << d;
+    // (HasPtr) HasPtr(const HasPtr &)
+    // (operator=) HasPtr &operator=(HasPtr &)
+    // swap called
+    // (~HasPtr) ~HasPtr()
+    c = a;
+
+    // HasPtr(HasPtr &&p) noexcept
+    // (operator=) HasPtr &operator=(HasPtr &)
+    // swap called
+    // (~HasPtr) ~HasPtr()
+    d = std::move(b);
+    cout << a << c << d;
     return 0;
 }
 
 int exercise13_53()
 {
+    string temp("this is a temp");
+    HasPtr a(temp, 1);
+    temp.push_back('a');
+    cout << "temp addr: " << &temp << "\n";
+    HasPtr b(temp, 2);
+    HasPtr c, d;
+    cout << a << b << c << d;
+    // (operator=) HasPtr &operator=(const HasPtr &)
+    c = a;
+    // (operator=) HasPtr &operator=(HasPtr &&)
+    // swap called
+    d = std::move(b);
+    cout << a << c << d;
     return 0;
 }
 
 int exercise13_54()
 {
+    // When we enable  (2) copy and swap verion of operator=, and inline HasPtr &operator=(HasPtr &&hp)
+    // error: ambiguous overload for ‘operator=’ (operand types are ‘HasPtr’ and ‘std::remove_reference<HasPtr&>::type {aka HasPtr}’)
     return 0;
 }
 
 int exercise13_55()
 {
+    StrVec a;
+    string temp("this is a str");
+    // (push_back) push_back(const std::string &s)
+    a.push_back(temp);
+    // (push_back) push_back(std::string &&s)
+    a.push_back("test");
     return 0;
 }
 
 int exercise13_56()
 {
+    Foo a;
+    a.data.push_back(1);
+    a.data.push_back(3);
+    a.data.push_back(2);
+
+    // Segmentation fault
+    Foo c = a.sorted();
     return 0;
 }
 
 int exercise13_57()
 {
+// 1, 3, 2, 
+// 1, 2, 3, 
+    Foo a;
+    a.data.push_back(1);
+    a.data.push_back(3);
+    a.data.push_back(2);
+    for (auto b : a.data)
+    {
+        cout << b << ", ";
+    }
+    cout << "\n";
+    Foo c = a.sorted();
+    for (auto b : c.data)
+    {
+        cout << b << ", ";
+    }
+    cout << "\n";
     return 0;
 }
 

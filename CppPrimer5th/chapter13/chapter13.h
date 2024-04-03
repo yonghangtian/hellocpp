@@ -67,11 +67,20 @@ public:
              << " HasPtr(const HasPtr &)\n";
     }
 
+    HasPtr(HasPtr &&p) noexcept : ps(p.ps), i(p.i)
+    {
+        cout << "HasPtr(HasPtr &&p) noexcept \n";
+        p.ps = nullptr;
+    }
+
     ~HasPtr()
     {
         cout << "(" << __FUNCTION__ << ")"
              << " ~HasPtr()\n";
-        cout << "String \"" << *ps << "\" is destoryed\n";
+        if (ps)
+        {
+            cout << "String \"" << *ps << "\" is destoryed, address: " << ps << "\n";
+        }
         delete ps;
     }
     // overloaded operators
@@ -85,27 +94,41 @@ public:
     }
 
     // (1) const ref verion of operator=
-    // inline HasPtr &operator=(const HasPtr &hp)
+    // In exercise13_53, use this one and comment (2)
+    inline HasPtr &operator=(const HasPtr &hp)
+    {
+        if (*this == hp)
+        {
+            return *this;
+        }
+        string *temp = new string(*hp.ps);
+        delete ps;
+        ps = temp;
+        i = hp.i;
+        cout << "(" << __FUNCTION__ << ")"
+             << " HasPtr &operator=(const HasPtr &)\n";
+        return *this;
+    }
+
+    // (2) copy and swap verion of operator=, this verion is automatically exception safe and correctly handle self-assignment.
+    // // When define a move constructor, then this "copy and swap" assignment will act move assignment.
+    // // In exercise13_52 and exercise13_54, use this one and comment (1)
+    // inline HasPtr &operator=(HasPtr hp)
     // {
-    //     if (*this == hp)
-    //     {
-    //         return *this;
-    //     }
-    //     string *temp = new string(*hp.ps);
-    //     delete ps;
-    //     ps = temp;
-    //     i = hp.i;
     //     cout << "(" << __FUNCTION__ << ")"
-    //          << " HasPtr &operator=(const HasPtr &)\n";
+    //          << " HasPtr &operator=(HasPtr &)\n";
+    //     swap(*this, hp);
     //     return *this;
     // }
 
-    // (2) copy and swap verion of operator=, this verion is automatically  exception safe and correctly handle self-assignment.
-    inline HasPtr &operator=(HasPtr hp)
+    inline HasPtr &operator=(HasPtr &&hp)
     {
-        swap(*this, hp);
         cout << "(" << __FUNCTION__ << ")"
-             << " HasPtr &operator=(HasPtr &)\n";
+             << " HasPtr &operator=(HasPtr &&)\n";
+        if (this != &hp)
+        {
+            swap(*this, hp);
+        }
         return *this;
     }
 
@@ -446,7 +469,7 @@ public:
     StrVec(std::initializer_list<std::string>);
 
     void push_back(const std::string &); // copy the element
-    // void push_back(std::string&&);       // move the element
+    void push_back(std::string &&);      // move the element
 
     // add elements
     size_t size() const { return first_free - elements; }
@@ -523,13 +546,13 @@ private:
 class SelfDefinedStr
 {
 public:
-    friend ostream & operator<<(ostream &, const SelfDefinedStr &);
+    friend ostream &operator<<(ostream &, const SelfDefinedStr &);
 
     // copy control members
     SelfDefinedStr() : elements(nullptr), first_free(nullptr), cap(nullptr) {}
 
-    SelfDefinedStr(const SelfDefinedStr &);            // copy constructor
-    SelfDefinedStr &operator=(const SelfDefinedStr &); // copy assignment
+    SelfDefinedStr(const SelfDefinedStr &);                // copy constructor
+    SelfDefinedStr &operator=(const SelfDefinedStr &);     // copy assignment
     SelfDefinedStr(SelfDefinedStr &&) noexcept;            // move constructor
     SelfDefinedStr &operator=(SelfDefinedStr &&) noexcept; // move assignment
 
@@ -574,6 +597,14 @@ private:
     char *elements;    // pointer to the first element in the array
     char *first_free;  // pointer to the first free element in the array
     char *cap;         // pointer to one past the end of the array
+};
+
+class Foo
+{
+public:
+    Foo sorted() &&;
+    Foo sorted() const &;
+    vector<int> data;
 };
 
 // Exercises Section 13.1.1
