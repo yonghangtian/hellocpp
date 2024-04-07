@@ -1,11 +1,7 @@
 build/
 .vscode/
 Testing/
-mysqlcppconn8dot3dot0/include/jdbc/
-mysqlcppconn8dot3dot0/include/mysql/
-mysqlcppconn8dot3dot0/include/mysqlx/
-mysqlcppconn8dot3dot0/lib64/
-mysqlcppconn1dot1dot12/include/
-mysqlcppconn1dot1dot12/lib/
+lib/
+include/
 CppPrimer5th/examples/
 CppPrimerPlus/examples/

@@ -7,10 +7,10 @@ step 1:
 >    tar -zxvf ${mysqlconnector}.tar.gz
 
 step 2: 
->    cp -r ${mysqlconnector}/include \${project_root}/mysqlcppconn8dot3dot0/
+>    cp -r ${mysqlconnector}/include \${project_root}/include/mysqlcppconn8dot3dot0/include/
 
 step 3: 
->    cp -r ${mysqlconnector}/lib64 \${project_root}/mysqlcppconn8dot3dot0/
+>    cp -r ${mysqlconnector}/lib64 \${project_root}/lib/mysqlcppconn8dot3dot0/lib64/
 
 step 4: modify CMakeLists.txt to use it: 
 >    include_directories("mysqlcppconn8dot3dot0/include")
@@ -30,15 +30,17 @@ step 1:
 >    tar -zxvf ${mysqlconnector}.tar.gz
 
 step 2: 
->    cp -r ${mysqlconnector}/include \${project_root}/mysqlcppconn1dot1dot12/
+>    cp -r ${mysqlconnector}/include \${project_root}/include/mysqlcppconn1dot1dot12/include/
 
 step 3: 
->    cp -r ${mysqlconnector}/lib64 \${project_root}/mysqlcppconn1dot1dot12/
+>    cp -r ${mysqlconnector}/lib64 \${project_root}/lib/mysqlcppconn1dot1dot12/lib64/
 
 step 4: modify CMakeLists.txt to use it: 
->    include_directories("mysqlcppconn1dot1dot12/include")
+>    include_directories(\${PROJECT_SOURCE_DIR}/include \${PROJECT_SOURCE_DIR}/include/mysqlcppconn1dot1dot12/include)
 >
->    target_link_libraries(HelloCpp "/home/tian/projects/hellocpp/mysqlcppconn1dot1dot12/lib/libmysqlcppconn.so")
+>    SET(MYSQL_CONN1_LIB \${PROJECT_SOURCE_DIR}/lib/mysqlcppconn1dot1dot12/lib64/libmysqlcppconn.so)
+>
+>    target_link_libraries(HelloCpp \${MYSQL_CONN1_LIB})
 
 step 5: include header file, for example: in chapter12.h:
 >  #include <mysql_connection.h>

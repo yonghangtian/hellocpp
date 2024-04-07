@@ -223,7 +223,7 @@ int exercise12_14()
     {
         // 创建MySQL连接
         sql::Driver *driver = get_driver_instance();
-        con = driver->connect("tcp://127.0.0.1:3306", "root", "950724");
+        con = driver->connect("tcp://127.0.0.1:3306", "root", "tian0724");
 
         // 连接到hellocpp数据库
         con->setSchema("hellocpp");
@@ -289,7 +289,7 @@ int exercise12_15()
     {
         // 创建MySQL连接
         sql::Driver *driver = get_driver_instance();
-        con = driver->connect("tcp://127.0.0.1:3306", "root", "950724");
+        con = driver->connect("tcp://127.0.0.1:3306", "root", "tian0724");
 
         // 连接到hellocpp数据库
         con->setSchema("hellocpp");
