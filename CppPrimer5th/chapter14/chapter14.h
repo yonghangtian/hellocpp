@@ -6,6 +6,7 @@
 #include <iostream>
 #include <cctype>
 #include <utility>
+#include "../chapter7/chapter7.h"
 using std::cerr;
 using std::cin;
 using std::cout;
@@ -32,22 +33,24 @@ int exercise14_2();
 // be used to compare objects of those types. Assuming svec1 and svec2 are
 // vectors that hold strings, identify which version of == is applied in each
 // of the following expressions:
-// (a) "cobble" == "stone"
-// (b) svec1[0] == svec2[0]
-// (c) svec1 == svec2
-// (d) "svec1[0] == "stone"
+// (a) "cobble" == "stone" : string's ==
+// (b) svec1[0] == svec2[0]: string's ==
+// (c) svec1 == svec2 : vector's ==
+// (d) "svec1[0] == "stone", string's ==
 int exercise14_3();
 
 // Exercise 14.4: Explain how to decide whether the following should be class
 // members:
-// (a) %
-// (b) %=
-// (c) ++
-// (d) ->
-// (e) <<
-// (f) &&
-// (g) ==
-// (h) ()
+// (a) % same with (e)
+// (b) %=  The compound-assignment operators ordinarily ought to be members. However, unlike assignment, they are not required to be members.
+// (c) ++ Operators that change the state of their object or that are closely tied to their 
+// given type—such as increment, decrement, and dereference—usually should be members.
+// (d) ->  must be defined as members.
+// (e) << Symmetric operators—those that might convert either operand,
+//  such as the arithmetic, equality, relational, and bitwise operators—usually should be defined as ordinary nonmember functions.
+// (f) && same with (e)
+// (g) == same with (e)
+// (h) ()  must be defined as members.
 int exercise14_4();
 
 // Exercise 14.5: In exercise 7.40 from § 7.5.1 (p. 291) you wrote a sketch of
@@ -59,6 +62,7 @@ int exercise14_4();
 // (d) Vehicle
 // (e) Object
 // (f) Tree
+// Answer: No need to do this exercise.
 int exercise14_5();
 
 // Exercises Section 14.2.1

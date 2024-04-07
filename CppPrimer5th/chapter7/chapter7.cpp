@@ -119,6 +119,16 @@ bool Sales_data::operator==(const Sales_data &a) const
     return (a.bookNo == bookNo) && (a.units_sold == units_sold) && (a.revenue == revenue);
 }
 
+Sales_data &Sales_data::operator+=(const Sales_data &rhs)
+{
+    if (isbn() == rhs.isbn())
+    {
+        units_sold += rhs.units_sold;
+        revenue += rhs.revenue;
+    }
+    return *this;
+}
+
 // transactions contain ISBN, number of copies sold, and sales price
 istream &read(istream &is, Sales_data &item)
 {
@@ -154,6 +164,16 @@ operator<<(std::ostream &out, const Sales_data &s)
     out << s.isbn() << " " << s.units_sold << " "
         << s.revenue << " " << s.avg_price();
     return out;
+}
+
+Sales_data operator+(const Sales_data &lhs, const Sales_data &rhs)
+{
+    Sales_data sum = lhs;
+    if (lhs.isbn() == rhs.isbn())
+    {
+        sum += rhs;
+    }
+    return sum;
 }
 
 bool compareIsbn(const Sales_data &a, const Sales_data &b)

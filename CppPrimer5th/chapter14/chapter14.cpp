@@ -7,11 +7,38 @@ int exercise14_1()
 
 int exercise14_2()
 {
+    // 2
+    // 2
+    // sales data destoryed. 
+    // pride 30 277.5 9.25
+    // pride 50 455.1 9.102
+    // sales data destoryed. 
+    // sales data destoryed. 
+    // sales data destoryed.
+    Sales_data a("pride", 10, 9.99);
+    Sales_data b("pride", 20, 8.88);
+    Sales_data c;
+    
+    c = a+b;
+    cout << c << "\n";
+
+    c += b;
+    cout << c << "\n";
+
     return 0;
 }
 
 int exercise14_3()
 {
+    vector<string> svec1,svec2;
+    svec1.push_back("cobble");
+    svec2.push_back("stone");
+    
+    cout << " svec1[0] == svec2[0] : operator==(svec1[0],svec2[0])  " << operator==(svec1[0],svec2[0]);
+    cout << "\n svec1 == svec2 : operator==(svec1,svec2)   " << operator==(svec1,svec2);
+    cout << "\n svec1[0] == \"stone\" : operator==(svec1[0], \"stone\")  " << operator==(svec1[0],"stone");
+    cout << "\n \"cobble\" == \"stone\" : operator==(string(\"cobble\"), string(\"stone\"))  " <<  operator==(string("cobble"), string("stone"));
+    cout << "\n";
     return 0;
 }
 
