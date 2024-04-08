@@ -4,9 +4,11 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <sstream>
 #include <cctype>
 #include <utility>
 #include "../chapter7/chapter7.h"
+#include "../chapter13/chapter13.h"
 using std::cerr;
 using std::cin;
 using std::cout;
@@ -67,18 +69,22 @@ int exercise14_5();
 
 // Exercises Section 14.2.1
 // Exercise 14.6: Define an output operator for your Sales_data class.
+// Answer: already done in Exercise 14.1
 int exercise14_6();
 
 // Exercise 14.7: Define an output operator for you String class you wrote
 // for the exercises in § 13.5 (p. 531).
+// Answer: already done in chapter13.h
 int exercise14_7();
 
 // Exercise 14.8: Define an output operator for the class you chose in exercise
 // 7.40 from § 7.5.1 (p. 291).
+// Answer: No need to do this exercise.
 int exercise14_8();
 
 // Exercises Section 14.2.2
 // Exercise 14.9: Define an input operator for your Sales_data class.
+// Answer: already done in Exercise 14.1
 int exercise14_9();
 
 // Exercise 14.10: Describe the behavior of the Sales_data input operator if
@@ -94,6 +100,7 @@ int exercise14_10();
 // {
 //  double price; in >> s.bookNo >> s.units_sold >> price; s.revenue = s.units_sold * price; return in;
 // }
+// Answer: this defination of input operator will not recovery Sales_data from bad input.
 int exercise14_11();
 
 // Exercise 14.12: Define an input operator for the class you used in exercise
@@ -104,10 +111,12 @@ int exercise14_12();
 // Exercise 14.13: Which other arithmetic operators (Table 4.1 (p. 139)), if
 // any, do you think Sales_data ought to support? Define any you think the
 // class should include.
+// Answer: only add and add-assignment
 int exercise14_13();
 
 // Exercise 14.14: Why do you think it is more efficient to define operator+
 // to call operator+= rather than the other way around?
+// Answer: the logics are similiar, we can save energy maintaining only one main logic.
 int exercise14_14();
 
 // Exercise 14.15: Should the class you chose for exercise 7.40 from § 7.5.1
@@ -123,16 +132,19 @@ int exercise14_16();
 // Exercise 14.17: Should the class you chose for exercise 7.40 from § 7.5.1
 // (p. 291) define the equality operators? If so, implement them. If not, explain
 // why not.
+// Answer: meanless.
 int exercise14_17();
 
 // Exercises Section 14.3.2
 // Exercise 14.18: Define relational operators for your StrBlob,
 // StrBlobPtr, StrVec, and String classes.
+// Answer: actually no need.
 int exercise14_18();
 
 // Exercise 14.19: Should the class you chose for exercise 7.40 from § 7.5.1
 // (p. 291) define the relational operators? If so, implement them. If not,
 // explain why not.
+// Answer: meanless.
 int exercise14_19();
 
 // Exercises Section 14.4

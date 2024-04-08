@@ -1,5 +1,25 @@
 #include "chapter12.h"
 
+bool operator==(const StrBlob & lhs, const StrBlob & rhs)
+{
+    return lhs.data == rhs.data;
+}
+
+bool operator!=(const StrBlob & lhs, const StrBlob & rhs)
+{
+    return !(lhs == rhs);
+}
+
+bool operator==(const StrBlobPtr &lhs, const StrBlobPtr &rhs)
+{
+    return eq(lhs,rhs);
+}
+
+bool operator!=(const StrBlobPtr &lhs, const StrBlobPtr &rhs)
+{
+    return !eq(lhs, rhs);
+}
+
 int exercise12_1()
 {
     StrBlob b1;

@@ -119,6 +119,11 @@ bool Sales_data::operator==(const Sales_data &a) const
     return (a.bookNo == bookNo) && (a.units_sold == units_sold) && (a.revenue == revenue);
 }
 
+bool operator!=(const Sales_data &lhs,const Sales_data &rhs)
+{
+    return !(lhs.operator==(rhs));
+}
+
 Sales_data &Sales_data::operator+=(const Sales_data &rhs)
 {
     if (isbn() == rhs.isbn())
@@ -145,8 +150,7 @@ ostream &print(ostream &os, const Sales_data &item)
     return os;
 }
 
-std::istream &
-operator>>(std::istream &in, Sales_data &s)
+istream & operator>>(istream &in, Sales_data &s)
 {
     double price;
     in >> s.bookNo >> s.units_sold >> price;
@@ -158,8 +162,16 @@ operator>>(std::istream &in, Sales_data &s)
     return in;
 }
 
-std::ostream &
-operator<<(std::ostream &out, const Sales_data &s)
+// This version IS WRONG, ONLY FOR exercise14_11's TEST PURPOSE 
+// istream &operator>>(istream &in, Sales_data &s)
+// {
+//     double price;
+//     in >> s.bookNo >> s.units_sold >> price;
+//     s.revenue = s.units_sold * price;
+//     return in;
+// }
+
+ostream & operator<<(ostream &out, const Sales_data &s)
 {
     out << s.isbn() << " " << s.units_sold << " "
         << s.revenue << " " << s.avg_price();

@@ -44,7 +44,8 @@ class StrBlob
 {
     friend class StrBlobPtr;
     friend class ConstStrBlobPtr;
-
+    friend bool operator==(const StrBlob &, const StrBlob &);
+    friend bool operator!=(const StrBlob &, const StrBlob &);
 public:
     typedef std::vector<std::string>::size_type size_type;
 
@@ -130,7 +131,8 @@ inline void StrBlob::check(size_type i, const std::string &msg) const
 class StrBlobPtr
 {
     friend bool eq(const StrBlobPtr &, const StrBlobPtr &);
-
+    friend bool operator==(const StrBlobPtr &, const StrBlobPtr &);
+    friend bool operator!=(const StrBlobPtr &, const StrBlobPtr &);
 public:
     StrBlobPtr() : curr(0) {}
     StrBlobPtr(StrBlob &a, size_t sz = 0) : wptr(a.data), curr(sz) {}

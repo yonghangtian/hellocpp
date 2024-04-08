@@ -84,6 +84,7 @@ public:
     friend std::ostream &print(std::ostream &, const Sales_data &);
     friend std::istream &read(std::istream &, Sales_data &);
     friend Sales_data operator+(const Sales_data&, const Sales_data&);
+    friend bool operator!=(const Sales_data&, const Sales_data&);
 
     // constructors
     Sales_data() = default;

@@ -76,6 +76,16 @@ std::ostream &print(std::ostream &os, QueryResultUseStrVec result)
     return os;
 }
 
+bool operator==(const StrVec & lhs, const StrVec &rhs)
+{
+    return (lhs.size()==rhs.size()) && (std::equal(lhs.begin(),lhs.end(),rhs.begin()));
+}
+
+bool operator!=(const StrVec & lhs, const StrVec &rhs)
+{
+    return !(lhs == rhs);
+}
+
 ostream &operator<<(ostream &os, const SelfDefinedStr &s)
 {
     os << "This is a SelfDefinedStr: "
@@ -87,6 +97,16 @@ ostream &operator<<(ostream &os, const SelfDefinedStr &s)
     std::for_each(s.begin(), s.end(), [&](char &p)
                   { os << p; });
     return os;
+}
+
+bool operator==(const SelfDefinedStr & lhs, const SelfDefinedStr &rhs)
+{
+    return (lhs.size()==rhs.size()) && (std::equal(lhs.begin(),lhs.end(),rhs.begin()));
+}
+
+bool operator!=(const SelfDefinedStr & lhs, const SelfDefinedStr &rhs)
+{
+    return !(lhs == rhs);
 }
 
 // add this Message to Folders that point to m
@@ -1335,8 +1355,8 @@ int exercise13_56()
 
 int exercise13_57()
 {
-// 1, 3, 2, 
-// 1, 2, 3, 
+    // 1, 3, 2,
+    // 1, 2, 3,
     Foo a;
     a.data.push_back(1);
     a.data.push_back(3);

@@ -455,6 +455,9 @@ private:
 class StrVec
 {
 public:
+    friend bool operator==(const StrVec &, const StrVec &);
+    friend bool operator!=(const StrVec &, const StrVec &);
+
     // copy control members
     StrVec() : elements(nullptr), first_free(nullptr), cap(nullptr) {}
 
@@ -547,7 +550,8 @@ class SelfDefinedStr
 {
 public:
     friend ostream &operator<<(ostream &, const SelfDefinedStr &);
-
+    friend bool operator==(const SelfDefinedStr &, const SelfDefinedStr &);
+    friend bool operator!=(const SelfDefinedStr &, const SelfDefinedStr &);
     // copy control members
     SelfDefinedStr() : elements(nullptr), first_free(nullptr), cap(nullptr) {}
 
