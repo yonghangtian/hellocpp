@@ -150,12 +150,14 @@ int exercise14_19();
 // Exercises Section 14.4
 // Exercise 14.20: Define the addition and compound-assignment operators
 // for your Sales_data class.
+// Answer: already done in 14.1
 int exercise14_20();
 
 // Exercise 14.21: Write the Sales_data operators so that + does the actual
 // addition and += calls +. Discuss the disadvantages of this approach compared
 // to the way these operators were defined in § 14.3 (p. 560) and § 14.4 (p.
 // 564).
+// Answer: the logics are similiar, we can save energy maintaining only one main logic.
 int exercise14_21();
 
 // Exercise 14.22: Define a version of the assignment operator that can assign
@@ -169,10 +171,12 @@ int exercise14_23();
 // Exercise 14.24: Decide whether the class you used in exercise 7.40 from §
 // 7.5.1 (p. 291) needs a copy- and move-assignment operator. If so, define
 // those operators.
+// Answer: no need to do.
 int exercise14_24();
 
 // Exercise 14.25: Implement any other assignment operators your class
 // should define. Explain which types should be used as operands and why.
+// Answer: no need to do.
 int exercise14_25();
 
 // Exercises Section 14.5
@@ -191,6 +195,7 @@ int exercise14_28();
 
 // Exercise 14.29: We did not define a const version of the increment and
 // decrement operators. Why not?
+// Answer: We dont define const version in order to be consistent with the built-in operators.
 int exercise14_29();
 
 // Exercises Section 14.7
@@ -203,6 +208,7 @@ int exercise14_30();
 
 // Exercise 14.31: Our StrBlobPtr class does not define the copy
 // constructor, assignment operator, or a destructor. Why is that okay?
+// Answer: the compilier generates default version of copy-control funcs.
 int exercise14_31();
 
 // Exercise 14.32: Define a class that holds a pointer to a StrBlobPtr.

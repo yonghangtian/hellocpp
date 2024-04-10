@@ -463,6 +463,7 @@ public:
 
     StrVec(const StrVec &);            // copy constructor
     StrVec &operator=(const StrVec &); // copy assignment
+    StrVec &operator=(std::initializer_list<std::string>);
 
     StrVec(StrVec &&) noexcept;            // move constructor
     StrVec &operator=(StrVec &&) noexcept; // move assignment
@@ -482,14 +483,14 @@ public:
     std::string *begin() const { return elements; }
     std::string *end() const { return first_free; }
 
-    // at function
-    std::string at(size_t i) const
-    {
-        if (i >= size())
-            throw std::runtime_error("Out of range\n");
+    // [] function
+    std::string &operator[](size_t i);
 
-        return *(elements + i);
-    }
+    // const [] function
+    const std::string &operator[](size_t i) const;
+
+    // at function
+    std::string at(size_t i) const;
 
 private:
     static std::allocator<std::string> alloc; // allocates the elements
@@ -575,14 +576,11 @@ public:
     char *begin() const { return elements; }
     char *end() const { return first_free; }
 
-    // at function
-    char at(size_t i) const
-    {
-        if (i >= size())
-            throw std::runtime_error("Out of range\n");
+    // [] function
+    char operator[](size_t i) const;
 
-        return *(elements + i);
-    }
+    // at function
+    char at(size_t i) const;
 
 private:
     static std::allocator<char> alloc;

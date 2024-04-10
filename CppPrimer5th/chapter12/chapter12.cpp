@@ -1,23 +1,98 @@
 #include "chapter12.h"
 
-bool operator==(const StrBlob & lhs, const StrBlob & rhs)
+bool operator==(const StrBlob &lhs, const StrBlob &rhs)
 {
     return lhs.data == rhs.data;
 }
 
-bool operator!=(const StrBlob & lhs, const StrBlob & rhs)
+bool operator!=(const StrBlob &lhs, const StrBlob &rhs)
 {
     return !(lhs == rhs);
 }
 
 bool operator==(const StrBlobPtr &lhs, const StrBlobPtr &rhs)
 {
-    return eq(lhs,rhs);
+    return eq(lhs, rhs);
 }
 
 bool operator!=(const StrBlobPtr &lhs, const StrBlobPtr &rhs)
 {
     return !eq(lhs, rhs);
+}
+
+std::string &StrBlob::operator[](std::size_t i)
+{
+    check(i, "out of range");
+    return data->operator[](i);
+}
+
+const std::string &StrBlob::operator[](std::size_t i) const
+{
+    check(i, "out of range");
+    return data->operator[](i);
+}
+
+char StrBlobPtr::operator[](std::size_t i)
+{
+    std::string temp = this->deref();
+    return temp[i];
+}
+
+const std::string & StrBlobPtr::operator*() const
+{
+    auto p = check(curr, "dereference past end");
+    return (*p)[curr]; // (*p) is the vector to which this object points
+}
+
+// prefix version
+StrBlobPtr &StrBlobPtr::operator++()
+{
+    // if curr already points past the end of the container, can't increment it
+    check(curr, "increment past end of StrBlobPtr");
+    ++curr; // advance the current state
+    return *this;
+}
+// prefix version
+StrBlobPtr &StrBlobPtr::operator--()
+{
+    // if curr is zero, decrementing it will yield an invalid subscript
+    --curr; // move the current state back one element}
+    check(curr, "decrement past begin of StrBlobPtr");
+    return *this;
+}
+// postfix version
+StrBlobPtr StrBlobPtr::operator++(int)
+{
+    StrBlobPtr temp = *this;
+    // if curr already points past the end of the container, can't increment it
+    check(curr, "increment past end of StrBlobPtr");
+    ++curr; // advance the current state
+    return temp;
+}
+// postfix version
+StrBlobPtr StrBlobPtr::operator--(int)
+{
+    StrBlobPtr temp = *this;
+    // if curr is zero, decrementing it will yield an invalid subscript
+    --curr; // move the current state back one element}
+    check(curr, "decrement past begin of StrBlobPtr");
+    return temp;
+}
+
+StrBlobPtr operator+(const StrBlobPtr & a, std::size_t i)
+{
+    StrBlobPtr temp = a;
+    temp.curr += i;
+    temp.check(temp.curr, "increment past end of StrBlobPtr");
+    return temp;
+}
+
+StrBlobPtr operator-(const StrBlobPtr & a, std::size_t i)
+{
+    StrBlobPtr temp = a;
+    temp.curr -= i;
+    temp.check(temp.curr, "decrement past begin of StrBlobPtr");
+    return temp;
 }
 
 int exercise12_1()

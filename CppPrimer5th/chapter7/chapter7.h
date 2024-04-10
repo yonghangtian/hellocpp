@@ -78,13 +78,13 @@ private:
 class Sales_data
 {
 public:
-    friend std::istream& operator>>(std::istream&, Sales_data&);
-    friend std::ostream& operator<<(std::ostream&, const Sales_data&);
+    friend std::istream &operator>>(std::istream &, Sales_data &);
+    friend std::ostream &operator<<(std::ostream &, const Sales_data &);
     friend Sales_data add(const Sales_data &, const Sales_data &);
     friend std::ostream &print(std::ostream &, const Sales_data &);
     friend std::istream &read(std::istream &, Sales_data &);
-    friend Sales_data operator+(const Sales_data&, const Sales_data&);
-    friend bool operator!=(const Sales_data&, const Sales_data&);
+    friend Sales_data operator+(const Sales_data &, const Sales_data &);
+    friend bool operator!=(const Sales_data &, const Sales_data &);
 
     // constructors
     Sales_data() = default;
@@ -92,14 +92,21 @@ public:
     Sales_data(const std::string &s, unsigned n, double p) : bookNo(s), units_sold(n), revenue(p * n) { cout << 2 << endl; }
     Sales_data(const std::string &s) : Sales_data(s, 0, 0.0) { cout << 1 << endl; }
     Sales_data(unsigned n, std::istream &is = cin);
-    ~Sales_data(){ cout << "sales data destoryed. \n"; }
+    ~Sales_data() { cout << "sales data destoryed. \n"; }
     // operations on Sales_data objects
     std::string isbn() const { return bookNo; }
     Sales_data &combine(const Sales_data &);
     // Sales_data &combine(Sales_data);
     // Sales_data &combine(const Sales_data&) const;
     bool operator==(const Sales_data &b) const;
-    Sales_data & operator+=(const Sales_data&);
+    Sales_data &operator+=(const Sales_data &);
+    Sales_data &operator=(const string &temp)
+    {
+        bookNo = temp;
+        units_sold = 0;
+        revenue = 0.0;
+        return *this;
+    };
 
     double avg_price() const { return units_sold ? revenue / units_sold : 0; }
 
@@ -150,52 +157,55 @@ private:
     NoDefault noDefaultObj; // Member of type NoDefault
 };
 
-class Debug {
+class Debug
+{
 public:
-	constexpr Debug(bool b = true): hw(b), io(b), other(b) { }
-	constexpr Debug(bool h, bool i, bool o): 
-	                                hw(h), io(i), other(o) { }
-	constexpr bool any() { return hw || io || other; }
-	constexpr bool hardware() { return hw || io; }
-	constexpr bool app() { return other; }
+    constexpr Debug(bool b = true) : hw(b), io(b), other(b) {}
+    constexpr Debug(bool h, bool i, bool o) : hw(h), io(i), other(o) {}
+    constexpr bool any() { return hw || io || other; }
+    constexpr bool hardware() { return hw || io; }
+    constexpr bool app() { return other; }
 
-	void set_io(bool b) { io = b; }
-	void set_hw(bool b) { hw = b; }
-	void set_other(bool b) { hw = b; }
+    void set_io(bool b) { io = b; }
+    void set_hw(bool b) { hw = b; }
+    void set_other(bool b) { hw = b; }
+
 private:
-	bool hw;    // hardware errors other than IO errors
-	bool io;    // IO errors
-	bool other; // other errors
+    bool hw;    // hardware errors other than IO errors
+    bool io;    // IO errors
+    bool other; // other errors
 };
 
-class Account {
+class Account
+{
 public:
-	Account() = default;
-	Account(const std::string &s, double amt):
-		owner(s), amount(amt) { }
+    Account() = default;
+    Account(const std::string &s, double amt) : owner(s), amount(amt) {}
 
     void calculate() { amount += amount * interestRate; }
     double balance() { return amount; }
+
 public:
     static double rate() { return interestRate; }
-    static void rate(double);   
+    static void rate(double);
+
 private:
-    std::string owner; 
+    std::string owner;
     double amount = 0.0;
-    static double interestRate; 
+    static double interestRate;
     static double initRate() { return .0225; }
     static const std::string accountType;
-    static constexpr int period = 30;// period is a constant expression
+    static constexpr int period = 30; // period is a constant expression
     double daily_tbl[period];
 };
 
-
 // example.h
-class Example {
+class Example
+{
 public:
- static double rate; 
- static const int vecSize = 20; 
- static vector<double> vec;
+    static double rate;
+    static const int vecSize = 20;
+    static vector<double> vec;
 };
 // // example.C
 // #include "example.h"
@@ -352,7 +362,7 @@ int exercise7_48();
 
 // Exercise 7.49: For each of the three following declarations of combine,
 // explain what happens if we call i.combine(s), where i is a Sales_data
-// and s is a string: 
+// and s is a string:
 // (a) Sales_data &combine(Sales_data);  Sales_data &Sales_data::combine(const Sales_data &rhs)
 // (b) Sales_data &combine(Sales_data&); Sales_data &Sales_data::combine(const Sales_data rhs)
 // (c) Sales_data &combine(const Sales_data&) const;
@@ -378,7 +388,7 @@ int exercise7_53();
 // Exercise 7.54: Should the members of Debug that begin with set_ be
 // declared as constexpr? If not, why not?
 // Answer: shouldn't, as set_ funcs changed the value of arguments(data member).
-// The constexpr specifier implies that the function can be evaluated at compile time if its arguments are constant expressions. However, in the case of set_io, set_hw, and set_other, these functions modify the state of the object (Debug) by changing the values of its member variables (io, hw, other). 
+// The constexpr specifier implies that the function can be evaluated at compile time if its arguments are constant expressions. However, in the case of set_io, set_hw, and set_other, these functions modify the state of the object (Debug) by changing the values of its member variables (io, hw, other).
 // This involves altering the object's state, which is not a compile-time operation and cannot be evaluated at compile time.
 int exercise7_54();
 

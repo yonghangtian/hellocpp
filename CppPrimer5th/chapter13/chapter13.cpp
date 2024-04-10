@@ -76,12 +76,12 @@ std::ostream &print(std::ostream &os, QueryResultUseStrVec result)
     return os;
 }
 
-bool operator==(const StrVec & lhs, const StrVec &rhs)
+bool operator==(const StrVec &lhs, const StrVec &rhs)
 {
-    return (lhs.size()==rhs.size()) && (std::equal(lhs.begin(),lhs.end(),rhs.begin()));
+    return (lhs.size() == rhs.size()) && (std::equal(lhs.begin(), lhs.end(), rhs.begin()));
 }
 
-bool operator!=(const StrVec & lhs, const StrVec &rhs)
+bool operator!=(const StrVec &lhs, const StrVec &rhs)
 {
     return !(lhs == rhs);
 }
@@ -99,12 +99,12 @@ ostream &operator<<(ostream &os, const SelfDefinedStr &s)
     return os;
 }
 
-bool operator==(const SelfDefinedStr & lhs, const SelfDefinedStr &rhs)
+bool operator==(const SelfDefinedStr &lhs, const SelfDefinedStr &rhs)
 {
-    return (lhs.size()==rhs.size()) && (std::equal(lhs.begin(),lhs.end(),rhs.begin()));
+    return (lhs.size() == rhs.size()) && (std::equal(lhs.begin(), lhs.end(), rhs.begin()));
 }
 
-bool operator!=(const SelfDefinedStr & lhs, const SelfDefinedStr &rhs)
+bool operator!=(const SelfDefinedStr &lhs, const SelfDefinedStr &rhs)
 {
     return !(lhs == rhs);
 }
@@ -314,6 +314,38 @@ StrVec &StrVec::operator=(const StrVec &temp)
     return *this;
 }
 
+StrVec &StrVec::operator=(std::initializer_list<std::string> temp)
+{
+    auto newdata = alloc_n_copy(temp.begin(), temp.end());
+    free();
+    elements = newdata.first;
+    first_free = cap = newdata.second;
+}
+
+std::string &StrVec::operator[](size_t i)
+{
+    if (i >= size())
+        throw std::runtime_error("Out of range\n");
+
+    return *(elements + i);
+}
+
+const std::string &StrVec::operator[](size_t i) const
+{
+    if (i >= size())
+        throw std::runtime_error("Out of range\n");
+
+    return *(elements + i);
+}
+
+std::string StrVec::at(size_t i) const
+{
+    if (i >= size())
+        throw std::runtime_error("Out of range\n");
+
+    return *(elements + i);
+}
+
 StrVec::StrVec(StrVec &&s) noexcept
     : elements(s.elements), first_free(s.first_free), cap(s.cap)
 {
@@ -340,7 +372,6 @@ StrVec::~StrVec() noexcept
 
 StrVec::StrVec(std::initializer_list<std::string> temp)
 {
-    // dont know how to do it.
     auto newdata = alloc_n_copy(temp.begin(), temp.end());
     elements = newdata.first;
     first_free = cap = newdata.second;
@@ -489,6 +520,20 @@ SelfDefinedStr &SelfDefinedStr::operator=(SelfDefinedStr &&sds) noexcept
         sds.elements = sds.first_free = sds.cap = nullptr;
     }
     return *this;
+}
+
+char SelfDefinedStr::operator[](size_t i) const
+{
+    return this->at(i);
+}
+
+// at function
+char SelfDefinedStr::at(size_t i) const
+{
+    if (i >= size())
+        throw std::runtime_error("Out of range\n");
+
+    return *(elements + i);
 }
 
 SelfDefinedStr::~SelfDefinedStr() noexcept

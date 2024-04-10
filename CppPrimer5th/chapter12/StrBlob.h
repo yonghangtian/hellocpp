@@ -46,6 +46,7 @@ class StrBlob
     friend class ConstStrBlobPtr;
     friend bool operator==(const StrBlob &, const StrBlob &);
     friend bool operator!=(const StrBlob &, const StrBlob &);
+
 public:
     typedef std::vector<std::string>::size_type size_type;
 
@@ -55,11 +56,10 @@ public:
     // explicit StrBlob(std::initializer_list<std::string> il);
 
     // value like copy constructor
-    StrBlob(const StrBlob & sb) : data(std::make_shared<std::vector<std::string>>(*sb.data)) {}; 
-
+    StrBlob(const StrBlob &sb) : data(std::make_shared<std::vector<std::string>>(*sb.data)){};
 
     // value like copy assign operator
-    StrBlob & operator=(const StrBlob & sb)
+    StrBlob &operator=(const StrBlob &sb)
     {
         std::cout << "Before assignment, data use count " << data.use_count() << " \n";
         if (data == sb.data)
@@ -71,10 +71,13 @@ public:
         std::cout << "After assignment, data use count " << data.use_count() << " \n";
         return *this;
     }
+    // [] operator
+    std::string &operator[](size_t);
+    const std::string &operator[](size_t) const;
 
     // size operations
     size_type size() const { return data->size(); }
-    bool empty() const { return data->empty(); }  
+    bool empty() const { return data->empty(); }
 
     // add and remove elements
     void push_back(const std::string &t) { data->push_back(t); }
@@ -96,9 +99,9 @@ public:
         return data->back();
     };
     void show_data()
-    {   
+    {
         std::cout << "Current data use count " << data.use_count() << " \n";
-        for (auto temp: *data)
+        for (auto temp : *data)
         {
             std::cout << temp << " , ";
         }
@@ -133,13 +136,23 @@ class StrBlobPtr
     friend bool eq(const StrBlobPtr &, const StrBlobPtr &);
     friend bool operator==(const StrBlobPtr &, const StrBlobPtr &);
     friend bool operator!=(const StrBlobPtr &, const StrBlobPtr &);
+    friend StrBlobPtr operator+(const StrBlobPtr &, std::size_t);
+    friend StrBlobPtr operator-(const StrBlobPtr &, std::size_t);
+
 public:
     StrBlobPtr() : curr(0) {}
     StrBlobPtr(StrBlob &a, size_t sz = 0) : wptr(a.data), curr(sz) {}
-
+    
+    // operators or operator-like funcs 
+    char operator[](std::size_t);
+    const std::string &operator*() const;
     std::string &deref() const;
     StrBlobPtr &incr(); // prefix version
     StrBlobPtr &decr(); // prefix version
+    StrBlobPtr &operator++();    // prefix version
+    StrBlobPtr &operator--();    // prefix version
+    StrBlobPtr operator++(int); // postfix version
+    StrBlobPtr operator--(int); // postfix version
 private:
     // check returns a shared_ptr to the vector if the check succeeds
     std::shared_ptr<std::vector<std::string>>
@@ -181,7 +194,7 @@ inline StrBlobPtr &StrBlobPtr::decr()
 {
     // if curr is zero, decrementing it will yield an invalid subscript
     --curr; // move the current state back one element}
-    check(-1, "decrement past begin of StrBlobPtr");
+    check(curr, "decrement past begin of StrBlobPtr");
     return *this;
 }
 
@@ -216,7 +229,6 @@ inline bool neq(const StrBlobPtr &lhs, const StrBlobPtr &rhs)
 {
     return !eq(lhs, rhs);
 }
-
 
 // StrBlobPtr throws an exception on attempts to access a nonexistent element
 class ConstStrBlobPtr

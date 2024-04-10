@@ -152,10 +152,10 @@ int exercise14_16()
     string t1("temp str"), t2("temp str2"), t3("temp str3");
     StrVec a{t1, t2, t3}, b{t1, t2, t3};
 
-    if (a==b)
-        cout << "StrVec a == b \n"; 
+    if (a == b)
+        cout << "StrVec a == b \n";
     else
-        cout << "StrVec a != b \n"; 
+        cout << "StrVec a != b \n";
 
     char *temp = "this is";
     SelfDefinedStr c(temp);
@@ -169,11 +169,10 @@ int exercise14_16()
     d.push_back('i');
     d.push_back('s');
 
-    
-    if (c==d)
-        cout << "SelfDefinedStr c == d \n"; 
+    if (c == d)
+        cout << "SelfDefinedStr c == d \n";
     else
-        cout << "SelfDefinedStr c != d \n"; 
+        cout << "SelfDefinedStr c != d \n";
 
     return 0;
 }
@@ -205,11 +204,28 @@ int exercise14_21()
 
 int exercise14_22()
 {
+    Sales_data c("pride", 20, 8.88);
+
+    cout << c << "\n";
+    string temp("let's see!");
+    c = temp;
+    cout << c << "\n";
+
     return 0;
 }
 
 int exercise14_23()
 {
+    // StrVec a == b
+    string t1("temp str"), t2("temp str2"), t3("temp str3"), t4("temp str4");
+    StrVec a{t1, t2, t3, t4}, b{t2, t1};
+
+    b = {t1, t2, t3, t4};
+    if (a == b)
+        cout << "StrVec a == b \n";
+    else
+        cout << "StrVec a != b \n";
+
     return 0;
 }
 
@@ -225,16 +241,56 @@ int exercise14_25()
 
 int exercise14_26()
 {
+    // test StrVec's [] operator: temp str4 temp str
+    // test SelfDefinedStr's [] operator: s h
+    // test StrBlob's [] operator: temp str3 test StrBlobPtr's [] operator: m
+    string t1("temp str"), t2("temp str2"), t3("temp str3"), t4("temp str4");
+    StrVec a{t1, t2, t3, t4}, b{t2, t1};
+
+    cout << "test StrVec's [] operator: " << a[3] << " " << b[1] << "\n";
+    char *temp = "this is";
+    SelfDefinedStr c(temp);
+
+    cout << "test SelfDefinedStr's [] operator: " << c[3] << " " << c[1] << "\n";
+
+    StrBlob e{t1, t2, t3, t4};
+    StrBlobPtr f(e, 2);
+
+    cout << "test StrBlob's [] operator: " << e[2] << " test StrBlobPtr's [] operator: " << f[2] << "\n";
     return 0;
 }
 
 int exercise14_27()
 {
+    string t1("temp str"), t2("temp str2"), t3("temp str3"), t4("temp str4");
+    StrBlob e{t1, t2, t3, t4};
+    StrBlobPtr f(e, 2);
+
+    cout << "curr: " << *f << "\n";
+    cout << "prefix++: " << *(++f) << "\n";
+    cout << "prefix--: " << *(--f) << "\n";
+    cout << "postfix++: " << *(f++) << " ,f is " << *f  << "\n";
+    cout << "postfix--: " << *(f--) << " ,f is " << *f  << "\n";
+
     return 0;
 }
 
 int exercise14_28()
 {
+    // curr: temp str3
+    // f + 1: temp str4
+    // f - 1: temp str2
+    // terminate called after throwing an instance of 'std::out_of_range'
+    //   what():  decrement past begin of StrBlobPtr
+    // Aborted
+    string t1("temp str"), t2("temp str2"), t3("temp str3"), t4("temp str4");
+    StrBlob e{t1, t2, t3, t4};
+    StrBlobPtr f(e, 2);
+
+    cout << "curr: " << *f << "\n";
+    cout << "f + 1: " << *(f+1) << "\n";
+    cout << "f - 1: " << *(f-1) << "\n";
+    cout << "f - 3: " << *(f-3) << "\n";
     return 0;
 }
 
