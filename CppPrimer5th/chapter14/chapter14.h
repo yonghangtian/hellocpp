@@ -19,6 +19,35 @@ using std::string;
 
 // #define NDEBUG
 
+template <typename T>
+int rangeForContainer(T& a)
+{
+    for (auto b : a)
+    {
+        cout << b << ",";
+    }
+    cout << endl;
+    return 0;
+}
+
+class readString
+{
+public:
+    readString(istream &ist) : is(ist){};
+    const string operator()()
+    {
+        string test;
+        is >> test;
+        if (!is)
+            test = "empty string";
+
+        return test;
+    }
+
+private:
+    istream &is;
+};
+
 // Exercises Section 14.1
 // Exercise 14.1: In what ways does an overloaded operator differ from a
 // built-in operator? In what ways are overloaded operators the same as the
@@ -45,7 +74,7 @@ int exercise14_3();
 // members:
 // (a) % same with (e)
 // (b) %=  The compound-assignment operators ordinarily ought to be members. However, unlike assignment, they are not required to be members.
-// (c) ++ Operators that change the state of their object or that are closely tied to their 
+// (c) ++ Operators that change the state of their object or that are closely tied to their
 // given type—such as increment, decrement, and dereference—usually should be members.
 // (d) ->  must be defined as members.
 // (e) << Symmetric operators—those that might convert either operand,
@@ -218,6 +247,10 @@ int exercise14_32();
 // Exercises Section 14.8
 // Exercise 14.33: How many operands may an overloaded function-call
 // operator take?
+// Answer: In C++, the overloaded function-call operator operator()
+// can take any number of operands. The function-call operator is a special type of operator
+// that allows an object to be called like a function.
+// It can be overloaded to accept any number of arguments, just like a regular function.
 int exercise14_33();
 
 // Exercise 14.34: Define a function-object class to perform an if-then-else
@@ -306,8 +339,8 @@ int exercise14_49();
 // initializations of ex1 and ex2. Explain whether the initializations are legal or
 // not.
 // struct LongDouble{
-//  LongDouble(double = 0.0); 
-//  operator double(); 
+//  LongDouble(double = 0.0);
+//  operator double();
 //  operator float();
 // };
 // LongDouble ldObj;
@@ -345,6 +378,5 @@ int exercise14_52();
 // SmallInt s1;
 // double d = s1 + 3.14;
 int exercise14_53();
-
 
 #endif

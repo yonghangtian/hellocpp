@@ -269,8 +269,8 @@ int exercise14_27()
     cout << "curr: " << *f << "\n";
     cout << "prefix++: " << *(++f) << "\n";
     cout << "prefix--: " << *(--f) << "\n";
-    cout << "postfix++: " << *(f++) << " ,f is " << *f  << "\n";
-    cout << "postfix--: " << *(f--) << " ,f is " << *f  << "\n";
+    cout << "postfix++: " << *(f++) << " ,f is " << *f << "\n";
+    cout << "postfix--: " << *(f--) << " ,f is " << *f << "\n";
 
     return 0;
 }
@@ -288,9 +288,9 @@ int exercise14_28()
     StrBlobPtr f(e, 2);
 
     cout << "curr: " << *f << "\n";
-    cout << "f + 1: " << *(f+1) << "\n";
-    cout << "f - 1: " << *(f-1) << "\n";
-    cout << "f - 3: " << *(f-3) << "\n";
+    cout << "f + 1: " << *(f + 1) << "\n";
+    cout << "f - 1: " << *(f - 1) << "\n";
+    cout << "f - 3: " << *(f - 3) << "\n";
     return 0;
 }
 
@@ -301,6 +301,27 @@ int exercise14_29()
 
 int exercise14_30()
 {
+    string t1("temp str"), t2("temp str2"), t3("temp str3"), t4("temp str4");
+    StrBlob e{t1, t2, t3, t4};
+    StrBlobPtr f(e, 2);
+    ConstStrBlobPtr h(e, 1);
+
+    cout << "StrBlobPtr.operator*(): " << *f << "\n";
+    cout << "*(StrBlobPtr.operator->()): " << f->c_str() << "\n";
+    cout << "StrBlobPtr.decr(): " << *(f.decr()) << "\n";
+
+    cout << "ConstStrBlobPtr.operator*(): " << *h << "\n";
+    cout << "*(ConstStrBlobPtr.operator->()): " << h->c_str() << "\n";
+    cout << "ConstStrBlobPtr.incr(): " << *(h.incr()) << "\n";
+
+    f.incr();
+    cout << "StrBlobPtr.operator*(): " << *f << "\n";
+    *f = "update string";
+    cout << "After update, StrBlobPtr.operator*(): " << *f << "\n";
+    cout << "ConstStrBlobPtr.operator*(): " << *h << "\n";
+
+    // *h = "again string";
+    // cout << "After update, ConstStrBlobPtr.operator*(): " << *h << "\n";
     return 0;
 }
 
@@ -311,6 +332,15 @@ int exercise14_31()
 
 int exercise14_32()
 {
+    string t1("temp str"), t2("temp str2"), t3("temp str3"), t4("temp str4");
+    StrBlob e{t1, t2, t3, t4};
+    StrBlobPtr f(e, 2);
+
+    PtrToStrBlobPtr a(f);
+
+    cout << "StrBlobPtr.operator*(): " << *f << "\n";
+    cout << "a->c_str(), will call: PtrToStrBlobPtr.operator->(), then call StrBlobPtr.operator->(), then we'll get a string : " << a->c_str() << "\n";
+
     return 0;
 }
 
@@ -321,21 +351,76 @@ int exercise14_33()
 
 int exercise14_34()
 {
+    class fielseif
+    {
+    public:
+        int operator()(bool test, int a, int b)
+        {
+            if (test)
+                return a;
+            else
+                return b;
+        }
+    };
+    fielseif f;
+    cout << f(false, 10, 5);
+
     return 0;
 }
 
+// Linux 中 ctrl + d：输入EOF信号 ； ctrl + z ：将前台程序转为后台并停止，使用jobs命令查看后台暂停的程序，然后使用“fg 序号”将命令带到前台继续执行
 int exercise14_35()
 {
+    readString obj(cin);
+
+    cout << obj() << endl;
+
     return 0;
 }
 
 int exercise14_36()
 {
+    readString obj(cin);
+
+    vector<string> temp;
+
+    while (cin)
+    {
+        temp.push_back(obj());
+    }
+
+    rangeForContainer(temp);
     return 0;
 }
 
 int exercise14_37()
 {
+    class EqualTo
+    {
+    public:
+        EqualTo(int value) : value_(value) {}
+
+        bool operator()(int x) const
+        {
+            return x == value_;
+        }
+
+    private:
+        int value_;
+    };
+
+    // Create a vector of integers
+    std::vector<int> numbers = {1, 2, 3, 2, 5, 2, 7};
+
+    // Create an EqualTo object to test for equality with the value 2
+    EqualTo equal_to_2(2);
+
+    // Replace all instances of the value 2 with the value 99
+    std::replace_if(numbers.begin(), numbers.end(), equal_to_2, 99);
+
+    // Print the modified vector
+    rangeForContainer(numbers);
+
     return 0;
 }
 

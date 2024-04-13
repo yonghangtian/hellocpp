@@ -38,10 +38,15 @@ char StrBlobPtr::operator[](std::size_t i)
     return temp[i];
 }
 
-const std::string & StrBlobPtr::operator*() const
+std::string & StrBlobPtr::operator*() const
 {
     auto p = check(curr, "dereference past end");
     return (*p)[curr]; // (*p) is the vector to which this object points
+}
+
+std::string * StrBlobPtr::operator->() const
+{
+    return & this->operator*();
 }
 
 // prefix version

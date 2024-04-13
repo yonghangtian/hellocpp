@@ -142,15 +142,16 @@ class StrBlobPtr
 public:
     StrBlobPtr() : curr(0) {}
     StrBlobPtr(StrBlob &a, size_t sz = 0) : wptr(a.data), curr(sz) {}
-    
-    // operators or operator-like funcs 
+
+    // operators or operator-like funcs
     char operator[](std::size_t);
-    const std::string &operator*() const;
+    std::string &operator*() const;
+    std::string *operator->() const;
     std::string &deref() const;
-    StrBlobPtr &incr(); // prefix version
-    StrBlobPtr &decr(); // prefix version
-    StrBlobPtr &operator++();    // prefix version
-    StrBlobPtr &operator--();    // prefix version
+    StrBlobPtr &incr();         // prefix version
+    StrBlobPtr &decr();         // prefix version
+    StrBlobPtr &operator++();   // prefix version
+    StrBlobPtr &operator--();   // prefix version
     StrBlobPtr operator++(int); // postfix version
     StrBlobPtr operator--(int); // postfix version
 private:
@@ -238,7 +239,8 @@ class ConstStrBlobPtr
 public:
     ConstStrBlobPtr() : curr(0) {}
     ConstStrBlobPtr(const StrBlob &a, size_t sz = 0) : wptr(a.data), curr(sz) {}
-
+    const std::string &operator*() const;
+    const std::string *operator->() const;
     const std::string &deref() const;
     ConstStrBlobPtr &incr(); // prefix version
     ConstStrBlobPtr &decr(); // prefix version
@@ -287,6 +289,17 @@ inline ConstStrBlobPtr &ConstStrBlobPtr::decr()
     return *this;
 }
 
+inline const std::string &ConstStrBlobPtr::operator*() const
+{
+    auto p = check(curr, "dereference past end");
+    return (*p)[curr]; // (*p) is the vector to which this object points
+}
+
+inline const std::string *ConstStrBlobPtr::operator->() const
+{
+    return &this->operator*();
+}
+
 // begin and end members for StrBlob
 inline ConstStrBlobPtr
 StrBlob::cbegin()
@@ -318,4 +331,19 @@ inline bool neq(const ConstStrBlobPtr &lhs, const ConstStrBlobPtr &rhs)
 {
     return !eq(lhs, rhs);
 }
+
+class PtrToStrBlobPtr
+{
+public:
+    PtrToStrBlobPtr(const StrBlobPtr & temp) : sbs(temp){};
+    const StrBlobPtr &
+    operator->() const
+    {
+        return sbs;
+    }
+
+private:
+    StrBlobPtr sbs;
+};
+
 #endif
