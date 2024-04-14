@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <fstream>
 #include <sstream>
 #include <cctype>
 #include <utility>
@@ -30,10 +31,10 @@ int rangeForContainer(T& a)
     return 0;
 }
 
-class readString
+class ReadString
 {
 public:
-    readString(istream &ist) : is(ist){};
+    ReadString(istream &ist) : is(ist){};
     const string operator()()
     {
         string test;
@@ -47,6 +48,43 @@ public:
 private:
     istream &is;
 };
+
+class CheckLen
+{
+public:
+    CheckLen(size_t a) : _len(a){};
+    bool operator()(const string & temp)
+    {
+        return (temp.size() == _len);
+    }
+
+private:
+    size_t _len;
+};
+
+class CompareLen
+{
+public:
+    CompareLen(size_t a) : _len(a){};
+    bool operator()(const string & temp)
+    {
+        return (temp.size() > _len);
+    }
+
+private:
+    size_t _len;
+};
+
+class IsShorter
+{
+public:
+    IsShorter(){};
+    bool operator()(const string & lhs, const string & rhs)
+    {
+        return (lhs.size() < rhs.size());
+    }
+};
+
 
 // Exercises Section 14.1
 // Exercise 14.1: In what ways does an overloaded operator differ from a
@@ -290,6 +328,8 @@ int exercise14_40();
 // Exercise 14.41: Why do you suppose the new standard added lambdas?
 // Explain when you would use a lambda and when you would write a class
 // instead.
+// Answer: it much easier to use lambda than class, as class need declaration, definition and (Instantiation and Member Function Call),
+// it's heavy and need to remeber two much points.
 int exercise14_41();
 
 // Exercises Section 14.8.2

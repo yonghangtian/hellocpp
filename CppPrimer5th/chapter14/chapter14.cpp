@@ -371,7 +371,7 @@ int exercise14_34()
 // Linux 中 ctrl + d：输入EOF信号 ； ctrl + z ：将前台程序转为后台并停止，使用jobs命令查看后台暂停的程序，然后使用“fg 序号”将命令带到前台继续执行
 int exercise14_35()
 {
-    readString obj(cin);
+    ReadString obj(cin);
 
     cout << obj() << endl;
 
@@ -380,7 +380,7 @@ int exercise14_35()
 
 int exercise14_36()
 {
-    readString obj(cin);
+    ReadString obj(cin);
 
     vector<string> temp;
 
@@ -426,16 +426,112 @@ int exercise14_37()
 
 int exercise14_38()
 {
+    std::ifstream fin("/home/tian/projects/hellocpp/CppPrimer5th/chapter14/data/input_StrBlob");
+
+    string temp;
+    vector<string> vec;
+    while (getline(fin, temp))
+    {
+        std::istringstream isin(temp);
+
+        string word;
+        while (isin >> word)
+        {
+            vec.push_back(word);
+        }
+    }
+
+    vector<size_t> counter(10, 0);
+    for (size_t i = 0; i < 10; ++i)
+    {
+        CheckLen checkLen(i);
+        counter[i] = std::count_if(vec.begin(), vec.end(), checkLen);
+        cout << "There are " << counter[i] << " words that has len " << i << " .\n";
+    }
+
     return 0;
 }
 
 int exercise14_39()
 {
+    std::ifstream fin("/home/tian/projects/hellocpp/CppPrimer5th/chapter14/data/input_StrBlob");
+
+    string temp;
+    vector<string> vec;
+    while (getline(fin, temp))
+    {
+        std::istringstream isin(temp);
+
+        string word;
+        while (isin >> word)
+        {
+            vec.push_back(word);
+        }
+    }
+
+    vector<size_t> counter(2, 0);
+    for (size_t i = 0; i < 20; ++i)
+    {
+        CheckLen checkLen(i);
+        size_t t = std::count_if(vec.begin(), vec.end(), checkLen);
+        if (i < 10) counter[0] += t;
+        else counter[1] += t;
+
+    }
+
+    cout << "There are " << counter[0] << " words that has len less than 10.\n";
+    cout << "There are " << counter[1] << " words that has len more than or equal to 10.\n";
     return 0;
+}
+
+void elimDups(vector<string> &words)
+{
+    // sort words alphabetically so we can find the duplicates
+    sort(words.begin(), words.end());
+    cout << "After sort: " << endl;
+    rangeForContainer(words);
+    // unique words
+    // The elements beyond that enc_unique still exist, but we don’t know what values they have
+    // (MEANS: unique function may change the VALUE!!!).
+    auto end_unique = unique(words.begin(), words.end());
+    cout << "After unique: " << endl;
+    rangeForContainer(words);
+    // erase non-unique elements
+    words.erase(end_unique, words.end());
+}
+
+void biggiesUsingClass(vector<string> &words, vector<string>::size_type wordSize)
+{
+    CompareLen compareLen(wordSize);
+    IsShorter isShorter;
+    elimDups(words);
+    
+    stable_sort(words.begin(), words.end(), isShorter);
+
+    auto it = std::find_if(words.begin(), words.end(), compareLen);
+
+    if (it != words.end())
+    {
+        cout << "Biggies found: ";
+        while (it != words.end())
+        {
+            cout << *(it++) << " ";
+        }
+    }
+    else
+    {
+        cout << "Biggies not found. ";
+    }
+    cout << endl;
 }
 
 int exercise14_40()
 {
+    vector<string> wds{"bcded", "defhhaserahoh", "abc", "abdc"};
+    cout << "Original: " << endl;
+    rangeForContainer(wds);
+
+    biggiesUsingClass(wds, wds.size());
     return 0;
 }
 
