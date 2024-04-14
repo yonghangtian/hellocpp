@@ -474,9 +474,10 @@ int exercise14_39()
     {
         CheckLen checkLen(i);
         size_t t = std::count_if(vec.begin(), vec.end(), checkLen);
-        if (i < 10) counter[0] += t;
-        else counter[1] += t;
-
+        if (i < 10)
+            counter[0] += t;
+        else
+            counter[1] += t;
     }
 
     cout << "There are " << counter[0] << " words that has len less than 10.\n";
@@ -505,7 +506,7 @@ void biggiesUsingClass(vector<string> &words, vector<string>::size_type wordSize
     CompareLen compareLen(wordSize);
     IsShorter isShorter;
     elimDups(words);
-    
+
     stable_sort(words.begin(), words.end(), isShorter);
 
     auto it = std::find_if(words.begin(), words.end(), compareLen);
@@ -542,16 +543,65 @@ int exercise14_41()
 
 int exercise14_42()
 {
+    vector<int> intVec{1024, 1023, 1025, 2016};
+    std::greater<int> gt1024;
+    auto f = std::bind(gt1024, _1, 1024);
+    size_t it = std::count_if(intVec.begin(), intVec.end(), f);
+    cout << it << "\n";
+
+    vector<string> strVec{"pool", "pool", "Pool", "POOL"};
+    std::not_equal_to<string> not_pool;
+    auto f2 = std::bind(not_pool, _1, "pool");
+    auto it2 = std::find_if(strVec.begin(), strVec.end(), f2);
+    cout << *it2 << "\n";
+
+    std::multiplies<int> multp2;
+    auto f3 = std::bind(multp2, _1, 2);
+    std::transform(intVec.begin(), intVec.end(), intVec.begin(), f3);
+    rangeForContainer(intVec);
     return 0;
 }
 
 int exercise14_43()
 {
+    vector<int> intVec{1024, 1023, 1025, 2016};
+    std::modulus<int> modulus3;
+    auto f = std::bind(modulus3, _1, 3);
+
+    auto it = find_if(intVec.begin(), intVec.end(), [&](int i)
+                      { return f(i) != 0; });
+
+    if (it != intVec.end())
+    {
+        cout << *it << "\n";
+    }
+
     return 0;
 }
 
 int exercise14_44()
 {
+    std::plus<int> p;
+    std::minus<int> mi;
+    std::divides<int> di;
+    std::function<int(int, int)> f1 = std::multiplies<int>();
+    std::function<int(int, int)> f2 = std::modulus<int>();
+
+    std::map<string, std::function<int(int, int)>> funcMap;
+    funcMap.insert({"*", f1});
+    funcMap.insert({"+", p});
+    funcMap.insert({"-", mi});
+    funcMap.insert({"/", di});
+    funcMap.insert({"%", f2});
+
+    int a = 0, b = 0;
+    string temp;
+    cout << "请输入一个整数接空格, 再输入运算符接空格, 再输入下一个操作数。在wsl中输入CTRL+D即可标识EOF,以结束程序\n";
+    while (cin >> a >> temp >> b)
+    {
+        cout << a << temp << b << "=" << funcMap.at(temp)(a, b) << "\n";
+    }
+
     return 0;
 }
 

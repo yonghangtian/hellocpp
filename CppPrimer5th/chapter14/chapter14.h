@@ -8,6 +8,7 @@
 #include <sstream>
 #include <cctype>
 #include <utility>
+#include <functional>
 #include "../chapter7/chapter7.h"
 #include "../chapter13/chapter13.h"
 using std::cerr;
@@ -17,7 +18,7 @@ using std::endl;
 using std::istream;
 using std::ostream;
 using std::string;
-
+using namespace std::placeholders;
 // #define NDEBUG
 
 template <typename T>
