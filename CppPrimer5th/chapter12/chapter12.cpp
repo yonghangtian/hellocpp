@@ -583,7 +583,7 @@ int exercise12_24()
     char *temp2 = new char[temp1.size() * 2];
     int i = 0;
 
-    for (; i <= temp1.size(); ++i)
+    for (; i < temp1.size(); ++i)
     {
         temp2[i] = temp1[i];
         if (i == temp1.size())

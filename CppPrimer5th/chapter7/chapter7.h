@@ -100,6 +100,9 @@ public:
     // Sales_data &combine(const Sales_data&) const;
     bool operator==(const Sales_data &b) const;
     Sales_data &operator+=(const Sales_data &);
+    explicit operator double ();
+    explicit operator string ();
+    explicit operator bool ();
     Sales_data &operator=(const string &temp)
     {
         bookNo = temp;

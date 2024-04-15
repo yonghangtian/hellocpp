@@ -607,6 +607,11 @@ int exercise14_44()
 
 int exercise14_45()
 {
+    Sales_data a("pride", 10, 9.99);
+
+    cout << static_cast<string>(a) << "\n";
+    cout << static_cast<double>(a) << "\n";
+
     return 0;
 }
 
@@ -617,6 +622,20 @@ int exercise14_46()
 
 int exercise14_47()
 {
+    struct Integral
+    {
+        operator const int() { return 1; };
+        operator int() const { return 1; };
+    };
+
+    Integral i;
+    const int a = i; // 使用转换运算符
+    // a = 10;  // 错误，因为a是const expression must be a modifiable lvalue
+
+    const Integral ci;
+    const int b = ci;
+    //  When we comment "operator int() const",会有错误，因为不能在const对象上调用非const成员函数 no suitable conversion function from "const Integral" to "const int" exists
+
     return 0;
 }
 
@@ -627,25 +646,121 @@ int exercise14_48()
 
 int exercise14_49()
 {
+    Sales_data a("pride", 10, 9.99);
+    Sales_data b("pride", 12, 9.99);
+
+    if (a)
+    {
+        cout << "a have revenue > 100 \n";
+    }
+
+    if (b)
+    {
+        cout << "b have revenue > 100 \n";
+    }
+
     return 0;
+}
+
+class SmallInt
+{
+public:
+    friend SmallInt operator+(const SmallInt &, const SmallInt &);
+    SmallInt(int m = 0) : val(m){};      // conversion from int
+    operator int() const { return val; } // conversion to int
+private:
+    std::size_t val;
+};
+
+struct LongDouble
+{
+    LongDouble(double = 0.0){};
+    operator double()
+    {
+        cout << "double \n";
+        return 0.99;
+    };
+    operator float()
+    {
+        cout << "float \n";
+        return 0.98f;
+    };
+    // member operator+ for illustration purposes; + is usually a nonmember
+    LongDouble operator+(const SmallInt &);
+};
+
+SmallInt operator+(const SmallInt &, const SmallInt &)
+{
+    cout << "SmallInt operator+(const SmallInt &, const SmallInt &) \n";
+    return SmallInt(15);
+}
+
+LongDouble operator+(LongDouble &, double)
+{
+    cout << "LongDouble operator+(LongDouble &, double) \n";
+    return LongDouble(2.2);
+}
+
+LongDouble operator+(LongDouble &, int)
+{
+    cout << "LongDouble operator+(LongDouble &, int) \n";
+    return LongDouble(2.2);
 }
 
 int exercise14_50()
 {
+    LongDouble ldObj;
+    // int ex1 = ldObj; // both double and float suits.
+    // float ex2 = ldObj; // only float
+
     return 0;
+}
+
+void calc(int)
+{
+    cout << "void calc(int) \n";
+}
+
+void calc(LongDouble)
+{
+    cout << "void calc(LongDouble) \n";
 }
 
 int exercise14_51()
 {
+    // Answer: see chapter 6, section 6.1, (convertion from double to int) has higher priority than (double to self-defined class(LongDoule))
+    double dval;
+    calc(dval); // which calc? void calc(int)
     return 0;
 }
 
 int exercise14_52()
 {
+
+    SmallInt si;
+    LongDouble ld;
+
+    // ambiguous overload for ‘operator+’ (operand types are ‘SmallInt’ and ‘LongDouble’)
+    // candidates are:
+    // operator+(int, double) <built-in>
+    // operator+(int, float) <built-in>
+    // more than one conversion function from "LongDouble" to a built-in type applies:
+    // function "LongDouble::operator double()" (declared at line 678)
+    // function "LongDouble::operator float()" (declared at line 683)
+    // ld = si + ld;
+
+    // ld = ld + si; // undefined reference to `LongDouble::operator+(SmallInt const&)'
+    // ld + si; // undefined reference to `LongDouble::operator+(SmallInt const&)'
+
     return 0;
 }
 
 int exercise14_53()
 {
+    SmallInt s1;
+    double d = static_cast<int>(s1) + 3.14;
+
+    cout << d << "\n";
+
     return 0;
 }

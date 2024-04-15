@@ -358,21 +358,26 @@ int exercise14_45();
 
 // Exercise 14.46: Explain whether defining these Sales_data conversion
 // operators is a good idea and whether they should be explicit.
+// Answer: not a good idea. There is no simple and strightforward mapping between Sales_data and a string (or a double).
 int exercise14_46();
 
 // Exercise 14.47: Explain the difference between these two conversion
 // operators:
 // struct Integral { operator const int(); operator int() const;
 // };
+// Answer: operator const int(); 是一个非const的转换运算符，返回一个const int，并且只能在非const对象上使用。
+// operator int() const; 是一个const的转换运算符，返回一个普通的int，并且可以在const和非const对象上使用。
 int exercise14_47();
 
 // Exercise 14.48: Determine whether the class you used in exercise 7.40 from
 // § 7.5.1 (p. 291) should have a conversion to bool. If so, explain why, and
 // explain whether the operator should be explicit. If not, explain why not.
+// Answer: meanless to do.
 int exercise14_48();
 
 // Exercise 14.49: Regardless of whether it is a good idea to do so, define a
 // conversion to bool for the class from the previous exercise.
+// Answer: I'll do it with Sales_data
 int exercise14_49();
 
 // Exercises Section 14.9.2
@@ -395,6 +400,7 @@ int exercise14_50();
 // void calc(LongDouble);
 // double dval;
 // calc(dval); // which calc?
+
 int exercise14_51();
 
 // Exercises Section 14.9.3
@@ -418,6 +424,7 @@ int exercise14_52();
 // operator is used? If not, how might you change the code to make it legal?
 // SmallInt s1;
 // double d = s1 + 3.14;
+// Answer: NOT LEGAL. Let's static_cast s1 to int, then do (int + double) then convert to double
 int exercise14_53();
 
 #endif
