@@ -34,7 +34,9 @@ SET(MYSQL_CONN1_LIB
 # add_executable(HelloCpp main.cpp CppPrimer5th/chapter10/chapter10.cpp CppPrimer5th/chapter7/chapter7.cpp)
 # add_executable(HelloCpp main.cpp CppPrimer5th/chapter12/chapter12.cpp)
 # add_executable(HelloCpp main.cpp CppPrimer5th/chapter13/chapter13.cpp CppPrimer5th/chapter12/chapter12.cpp CppPrimer5th/chapter7/chapter7.cpp)
-add_executable(HelloCpp main.cpp CppPrimer5th/chapter14/chapter14.cpp CppPrimer5th/chapter13/chapter13.cpp CppPrimer5th/chapter12/chapter12.cpp CppPrimer5th/chapter7/chapter7.cpp)
+# add_executable(HelloCpp main.cpp CppPrimer5th/chapter14/chapter14.cpp CppPrimer5th/chapter13/chapter13.cpp CppPrimer5th/chapter12/chapter12.cpp CppPrimer5th/chapter7/chapter7.cpp)
+add_executable(HelloCpp main.cpp CppPrimer5th/chapter15/chapter15.cpp)
+
 
 target_link_libraries(HelloCpp ${MYSQL_CONN1_LIB})
 
