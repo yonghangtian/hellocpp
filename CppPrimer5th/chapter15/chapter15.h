@@ -226,15 +226,23 @@ int exercise15_7();
 
 // Exercises Section 15.2.3
 // Exercise 15.8: Define static type and dynamic type.
+// Answer:  the static type of a variable or other expression and the dynamic type of the object
+// that expression represents. The static type of an expression is always known at
+// compile time—it is the type with which a variable is declared or that an expression
+// yields. The dynamic type is the type of the object in memory that the variable or
+// expression represents. The dynamic type may not be known until run time.
 int exercise15_8();
 
 // Exercise 15.9: When is it possible for an expression’s static type to differ
 // from its dynamic type? Give three examples in which the static and dynamic
 // type differ.
 int exercise15_9();
+
 // Exercise 15.10: Recalling the discussion from §8.1 (p. 311), explain how
 // the program on page 317 that passed an ifstream to the Sales_data
 // read function works.
+// Answer: simply, as ifstream inherits from istream, 
+// so ifstream has same interfaces and operations with istream.
 int exercise15_10();
 
 // Exercises Section 15.3

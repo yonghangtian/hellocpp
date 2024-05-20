@@ -109,8 +109,27 @@ int exercise15_7()
 
     return 0;
 }
+
 int exercise15_8() { return 0; }
-int exercise15_9() { return 0; }
+
+int exercise15_9()
+{
+
+    Quote item("abc", 1.12);                // object of base type
+    Bulk_quote bulk1("abc", 1.12, 99, 0.7); // object of derived type
+    Bulk_quote bulk2("efg", 3.11, 99, 0.4); // object of derived type
+
+    // Static type : Quote *; dynamic type: Bulk_quote *
+    Quote * item2 = &bulk1;
+    // Static type : Quote &; dynamic type: Bulk_quote
+    Quote & item3 = bulk2;
+
+    // Static type: Quote::net_Price; dynamic type: Bulk_quote::net_price
+    cout << item.net_price(100) << ", " << item2->net_price(100) << ", "  << item3.net_price(100) << "\n";
+
+    return 0;
+}
+
 int exercise15_10() { return 0; }
 int exercise15_11() { return 0; }
 int exercise15_12() { return 0; }
