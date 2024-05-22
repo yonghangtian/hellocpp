@@ -34,6 +34,8 @@ class Base
 {
 public:
     int pub_mem = 1; // public member
+    void memfcn(Base &b) { b = *this; }
+
 protected:
     int prot_mem = 2; // protected member
 private:
@@ -43,6 +45,7 @@ private:
 class Pub_Derv : public Base // (The derivation access specifier has no effect on whether members (and friends) of a derived class may access the members of its own direct base class.)
 {
 public:
+    void memfcn(Base &b) { b = *this; }
     // ok: derived classes can access protected members
     int d() { return pub_mem; }
     // ok: derived classes can access protected members
@@ -54,6 +57,7 @@ public:
 class Prot_Derv : protected Base // (The derivation access specifier has no effect on whether members (and friends) of a derived class may access the members of its own direct base class.)
 {
 public:
+    void memfcn(Base &b) { b = *this; }
     // ok: derived classes can access protected members and
     int d() { return pub_mem; }
     // ok: derived classes can access protected members
@@ -65,6 +69,7 @@ public:
 class Priv_Derv : private Base // (The derivation access specifier has no effect on whether members (and friends) of a derived class may access the members of its own direct base class.)
 {
 public:
+    void memfcn(Base &b) { b = *this; }
     // ok: derived classes can access protected members
     int d() { return pub_mem; }
     // ok: derived classes can access protected members
@@ -76,6 +81,7 @@ public:
 class Derived_from_Pub : public Pub_Derv
 {
 public:
+    void memfcn(Base &b) { b = *this; }
     // ok: base class public member still public in public derv
     int g() { return pub_mem; }
     // ok: base class protected member still protected in public derv
@@ -85,6 +91,7 @@ public:
 class Derived_from_Prot : public Prot_Derv
 {
 public:
+    void memfcn(Base &b) { b = *this; }
     // ok: base class public member become protected in protected derv,
     int g() { return pub_mem; }
     // ok: base class protected member still protected in protected derv
@@ -94,6 +101,10 @@ public:
 class Derived_from_Priv : public Priv_Derv
 {
 public:
+    // Member functions and friends of classes derived from D may use
+    // the derived-to-base conversion if D inherits from B using either public or protected. Such
+    // code may not use the conversion if D inherits privately from B.
+    // void memfcn(Base &b) { b = *this; }
     // error: base class public member become private in private derv
     // complier error: member "Base::pub_mem" (declared at line 36) is inaccessible
     // int g() { return pub_mem; }
@@ -129,6 +140,7 @@ public:
     Quote() = default; // = default see § 7.1.4 (p. 264)
     Quote(const std::string &book, double sales_price) : bookNo(book), price(sales_price) {}
     std::string isbn() const { return bookNo; }
+    virtual void debug() { cout << "Quote: bookno" << bookNo << ", price" << price; }
 
     // returns the total sales price for the specified number of items
     // derived classes will override and apply different discount algorithms
@@ -158,6 +170,8 @@ public:
         else
             return cnt * price;
     }
+    virtual void debug() { cout << "Bulk_quote: min_qty" << min_qty << ", discount" << discount; }
+
     virtual ~Bulk_quote() = default;
 
 private:
@@ -179,11 +193,110 @@ public:
         else
             return cnt * (1 - discount) * price;
     }
+    virtual void debug() { cout << "Spec_quote: max_qty" << max_qty << ", discount" << discount; }
+
     virtual ~Spec_quote() = default;
 
 private:
     std::size_t max_qty = 0; // minimum purchase for the discount to apply
     double discount = 0.0;   // fractional discount to apply
+};
+
+class base1
+{
+public:
+    string name() { return basename; }
+    void setName(string a) { basename = a; }
+    virtual void print(ostream &os = cout) { os << basename; }
+
+private:
+    string basename;
+};
+
+class derived : public base1
+{
+public:
+    void print(ostream &os = cout) override
+    {
+        // I modified here.
+        base1::print(os);
+        os << " " << i;
+    }
+
+private:
+    int i = 0;
+};
+
+// class to hold the discount rate and quantity
+// derived classes will implement pricing strategies using these data
+class Disc_quote : public Quote
+{
+public:
+    Disc_quote() = default;
+    Disc_quote(const std::string &book, double price, std::size_t qty, double disc) : Quote(book, price), quantity(qty), discount(disc) {}
+    // a class with pure virtual function is called Abstract Base Class
+    virtual double net_price(std::size_t) const = 0;
+
+protected:
+    std::size_t quantity = 0; // purchase size for the discount to apply
+    double discount = 0.0;    // fractional discount to apply
+};
+
+// the discount kicks in when a specified number of copies of the same book are sold
+// the discount is expressed as a fraction to use to reduce the normal price
+class Bulk_quote_2 : public Disc_quote
+{
+public:
+    Bulk_quote_2() = default;
+    Bulk_quote_2(const std::string &book, double price,
+                 std::size_t qty, double disc) : Disc_quote(book, price, qty, disc) {}
+
+    // overrides the base version to implement the bulk purchase discount policy
+    double net_price(std::size_t cnt) const override
+    {
+        if (cnt >= quantity)
+            return cnt * (1 - discount) * price;
+        else
+            return cnt * price;
+    }
+};
+
+class Spec_quote_2 : public Disc_quote
+{
+public:
+    Spec_quote_2() = default;
+    Spec_quote_2(const std::string &book, double price,
+                 std::size_t qty, double disc) : Disc_quote(book, price, qty, disc) {}
+
+    // overrides the base version in order to implement the bulk purchase discount policy
+    double net_price(std::size_t cnt) const override
+    {
+        if (cnt >= quantity)
+            return quantity * (1 - discount) * price + (cnt - quantity) * price;
+        else
+            return cnt * (1 - discount) * price;
+    }
+};
+
+class Base3
+{
+public:
+    virtual int fcn() { return 1; }
+};
+
+class D1 : public Base3
+{
+public:
+    int fcn() { return 2; };         // parameter list differs from fcn in Base
+    virtual void f2() { cout << 4; }; // new virtual function that does not exist in Base
+};
+
+class D2 : public D1
+{
+public:
+    int fcn(int);                    // nonvirtual function hides D1::fcn(int)
+    int fcn() { return 3; }          // overrides virtual fcn from Base
+    virtual void f2() { cout << 5; }; // overrides virtual f2 from D1
 };
 
 int testAccessControl();
@@ -241,7 +354,7 @@ int exercise15_9();
 // Exercise 15.10: Recalling the discussion from §8.1 (p. 311), explain how
 // the program on page 317 that passed an ifstream to the Sales_data
 // read function works.
-// Answer: simply, as ifstream inherits from istream, 
+// Answer: simply, as ifstream inherits from istream,
 // so ifstream has same interfaces and operations with istream.
 int exercise15_10();
 
@@ -252,10 +365,20 @@ int exercise15_11();
 
 // Exercise 15.12: Is it ever useful to declare a member function as both
 // override and final? Why or why not?
+// Answer: yes, very useful in some case.
+// 在C++11中，将成员函数声明为override和final可以同时使用，并且在某些情况下是非常有用的。
+// override关键字：这个关键字用于指示编译器该函数是一个重写的虚函数。这有助于编译器检查你是否正确地重写了基类中的虚函数。如果你误拼写了函数名或者函数的参数与基类中的虚函数不匹配，编译器将会报错。这增加了代码的安全性和可维护性。
+// final关键字：这个关键字用于指示该函数是最终的，不能被任何派生类重写。这可以用来防止子类意外地重写某个特定的虚函数，从而改变基类的预期行为。
+// 将成员函数同时声明为override和final的用处在于：
+// 明确性：通过同时使用这两个关键字，你明确地向其他开发者表示，这个函数是一个重写的虚函数，并且不希望它被任何派生类进一步重写。
+// 防止意外重写：通过声明函数为final，你确保了没有任何派生类能够重写这个函数，这有助于维护代码的稳定性和一致性。
+// 编译器检查：override关键字让编译器帮助你检查是否正确地重写了基类中的虚函数，增加了代码的安全性。
+// 因此，在某些情况下，将成员函数同时声明为override和final是非常有用的，特别是当你想要确保某个特定的虚函数在派生类中不再被重写时。
 int exercise15_12();
 
-// Exercise 15.13 : Given the following classes, explain each print function : If there is a problem in this code, how would you fix it?
-// classs base
+// Exercise 15.13 : Given the following classes, explain each print function:
+// If there is a problem in this code, how would you fix it?
+// class base1
 // {
 // public:
 //     string name() { return basename; }
@@ -272,7 +395,6 @@ int exercise15_12();
 //         print(os);
 //         os << " " << i;
 //     }
-
 // private:
 //     int i;
 // };
@@ -288,16 +410,19 @@ int exercise15_13();
 // (e) br1.print();
 // (f) br2.print();
 int exercise15_14();
+
 // Exercises Section 15.4
-// Exercise 15.15: Define your own versions of Disc_quote and
-// Bulk_quote.
+// Exercise 15.15: Define your own versions of Disc_quote and Bulk_quote.
 int exercise15_15();
+
 // Exercise 15.16: Rewrite the class representing a limited discount strategy,
 // which you wrote for the exercises in § 15.2.2 (p. 601), to inherit from
 // Disc_quote.
 int exercise15_16();
+
 // Exercise 15.17: Try to define an object of type Disc_quote and see what errors you get from the compiler.
 int exercise15_17();
+
 // Exercises Section 15.5
 // Exercise 15.18: Given the classes from page 612 and page 613, and
 // assuming each object has the type specified in the comments, determine
@@ -323,10 +448,11 @@ int exercise15_20();
 // (a) Graphical file formats (such as gif, tiff, jpeg, bmp)
 // (b) Geometric primitives (such as box, circle, sphere, cone)
 // (c) C++ language types (such as class, function, member function)
+// Answer: honstly speeking, I have nothing to say.
 int exercise15_21();
 // Exercise 15.22: For the class you chose in the previous exercise, identify
-// some of the likely virtual functions as well as public and protected
-// members.
+// some of the likely virtual functions as well as public and protected members.
+// Answer: honstly speeking, I have nothing to say.
 int exercise15_22();
 // Exercises Section 15.6
 // Exercise 15.23: Assuming class D1 on page 620 had intended to override
