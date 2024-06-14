@@ -1,4 +1,5 @@
 #!/bin/bash
+echo "Test the connectivity between CppCoreDev and github."
 echo "Total: "
 find . \( -wholename "*chapter*.cpp" -o -wholename "*chapter*.h" \) -exec wc -l {} + | awk '{total += $1} END {print total}'
 echo "CppPrimer5th:"
