@@ -1,0 +1,5 @@
+This is a text file for chapter6's No.8 programming homework.
+
+The purpose of this homework is let students learn how to read plain text file using c++ programming language.
+
+This text file is created by tianyonghang.

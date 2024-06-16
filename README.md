@@ -24,6 +24,23 @@ Cppcheck 2.13 is installed from source code :
 >
 >  $ cppcheck --version
 
+Spdlog 1.13.0 is included in ${project_source_root}/include/spdlog folder, btw, ${project_source_root}/include is in project's .gitignore
+>[projects]$ cd spdlog-1.13.0
+>
+>[spdlog-1.13.0]$ cd include/
+>
+>[include]$ ls
+>
+>spdlog
+>
+>[include]$ cp -r spdlog/ ~/projects/hellocpp/include/
+>
+>[include]$ cd ~/projects/hellocpp/include/
+>
+>[include]$ ls
+>
+>mysqlcppconn1dot1dot12  mysqlcppconn8dot3dot0  spdlog
+
 ## Note:
 Below dirs are downloaded from their official website, therefore, I add them in .gitignore.
 >    [CppPrimer5th/examples](http://informit.com/title/0321714113 "cpp primer 5th source code")

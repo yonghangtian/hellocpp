@@ -4,12 +4,12 @@ add_compile_options(-std=c++11)
 include(CTest)
 enable_testing()
 
-# 安装cppcheck: 将编译命令导出到 compile_commands.json
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-# 安装cppcheck: 设置CPPCHECK路径
-set(CPPCHECK_EXECUTABLE "/usr/bin/cppcheck")
-# 安装cppcheck: 添加编译选项以显示警告信息
-add_compile_options(-Wall -Wextra)
+# # 安装cppcheck: 将编译命令导出到 compile_commands.json
+# set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+# # 安装cppcheck: 设置CPPCHECK路径
+# set(CPPCHECK_EXECUTABLE "/usr/bin/cppcheck")
+# # 安装cppcheck: 添加编译选项以显示警告信息
+# add_compile_options(-Wall -Wextra)
 
 
 # 将第三方包的.h头文件放在include目录，将so文件放到lib目录中。
@@ -19,23 +19,25 @@ add_compile_options(-Wall -Wextra)
 
 # mysqlcppconn1.1.12(CppPrimer5th:exercise12_14):  below part for mysqlcppconn1.1.12, installed on project root downloaded from oracle official website.
 include_directories( ${PROJECT_SOURCE_DIR}/include
-                    ${PROJECT_SOURCE_DIR}/include/mysqlcppconn1dot1dot12/include)
+                     ${PROJECT_SOURCE_DIR}/include/mysqlcppconn1dot1dot12
+                     ${PROJECT_SOURCE_DIR}/include/spdlog)
+
 SET(MYSQL_CONN1_LIB
-    ${PROJECT_SOURCE_DIR}/lib/mysqlcppconn1dot1dot12/lib64/libmysqlcppconn.so)
+    ${PROJECT_SOURCE_DIR}/lib/mysqlcppconn1dot1dot12/libmysqlcppconn.so)
 
 # mysqlcppconn8.3.0(CppPrimer5th:exercise12_15):  below part for mysqlcppconn8.3.0, installed on project root downloaded from oracle official website.
 # include_directories("/home/tian/projects/hellocpp/mysqlcppconn8dot3dot0/include")
 # target_link_libraries(HelloCpp "/home/tian/projects/hellocpp/mysqlcppconn8dot3dot0/lib64/libmysqlcppconn.so")
 
-# add_executable(HelloCpp CppPrimerPlus/chapter91/chapter91_main.cpp CppPrimerPlus/chapter91/golf.cpp)
-# add_executable(HelloCpp CppPrimerPlus/chapter111/randwalk.cpp CppPrimerPlus/chapter111/vect.cpp)
-# add_executable(HelloCpp main.cpp CppPrimerPlus/chapter13.cpp)
-# add_executable(HelloCpp main.cpp CppPrimerPlus/chapter17/chapter17.cpp)
-# add_executable(HelloCpp main.cpp CppPrimer5th/chapter10/chapter10.cpp CppPrimer5th/chapter7/chapter7.cpp)
-# add_executable(HelloCpp main.cpp CppPrimer5th/chapter12/chapter12.cpp)
-# add_executable(HelloCpp main.cpp CppPrimer5th/chapter13/chapter13.cpp CppPrimer5th/chapter12/chapter12.cpp CppPrimer5th/chapter7/chapter7.cpp)
-# add_executable(HelloCpp main.cpp CppPrimer5th/chapter14/chapter14.cpp CppPrimer5th/chapter13/chapter13.cpp CppPrimer5th/chapter12/chapter12.cpp CppPrimer5th/chapter7/chapter7.cpp)
-add_executable(HelloCpp main.cpp CppPrimer5th/chapter15/chapter15.cpp)
+# add_executable(HelloCpp src/CppPrimerPlus/chapter91/chapter91_main.cpp src/CppPrimerPlus/chapter91/golf.cpp)
+# add_executable(HelloCpp src/CppPrimerPlus/chapter111/randwalk.cpp src/CppPrimerPlus/chapter111/vect.cpp)
+# add_executable(HelloCpp src/main.cpp src/CppPrimerPlus/chapter13.cpp)
+# add_executable(HelloCpp src/main.cpp src/CppPrimerPlus/chapter17/chapter17.cpp)
+# add_executable(HelloCpp src/main.cpp src/CppPrimer5th/chapter10/chapter10.cpp src/CppPrimer5th/chapter7/chapter7.cpp)
+# add_executable(HelloCpp src/main.cpp src/CppPrimer5th/chapter12/chapter12.cpp)
+# add_executable(HelloCpp src/main.cpp src/CppPrimer5th/chapter13/chapter13.cpp src/CppPrimer5th/chapter12/chapter12.cpp src/CppPrimer5th/chapter7/chapter7.cpp)
+# add_executable(HelloCpp src/main.cpp src/CppPrimer5th/chapter14/chapter14.cpp src/CppPrimer5th/chapter13/chapter13.cpp src/CppPrimer5th/chapter12/chapter12.cpp src/CppPrimer5th/chapter7/chapter7.cpp)
+add_executable(HelloCpp src/main.cpp src/CppPrimer5th/chapter15/chapter15.cpp src/CppPrimer5th/chapter12/chapter12.cpp)
 
 
 target_link_libraries(HelloCpp ${MYSQL_CONN1_LIB})
@@ -45,6 +47,6 @@ set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
 
 
-# 安装cppcheck: 将cppcheck添加到编译目标之后
-add_custom_command(TARGET HelloCpp POST_BUILD COMMAND ${CPPCHECK_EXECUTABLE} --enable=warning
-                    --std=c++11 --force --quiet --project=compile_commands.json COMMENT "Running cppcheck after build")
+# # 安装cppcheck: 将cppcheck添加到编译目标之后
+# add_custom_command(TARGET HelloCpp POST_BUILD COMMAND ${CPPCHECK_EXECUTABLE} --enable=warning
+#                     --std=c++11 --force --quiet --project=compile_commands.json COMMENT "Running cppcheck after build")
