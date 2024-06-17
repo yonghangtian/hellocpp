@@ -3,5 +3,5 @@ build/
 Testing/
 lib/
 include/
-CppPrimer5th/examples/
-CppPrimerPlus/examples/
+src/CppPrimer5th/examples/
+src/CppPrimerPlus/examples/
