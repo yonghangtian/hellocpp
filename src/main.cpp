@@ -7,10 +7,12 @@
 
 
 // global variable
-bool spdlog_init_flag = true;
-std::shared_ptr<spdlog::sinks::stdout_color_sink_st> console_sink;
-std::shared_ptr<spdlog::sinks::rotating_file_sink_st> file_sink; 
-std::shared_ptr<spdlog::logger> hellocpp_logger;
+// bool spdlog_init_flag = true;
+// std::shared_ptr<spdlog::sinks::stdout_color_sink_st> console_sink;
+// std::shared_ptr<spdlog::sinks::rotating_file_sink_st> file_sink; 
+// std::shared_ptr<spdlog::logger> hellocpp_logger;
+
+HiSpdlog hi_spdlog;
 
 int main(int argc, char **argv)
 {

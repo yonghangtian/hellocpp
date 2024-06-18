@@ -5,55 +5,63 @@
 #include <sinks/rotating_file_sink.h>
 #include "spdlog/sinks/stdout_color_sinks.h"
 
-extern bool spdlog_init_flag;
-extern std::shared_ptr<spdlog::sinks::stdout_color_sink_st> console_sink;
-extern std::shared_ptr<spdlog::sinks::rotating_file_sink_st> file_sink;
-extern std::shared_ptr<spdlog::logger> hellocpp_logger;
+class HiSpdlog;
 
-inline void init_logger()
+// hi_spdlog instance is defined in main.cpp
+extern HiSpdlog hi_spdlog;
+
+class HiSpdlog
 {
-    std::vector<spdlog::sink_ptr> sinks;
-    console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_st>();
-    // Create a file rotating logger with 5 MB size max and 10 rotated files
-    auto max_size = 1048576 * 5;
-    auto max_files = 10;
-    file_sink = std::make_shared<spdlog::sinks::rotating_file_sink_st>("logs/hellocpp.log", max_size, max_files);
-    console_sink->set_level(spdlog::level::info);
-    file_sink->set_level(spdlog::level::debug);
-
-    sinks.push_back(console_sink);
-    sinks.push_back(file_sink);
-
-    hellocpp_logger = std::make_shared<spdlog::logger>(spdlog::logger("multi_sink", sinks.begin(), sinks.end()));
-    hellocpp_logger->set_level(spdlog::level::debug);
-}
-
-inline void hellocpp_log(const string &log_level, const string &log_content)
-{
-    if (spdlog_init_flag)
+public:
+    HiSpdlog(const string &logger_name = "hi_spdlog", const string &log_path = "logs/hellocpp.log", unsigned int max_log_size = 1048576 * 5, unsigned int max_log_files = 10)
+        : console_sink(std::make_shared<spdlog::sinks::stdout_color_sink_st>()),
+          file_sink(std::make_shared<spdlog::sinks::rotating_file_sink_st>(log_path, max_log_size, max_log_files)),
+          hi_logger(std::make_shared<spdlog::logger>(spdlog::logger(logger_name, {console_sink, file_sink})))
     {
-        init_logger();
-        spdlog_init_flag = false;
+        console_sink->set_level(spdlog::level::info);
+        file_sink->set_level(spdlog::level::debug);
+        hi_logger->set_level(spdlog::level::debug);
     }
 
-    if (log_level == "INFO")
+
+    // 当你调用set_level函数并为它提供一个日志级别参数时，你实际上是在指定该日志记录器（logger或sink）应该记录哪些级别的日志消息。
+    // 例如，如果你将日志级别设置为warn，那么只有警告、错误和致命错误级别的日志消息会被记录，而较低级别的消息（如调试和信息）则会被忽略。
+    // 日志级别如下（数字越大，级别越高）：
+    // #define SPDLOG_LEVEL_TRACE 0
+    // #define SPDLOG_LEVEL_DEBUG 1
+    // #define SPDLOG_LEVEL_INFO 2
+    // #define SPDLOG_LEVEL_WARN 3
+    // #define SPDLOG_LEVEL_ERROR 4
+    // #define SPDLOG_LEVEL_CRITICAL 5
+    // #define SPDLOG_LEVEL_OFF 6
+
+    inline void pls_log(const string &log_level, const string &log_content)
     {
-        // "this message should not appear in the console, only in the file."
-        hellocpp_logger->info(log_content);
+        if (log_level == "INFO")
+        {
+            hi_logger->info(log_content);
+        }
+        else if (log_level == "DEBUG")
+        {
+            hi_logger->debug(log_content);
+        }
+        else if (log_level == "WARN")
+        {
+            // "this should appear in both console and file"
+            hi_logger->warn(log_content);
+        }
+        else if (log_level == "ERROR")
+        {
+            hi_logger->error(log_content);
+        }
     }
-    else if (log_level == "DEBUG")
-    {
-        hellocpp_logger->debug(log_content);
-    }
-    else if (log_level == "WARN")
-    {
-        // "this should appear in both console and file"
-        hellocpp_logger->warn(log_content);
-    }
-    else if (log_level == "ERROR")
-    {
-        hellocpp_logger->error(log_content);
-    }
-}
+
+private:
+    std::shared_ptr<spdlog::sinks::stdout_color_sink_st> console_sink;
+    std::shared_ptr<spdlog::sinks::rotating_file_sink_st> file_sink;
+    std::shared_ptr<spdlog::logger> hi_logger;
+};
+
+
 
 #endif

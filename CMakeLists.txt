@@ -48,5 +48,11 @@ include(CPack)
 
 
 # # 安装cppcheck: 将cppcheck添加到编译目标之后
-# add_custom_command(TARGET HelloCpp POST_BUILD COMMAND ${CPPCHECK_EXECUTABLE} --enable=warning
-#                     --std=c++11 --force --quiet --project=compile_commands.json COMMENT "Running cppcheck after build")
+# add_custom_command(TARGET HelloCpp POST_BUILD COMMAND ${CPPCHECK_EXECUTABLE} --enable=warning 
+#                     -i/home/tian/projects/hellocpp/include/mysqlcppconn1dot1dot12 
+#                     -i/home/tian/projects/hellocpp/include/spdlog
+#                     -i/home/tian/projects/hellocpp/include/spdlog/cfg
+#                     -i/home/tian/projects/hellocpp/include/spdlog/details
+#                     -i/home/tian/projects/hellocpp/include/spdlog/fmt
+#                     -i/home/tian/projects/hellocpp/include/spdlog/sinks
+#                     --std=c++11 --force --quiet --project=compile_commands.json -i/home/tian/projects/hellocpp/include COMMENT "Running cppcheck after build")

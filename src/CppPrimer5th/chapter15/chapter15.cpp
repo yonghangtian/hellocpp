@@ -48,12 +48,12 @@ int testAccessControl()
 
 int testSpdLog()
 {
-    for (int i = 0; i < 200000; ++i)
+    for (int i = 0; i < 20; ++i)
     {
-        hellocpp_log("INFO", "this message should not appear in the console, only in the file.");
-        hellocpp_log("DEBUG", "this is debug message.");
-        hellocpp_log("WARN", "this should appear in both console and file");
-        hellocpp_log("ERROR", "this is error message.");
+        hi_spdlog.pls_log("DEBUG", "this is debug message, only in the file.");
+        hi_spdlog.pls_log("INFO", "this info message, should appear in both console and file");
+        hi_spdlog.pls_log("WARN", "this warn message, should appear in both console and file");
+        hi_spdlog.pls_log("ERROR", "this is error message.");
     }
     return 0;
 }
