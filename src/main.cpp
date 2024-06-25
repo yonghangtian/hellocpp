@@ -16,7 +16,7 @@ HiSpdlog hi_spdlog;
 
 int main(int argc, char **argv)
 {
-    int a = testSpdLog();
+    int a = testBase64EncodeDecode();
     // int a = exercise12_14();
     // int a = exercise8_7(argc, argv);
     // int a = exercise6_26(argc, argv);

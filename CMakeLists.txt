@@ -40,7 +40,7 @@ SET(MYSQL_CONN1_LIB
 add_executable(HelloCpp src/main.cpp src/CppPrimer5th/chapter15/chapter15.cpp src/CppPrimer5th/chapter12/chapter12.cpp)
 
 
-target_link_libraries(HelloCpp ${MYSQL_CONN1_LIB})
+target_link_libraries(HelloCpp ${MYSQL_CONN1_LIB} -lssl -lcrypto)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

@@ -9,6 +9,8 @@
 #include <cctype>
 #include <utility>
 #include <functional>
+#include <cstring>
+#include <openssl/evp.h>
 using std::cerr;
 using std::cin;
 using std::cout;
@@ -304,6 +306,9 @@ public:
 int testAccessControl();
 
 int testSpdLog();
+
+// base64编解码，使用openssl包
+int testBase64EncodeDecode();
 
 // Exercises Section 15.2.1
 // Exercise 15.1: What is a virtual member?

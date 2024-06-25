@@ -58,6 +58,87 @@ int testSpdLog()
     return 0;
 }
 
+// base64编码，使用openssl包
+int testBase64EncodeDecode()
+{
+    unsigned int max_input_size = 500;
+    unsigned int max_output_size = 2000;
+    unsigned char in[max_input_size], out[max_output_size], d[max_input_size], *p;
+    char target[max_output_size];
+    string target_str;
+    int inl, i, len, pad;
+
+    string in_str;
+    cout << "Please input your orig str : \n";
+    getline(cin, in_str);
+    cout << in_str << "," << in_str.size() << endl;
+    if (in_str.size() <= 0 || in_str.size() > max_input_size)
+    {
+        cout << "Input failed\n quit.";
+        return 20;
+    }
+
+    cout << "原始输入：";
+    for (int k = 0; k < in_str.size(); k++)
+    {
+        
+        in[k] = (unsigned char)in_str[k];
+        cout << in[k];
+    }
+    cout << endl;
+
+    len = EVP_EncodeBlock(out, in, in_str.size());
+
+    // 输出的out并不是以\0结尾的
+    cout << "编码输出：";
+    for (int k = 0; k < len; k++)
+    {
+        // cout << out[k];
+        target[k] = out[k];
+    }
+
+    target[len] = '\0';
+    cout << target << endl;
+
+
+    // 计算尾部填充的=的个数
+    p = out + len - 1;
+    pad = 0;
+    for (i = 0; i < 4; i++)
+    {
+        if (*p == '=')
+        {
+            pad++;
+        }
+        p--;
+    }
+
+    // 解码时，作为输入的out并不是以\0结尾的
+    len = EVP_DecodeBlock(d, out, len);
+    len -= pad;
+
+    // 输出的out并不是以\0结尾的
+    cout << "解码输出：";
+    for (int k = 0; k < len; k++)
+    {
+        // cout << d[k];
+        target[k] = d[k];
+    }
+    target[len] = '\0';
+    cout << target << endl;
+
+    if ((len != in_str.size()) || (memcmp(in, d, len)))
+    {
+        cout << "ERROR\n";
+    }
+    else
+    {
+        cout << "test OK\n";
+    }
+
+    return 0;
+}
+
 ostream &operator<<(ostream &os, Quote &q)
 {
     os << q.isbn() << ", " << q.price << "\n";
